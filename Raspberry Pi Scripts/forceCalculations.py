@@ -17,3 +17,5 @@ def shooterCalculations(distanceFromTopHub):
   print("Distance from Hubs: "+str(distanceFromHubBase))
   
   return (rawShooterAngle, distanceFromHubBase)
+
+shooterCalculations(20) #Leave this for now
