@@ -67,7 +67,7 @@ lower_red, upper_red = np.array([0, 50, 50]), np.array([10, 255, 255])
 def detectBalls():
     global cap, fps, lower_blue, upper_blue, lower_red, upper_red
     # intialize updating while loop
-    while True:
+    while cap.isOpened():
         # reading video capture frame
         frame = vs.read()
         centerOfScreen = frame.shape[1] / 2
@@ -111,8 +111,10 @@ def detectBalls():
                     continue
                 if min_distance < 0:
                     print('turn left {}'.format(abs(min_distance)))
+                    time.sleep(1)
                 else:
                     print('turn right {}'.format(min_distance))
+                    time.sleep(1)
             else:
                 continue
         # for red regions
@@ -142,3 +144,5 @@ def detectBalls():
     print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
     cap.release()
     cv2.destroyAllWindows()
+
+detectBalls()
