@@ -6,8 +6,6 @@
 ### Shooting Mechanics - Automatically aim turret at Hubs
 **Aiming and tracking team:**
 1. Sriman Achanta
-2. 
-3. 
 
  * Use limelight to automatically track shooter at top hub retro reflectors.
  * Limelight will be added directly to the shooter
@@ -17,9 +15,7 @@
 ### Ball Detection - Use camera and Raspberry Pi to find balls
 **Ball tracking and navigation team:**
 1. Ayush Pal
-2. 
-3. 
-~~Camera and Contrast Idea~~
+
 **Track balls using Video**
  * Take video input from Raspberry Pi
 	 * Use a mask and contur detection to differentiate balls from the outline of the arena.
@@ -30,6 +26,3 @@
 
 ### Climb Mechanic - TBD
 **Climbing team:**
-1. 
-2. 
-3. 
