@@ -83,7 +83,6 @@ def detectBalls():
                     continue
                 if radius > 100:
                     cv2.circle(result, (centers_blue[-1]), int(radius), (255, 0, 0), 5)
-                    cv2.imwrite("circled_frame.png", cv2.resize(result, (int(height / 2), int(width / 2))))
                     cv2.circle(result, centers_blue[-1], 5, (0, 255, 255), -1)
                     distances_from_center_blue.append(centers_blue[-1][0] - centerOfScreen)
             # prints the distance from the closest ball to the center and how far to turn the robot;
@@ -110,7 +109,6 @@ def detectBalls():
                     continue
                 if radius > 100:
                     cv2.circle(result, (centers_red[-1]), int(radius), (0, 0, 255), 5)
-                    cv2.imwrite("circled_frame.png", cv2.resize(result, (int(height / 2), int(width / 2))))
                     cv2.circle(result, centers_red[-1], 5, (0, 255, 255), -1)
         # showing current frame
         cv2.imshow("Result", result)

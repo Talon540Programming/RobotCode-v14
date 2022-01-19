@@ -18,4 +18,5 @@ def shooterCalculations(distanceFromTopHub):
   
   return (rawShooterAngle, distanceFromHubBase)
 
+dist = input("Enter Distance: ")
 shooterCalculations(20) #Leave this for now
