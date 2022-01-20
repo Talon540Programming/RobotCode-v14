@@ -58,17 +58,19 @@ lower_blue, upper_blue = np.array([100, 35, 140]), np.array([180, 255, 255])
 lower_red, upper_red = np.array([0, 50, 50]), np.array([10, 255, 255])
 
 
-def detectBalls(duration):
+def detectBalls():
     global fps, lower_blue, upper_blue, lower_red, upper_red
     start, stop = time.perf_counter(), time.perf_counter()
-    while stop - start < duration:
+    while True:
         frame = vs.read()
         centerOfScreen = frame.shape[1] / 2
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         mask_blue, mask_red = cv2.inRange(hsv, lower_blue, upper_blue), cv2.inRange(hsv, lower_red, upper_red)
         result = cv2.bitwise_and(frame, frame, mask=mask_blue + mask_red)
-        blurred = cv2.GaussianBlur(frame, (11, 11), 0)
+
+        blurred = cv2.GaussianBlur(frame, (15, 15), 0)
         width, height = result.shape[:2]
+
         hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
         mask_blue, mask_red = cv2.erode(mask_blue, None, iterations=2), cv2.erode(mask_red, None, iterations=2)
         mask_blue, mask_red = cv2.dilate(mask_blue, None, iterations=2), cv2.dilate(mask_red, None, iterations=2)
@@ -110,11 +112,14 @@ def detectBalls(duration):
                     cv2.circle(result, (centers_red[-1]), int(radius), (0, 0, 255), 5)
                     cv2.circle(result, centers_red[-1], 5, (0, 255, 255), -1)
         cv2.imshow("Result", result)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('c'):
             break
         stop = time.perf_counter()
         fps.update()
     fps.stop()
     vs.stop()
     cv2.destroyAllWindows()
-detectBalls(60)
+    print("[LOG]: Test Durration Complete")  # REMOVE
+
+
+detectBalls()  # REMOVE
