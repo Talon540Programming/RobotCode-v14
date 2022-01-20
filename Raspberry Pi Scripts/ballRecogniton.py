@@ -117,3 +117,4 @@ def detectBalls(duration):
     fps.stop()
     vs.stop()
     cv2.destroyAllWindows()
+detectBalls(60)
