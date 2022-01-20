@@ -1,10 +1,8 @@
-# import packages
 from threading import Thread
 import cv2
 import datetime
 import numpy as np
 import time
-# defined FPS class
 class FPS:
     def __init__(self):
         self._start = None
@@ -21,8 +19,6 @@ class FPS:
         return (self._end - self._start).total_seconds()
     def fps(self):
         return self._numFrames / self.elapsed()
-# defined WebcamVideoStream class
-
 class WebcamVideoStream:
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
