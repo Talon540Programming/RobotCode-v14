@@ -20,8 +20,9 @@ class FPS:
     def elapsed(self):
         return (self._end - self._start).total_seconds()
     def fps(self):
-        return self._numFrames / self.elapsed(
+        return self._numFrames / self.elapsed()
 # defined WebcamVideoStream class
+
 class WebcamVideoStream:
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
