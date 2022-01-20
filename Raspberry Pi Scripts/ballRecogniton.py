@@ -3,44 +3,61 @@ import cv2
 import datetime
 import numpy as np
 import time
+
+
 class FPS:
     def __init__(self):
         self._start = None
         self._end = None
         self._numFrames = 0
+
     def start(self):
         self._start = datetime.datetime.now()
         return self
+
     def stop(self):
         self._end = datetime.datetime.now()
+
     def update(self):
         self._numFrames += 1
+
     def elapsed(self):
         return (self._end - self._start).total_seconds()
+
     def fps(self):
         return self._numFrames / self.elapsed()
+
+
 class WebcamVideoStream:
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
         (self.grabbed, self.frame) = self.stream.read()
         self.stopped = False
+
     def start(self):
         Thread(target=self.update, args=()).start()
         return self
+
     def update(self):
         while True:
             if self.stopped:
                 return
             (self.grabbed, self.frame) = self.stream.read()
+
     def read(self):
         return self.frame
+
     def stop(self):
         self.stopped = True
+
+
 fps = FPS().start()
 vs = WebcamVideoStream(src=0).start()
 time.sleep(2)
 lower_blue, upper_blue = np.array([100, 35, 140]), np.array([180, 255, 255])
 lower_red, upper_red = np.array([0, 50, 50]), np.array([10, 255, 255])
+
+
 def detectBalls(duration):
     global fps, lower_blue, upper_blue, lower_red, upper_red
     start, stop = time.perf_counter(), time.perf_counter()
