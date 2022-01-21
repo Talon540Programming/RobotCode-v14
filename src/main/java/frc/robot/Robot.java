@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import edu.wpi.first.wpilibj.Joystick;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +22,8 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private TalonFX backLeft, backRight, frontLeft, frontRight;
+  private Joystick leftJoy, rightJoy;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -29,6 +34,11 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    frontRight = new TalonFX(0);
+    backRight = new TalonFX(1);
+    frontLeft = new TalonFX(2);
+    backLeft = new TalonFX(3);
   }
 
   /**
@@ -78,7 +88,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    drive();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -95,4 +107,24 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+  public void drive() {
+    double right = -rightJoy.getY();
+    double left = -leftJoy.getY();
+
+    if (Math.abs(right) < 0.2) {
+      right = 0;
+    }
+    if (Math.abs(left) < 0.2) {
+      left = 0;
+    }
+    setMotors(left, right);
+  }
+
+  public void setMotors(double left, double right) {
+    frontLeft.set(ControlMode.PercentOutput, left);
+    backLeft.set(ControlMode.PercentOutput, left);
+    frontRight.set(ControlMode.PercentOutput, -right);
+    backRight.set(ControlMode.PercentOutput, -right);
+  }
 }
