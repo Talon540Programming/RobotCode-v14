@@ -9,8 +9,3 @@ print("[Imported numpy] Current Version: "+np.__version__)
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 print("Sysclock: "+current_time)
-
-# Test Camera
-cap = cv2.VideoCapture(0) 
-
-print(cap.isOpened())
