@@ -1,39 +1,54 @@
+"""imports: computer vision, datetime, and threading"""
+
 from threading import Thread
 import cv2
 import datetime
 import numpy as np
 import time
 
-
-class FPS:
+#declare class for Frames Per Sec - inherits nothing, but object properties
+class FPS: 
+    #constructor, declares/initializes instance variable
     def __init__(self):
         self._start = None
         self._end = None
         self._numFrames = 0
 
+    #getter methods (including return self) 
+        
+    #start method - grants a start time, for the frames
     def start(self):
         self._start = datetime.datetime.now()
-        return self
-
-    def stop(self):
-        self._end = datetime.datetime.now()
-
-    def update(self):
-        self._numFrames += 1
-
+        return self #returns reference to the instance object it was called from
+    
+    #simple method that calculates the elapsed time
     def elapsed(self):
         return (self._end - self._start).total_seconds()
 
+    #just calculates the fps, number of frames divided by elapsed time
     def fps(self):
         return self._numFrames / self.elapsed()
+    
+    #setter methods without return values
+    
+    #stops the frame recording, and resets the time
+    def stop(self):
+        self._end = datetime.datetime.now()
 
+    #increases the frame count by 1 each time it is called
+    def update(self):
+        self._numFrames += 1
 
+#webcam streaming class - inherits nothing except the object properties
 class WebcamVideoStream:
+    
+    #initializiation/constructor for the instance variables
     def __init__(self, src=0):
-        self.stream = cv2.VideoCapture(src)
-        (self.grabbed, self.frame) = self.stream.read()
-        self.stopped = False
+        self.stream = cv2.VideoCapture(src) #creates variable of object type for the entire cv2 video capture
+        (self.grabbed, self.frame) = self.stream.read() #initializes 2 objects within a tuple 
+        self.stopped = False #assumes that the stream starts out by boolean value
 
+    
     def start(self):
         Thread(target=self.update, args=()).start()
         return self
