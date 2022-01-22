@@ -1,3 +1,4 @@
+"""imports"""
 from threading import Thread
 import cv2
 import datetime
@@ -5,21 +6,28 @@ import numpy as np
 import time
 
 
+#FPS class
 class FPS:
+    
+    #constructor
+    
     def __init__(self):
-        self._start = None
-        self._end = None
+        self._start, self._end = None, None
         self._numFrames = 0
 
-    def start(self):
-        self._start = datetime.datetime.now()
-        return self
-
+    #setter/mutator methods 
+       
     def stop(self):
         self._end = datetime.datetime.now()
 
     def update(self):
         self._numFrames += 1
+        
+    #getter/return methods - returning frames and elapsed time
+    
+    def start(self):
+        self._start = datetime.datetime.now()
+        return self
 
     def elapsed(self):
         return (self._end - self._start).total_seconds()
@@ -27,13 +35,18 @@ class FPS:
     def fps(self):
         return self._numFrames / self.elapsed()
 
-
+#methods from webcam
 class WebcamVideoStream:
+    
+    #initialization with constructor with instance variables
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
         (self.grabbed, self.frame) = self.stream.read()
         self.stopped = False
 
+    #getter method: (counting the return self stuff)    
+    
+    #starts webcam
     def start(self):
         Thread(target=self.update, args=()).start()
         return self
@@ -41,23 +54,26 @@ class WebcamVideoStream:
     def update(self):
         while True:
             if self.stopped:
-                return
-            (self.grabbed, self.frame) = self.stream.read()
+                return (self.grabbed, self.frame) = self.stream.read()
 
     def read(self):
         return self.frame
 
+    #setter method
+    
     def stop(self):
         self.stopped = True
 
 
-fps = FPS().start()
-vs = WebcamVideoStream(src=0).start()
-time.sleep(2)
-lower_blue, upper_blue = np.array([100, 35, 140]), np.array([180, 255, 255])
+fps = FPS().start() #creates FPS object for webcam
+vs = WebcamVideoStream(src=0).start() #creates object to start the webcam
+time.sleep(2) #sleep key
+
+#lower and upper blue filters - using the RGB parameters, ie: 0-225, 0-225, 0-225
+lower_blue, upper_blue = np.array([100, 35, 140]), np.array([180, 255, 255]) 
 lower_red, upper_red = np.array([0, 50, 50]), np.array([10, 255, 255])
 
-
+#detect balls function, to be executed in the main method
 def detectBalls():
     global fps, lower_blue, upper_blue, lower_red, upper_red
     start, stop = time.perf_counter(), time.perf_counter()
@@ -112,8 +128,7 @@ def detectBalls():
                     cv2.circle(result, (centers_red[-1]), int(radius), (0, 0, 255), 5)
                     cv2.circle(result, centers_red[-1], 5, (0, 255, 255), -1)
         cv2.imshow("Result", result)
-        if cv2.waitKey(1) & 0xFF == ord('c'):
-            break
+        if cv2.waitKey(1) & 0xFF == ord('c'): break 
         stop = time.perf_counter()
         fps.update()
     fps.stop()
@@ -122,4 +137,6 @@ def detectBalls():
     print("[LOG]: Test Durration Complete")  # REMOVE
 
 
-detectBalls()  # REMOVE
+#add main method to call the global function
+if __name__ == "__main__":
+    detectBalls() #activate the method in main
