@@ -11,7 +11,8 @@ current_time = now.strftime("%H:%M:%S")
 print("Sysclock: "+current_time)
 
 # Test Camera
-camnum = 2
+camnum = 0
 cap = cv2.VideoCapture(camnum) 
-if cap is None or not cap.isOpened():
-    print('Warning: unable to open video source: ', camnum)
+# if cap is None or not cap.isOpened():
+#     print('Warning: unable to open video source: ', camnum)
+print(cap.isOpened())
