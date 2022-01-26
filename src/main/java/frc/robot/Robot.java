@@ -118,6 +118,21 @@ public class Robot extends TimedRobot {
     if (Math.abs(left) < 0.2) {
       left = 0;
     }
+    
+    if (left >= 0.2) {
+      left = (left - 0.2) * 1.25
+    }
+    else if (left <= -0.2) {
+      left = (left + 0.2) * 1.25
+    }
+    
+    if (right >= 0.2) {
+      right = (right - 0.2) * 1.25
+    }
+    else if (right <= -0.2) {
+      right = (right + 0.2) * 1.25
+    }
+    
     setMotors(left, right);
   }
 
