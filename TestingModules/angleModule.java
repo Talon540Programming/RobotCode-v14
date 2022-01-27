@@ -1,13 +1,17 @@
 import java.util.Scanner;
 class Main {
-    private static final double HubHeight = 2.64; //meters
+    // Height to top of hubs in Meters from the floor
+    private static final double HubHeight = 2.64;
+    // Height to Limelight from floor in meters
     private static final double LimelightHeight = 0.4882896; //meters
+    // Height difference between Hubs and Limelight
     private static final double HEIGHTDIFFERENCE = HubHeight-LimelightHeight;; // Height difference between shooter/Limelight and HubStackHeight
+    // Angle of Limelight to the ground (63° on 13.0, used for testing)
     private static final double LimelightFixedAngle = 63 ; // Fixed Limelight Angle
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter ⍬ (from LimeLight): ");
+        System.out.println("Enter ⍬ (from LimeLight) in Degrees: ");
         double LimelightFluidAngle = scan.nextDouble();
         long startNano = System.nanoTime();
         double distance = 0;
