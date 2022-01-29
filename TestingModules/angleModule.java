@@ -19,10 +19,13 @@ class Main {
         double distance = 0;
 
         distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LimelightFixedAngle))+(Math.toRadians(LimelightFluidAngle)))));
-
+        
+        double angle = calculateAngle(distance)
+        double velocity = calculateVelocity(distance, angle)
+            
         System.out.println("Distance from Hubs: "+distance);
-        System.out.println("Shooter Angle: "+calculateAngle(distance)+"°");
-        System.out.println("Ideal Ball Veloity: "+calculateVelocity(distance)+" m/s");
+        System.out.println("Shooter Angle: "+angle+"°");
+        System.out.println("Ideal Ball Veloity: "+ velocity +" m/s");
         // Calculate Time
         long finishNano = System.nanoTime();
         long elapsedTimeNano = finishNano - startNano; 
@@ -35,8 +38,8 @@ class Main {
         // Return the necessary angle the shooter should actuate to
     }
 
-    public static double calculateVelocity(double d) {
-        return Math.sqrt(-1*((9.8*d*d*(1 + (Math.pow(Math.tan(Math.toRadians(calculateAngle(d))), 2))) )/((2*HEIGHTDIFFERENCE)-(2*d*Math.tan(Math.toRadians(calculateAngle(d)))))));
+    public static double calculateVelocity(double d, double a) {
+        return Math.sqrt(-1*((9.8*d*d*(1 + (Math.pow(Math.tan(Math.toRadians(a)), 2))) )/((2*HEIGHTDIFFERENCE)-(2*d*Math.tan(Math.toRadians(a))))));
         // Returns the ideal velocity the ball should be accelerated to by the flywheel.
     }
 }
