@@ -7,7 +7,6 @@
 **Aiming and tracking team:**
 1. Sriman Achanta
 2. Mihir Pokhriyal
-3. Brandon Fecht
 
  * Use limelight to automatically track shooter at top hub retro reflectors.
  * Limelight will be added directly to the shooter, at a fixed vertical angle.
@@ -40,3 +39,6 @@
 1. Iuri Vintonyak
 2. Jinwon Cha
 3. Rishav Sen
+
+### Main Drive Code
+1. Brandon Fecht
