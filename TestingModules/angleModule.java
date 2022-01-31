@@ -20,8 +20,8 @@ class Main {
 
         distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LimelightFixedAngle))+(Math.toRadians(LimelightFluidAngle)))));
         
-        double angle = calculateAngle(distance)
-        double velocity = calculateVelocity(distance, angle)
+        double angle = calculateAngle(distance);
+        double velocity = calculateVelocity(distance, angle);
             
         System.out.println("Distance from Hubs: "+distance);
         System.out.println("Shooter Angle: "+angle+"°");
@@ -31,6 +31,7 @@ class Main {
         long elapsedTimeNano = finishNano - startNano; 
         //Time for the Calculation to complete
         System.out.println("Calculation Time: "+elapsedTimeNano/1000000+" ms");
+        scan.close();
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
