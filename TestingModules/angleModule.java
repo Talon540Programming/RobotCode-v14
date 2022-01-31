@@ -14,6 +14,7 @@ class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Enter ⍬ (from LimeLight) in Degrees: ");
+    
         double LimelightFluidAngle = scan.nextDouble();
         long startNano = System.nanoTime();
         double distance = 0;
@@ -28,6 +29,7 @@ class Main {
         long elapsedTimeNano = finishNano - startNano; 
         //Time for the Calculation to complete
         System.out.println("Calculation Time: "+elapsedTimeNano/1000000+" ms");
+        scan.close();
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
