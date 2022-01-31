@@ -1,15 +1,15 @@
 import java.util.Scanner;
 class Main {
     // Height to top of hubs in Meters from the floor
-    private static final double HubHeight = 2.64;
+    private static final double HUB_HEIGHT = 2.64;
     // Height to Limelight from floor in meters on 13.0
-    private static final double LimelightHeight = 0.4882896; //meters
+    private static final double LIMELIGHT_HEIGHT = 0.4882896; //meters
     // Height difference between Hubs and Limelight
-    private static final double HEIGHTDIFFERENCE = HubHeight-LimelightHeight;; // Height difference between shooter/Limelight and HubStackHeight
+    private static final double HEIGHTDIFFERENCE = HUB_HEIGHT-LIMELIGHT_HEIGHT;; // Height difference between shooter/Limelight and HubStackHeight
     // Angle of Limelight to the ground (63° on 13.0, used for testing)
-    private static final double LimelightFixedAngle = 63 ; // Fixed Limelight Angle
+    private static final double LIME_FIXED_ANGLE = 63 ; // Fixed Limelight Angle
     // Angle of Entry into the hub
-    private static final double IdealEntryAngle = -20;
+    private static final double ENTRY_ANGLE = -20;
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
@@ -18,7 +18,7 @@ class Main {
         long startNano = System.nanoTime();
         double distance = 0;
 
-        distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LimelightFixedAngle))+(Math.toRadians(LimelightFluidAngle)))));
+        distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LIME_FIXED_ANGLE))+(Math.toRadians(LimelightFluidAngle)))));
         
         double angle = calculateAngle(distance);
         double velocity = calculateVelocity(distance, angle);
@@ -35,7 +35,7 @@ class Main {
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
-        return Math.toDegrees(Math.atan((Math.tan(Math.toRadians(IdealEntryAngle))*(d)-(2*HEIGHTDIFFERENCE))/(-d)));
+        return Math.toDegrees(Math.atan((Math.tan(Math.toRadians(ENTRY_ANGLE))*(d)-(2*HEIGHTDIFFERENCE))/(-d)));
         // Return the necessary angle the shooter should actuate to
     }
 
