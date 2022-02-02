@@ -1,7 +1,6 @@
-import java.util.Scanner;
 class Main {
     // Height to top of hubs in Meters from the floor
-    private static final double HUB_HEIGHT = 2.64;
+    private static final double HUB_HEIGHT = 2.6416;
     // Height to Limelight from floor in meters on 13.0
     private static final double LIMELIGHT_HEIGHT = 0.4882896; //meters
     // Height difference between Hubs and Limelight
@@ -9,29 +8,26 @@ class Main {
     // Angle of Limelight to the ground (63° on 13.0, used for testing)
     private static final double LIME_FIXED_ANGLE = 63 ; // Fixed Limelight Angle
     // Angle of Entry into the hub
-    private static final double ENTRY_ANGLE = -20;
+    private static final double ENTRY_ANGLE = -45;
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter ⍬ (from LimeLight) in Degrees: ");
-        double LimelightFluidAngle = scan.nextDouble();
-        long startNano = System.nanoTime();
+        double LimelightFluidAngle = -22; //Replace with LL data
         double distance = 0;
+        while (true) {
+            // Check if target is present in FOV if not spin till found
+            // Maximum Horizontal FOV IS 54°
+            // Maximum Vertical FOV is 41°
+            distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LIME_FIXED_ANGLE))+(Math.toRadians(LimelightFluidAngle)))));
+            double angle = calculateAngle(distance);
+            double velocity = calculateVelocity(distance, angle);
 
-        distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LIME_FIXED_ANGLE))+(Math.toRadians(LimelightFluidAngle)))));
-        
-        double angle = calculateAngle(distance);
-        double velocity = calculateVelocity(distance, angle);
-            
-        System.out.println("Distance from Hubs: "+distance);
-        System.out.println("Shooter Angle: "+angle+"°");
-        System.out.println("Ideal Ball Veloity: "+ velocity +" m/s");
-        // Calculate Time
-        long finishNano = System.nanoTime();
-        long elapsedTimeNano = finishNano - startNano; 
-        //Time for the Calculation to complete
-        System.out.println("Calculation Time: "+elapsedTimeNano/1000000+" ms");
-        scan.close();
+            System.out.println("Distance from Hubs: "+distance);
+            System.out.println("Shooter Angle: "+angle+"°");
+            System.out.println("Ideal Ball Veloity: "+ velocity +" m/s");
+        }
+
+        System.out.println("Code exited with code: 0");
+        System.exit(0)
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
