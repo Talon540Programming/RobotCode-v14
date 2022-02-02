@@ -1,3 +1,8 @@
+/** 
+All measurments are in the metric system, and were converted from the game manual's customary measurments
+for stuff like the hub height, dimensions, and other feild parameters for the shooting mechanism code.
+**/
+
 class Main {
     // Height to top of hubs in Meters from the floor
     private static final double HUB_HEIGHT = 2.6416;
@@ -17,13 +22,13 @@ class Main {
             // Check if target is present in FOV if not spin till found
             // Maximum Horizontal FOV IS 54°
             // Maximum Vertical FOV is 41°
-            distance = HEIGHTDIFFERENCE/(Math.tan(((Math.toRadians(LIME_FIXED_ANGLE))+(Math.toRadians(LimelightFluidAngle)))));
+            distance = HEIGHTDIFFERENCE / (Math.tan(((Math.toRadians(LIME_FIXED_ANGLE)) + (Math.toRadians(LimelightFluidAngle)))));
             double angle = calculateAngle(distance);
             double velocity = calculateVelocity(distance, angle);
 
-            System.out.println("Distance from Hubs: "+distance);
-            System.out.println("Shooter Angle: "+angle+"°");
-            System.out.println("Ideal Ball Veloity: "+ velocity +" m/s");
+            System.out.println("Distance from Hubs: " + distance);
+            System.out.println("Shooter Angle: " + angle + "°");
+            System.out.println("Ideal Ball Veloity: " + velocity + " m/s");
         }
 
         //System.out.println("Code exited with code: 0");
@@ -31,12 +36,12 @@ class Main {
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
-        return Math.toDegrees(Math.atan((Math.tan(Math.toRadians(ENTRY_ANGLE))*(d)-(2*HEIGHTDIFFERENCE))/(-d)));
+        return Math.toDegrees(Math.atan((Math.tan(Math.toRadians(ENTRY_ANGLE)) * (d)-(2 * HEIGHTDIFFERENCE)) / (-d)));
         // Return the necessary angle the shooter should actuate to
     }
 
     public static double calculateVelocity(double d, double a) {
-        return Math.sqrt(-1*((9.8*d*d*(1 + (Math.pow(Math.tan(Math.toRadians(a)), 2))) )/((2*HEIGHTDIFFERENCE)-(2*d*Math.tan(Math.toRadians(a))))));
+        return Math.sqrt(-1 * ((9.8 * d * d * (1 + (Math.pow(Math.tan(Math.toRadians(a)), 2))) )/((2 * HEIGHTDIFFERENCE)-(2 * d * Math.tan(Math.toRadians(a))))));
         // Returns the ideal velocity the ball should be accelerated to by the flywheel.
     }
 }
