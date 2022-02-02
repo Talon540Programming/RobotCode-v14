@@ -26,8 +26,8 @@ class Main {
             System.out.println("Ideal Ball Veloity: "+ velocity +" m/s");
         }
 
-        System.out.println("Code exited with code: 0");
-        System.exit(0)
+        //System.out.println("Code exited with code: 0");
+        //System.exit(0);
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
