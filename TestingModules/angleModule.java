@@ -11,7 +11,7 @@ class Main {
     // Height difference between Hubs and Limelight
     private static final double HEIGHTDIFFERENCE = HUB_HEIGHT-LIMELIGHT_HEIGHT;; // Height difference between shooter/Limelight and HubStackHeight
     // Angle of Limelight to the ground (63° on 13.0, used for testing)
-    private static final double LIME_FIXED_ANGLE = 63 ; // Fixed Limelight Angle
+    private static final double LIME_FIXED_ANGLE = 63; // Fixed Limelight Angle
     // Angle of Entry into the hub
     private static final double ENTRY_ANGLE = -45;
 
