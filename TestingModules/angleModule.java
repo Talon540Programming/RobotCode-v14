@@ -16,23 +16,35 @@ class Main {
     private static final double ENTRY_ANGLE = -45;
 
     public static void main(String[] args) {
-        double LimelightFluidAngle = -22; //Replace with LL data
-        double distance = 0;
-        while (true) {
-            // Check if target is present in FOV if not spin till found
-            // Maximum Horizontal FOV IS 54°
-            // Maximum Vertical FOV is 41°
-            distance = HEIGHTDIFFERENCE / (Math.tan(((Math.toRadians(LIME_FIXED_ANGLE)) + (Math.toRadians(LimelightFluidAngle)))));
-            double angle = calculateAngle(distance);
-            double velocity = calculateVelocity(distance, angle);
+        // System.out.println(getShooterInfo(-22)[0]);
+        //Get Data from Limelight (Tv, Tx, Ty, Tl)
+        double Tv = 1; // 0 if no Target 1 if Target
+        double Tx = 1; // Degree Measure from Straight forward target (horizontal)
+        double Ty = -22; // Degree measure from Fixed Angle: https://www.desmos.com/calculator/6vvjdedpc6
+        double Tl = 1;
+        double[] LimelightInfo = {Tv,Tx,Ty,Tl};
 
-            System.out.println("Distance from Hubs: " + distance);
-            System.out.println("Shooter Angle: " + angle + "°");
-            System.out.println("Ideal Ball Veloity: " + velocity + " m/s");
+        for(double value : getShooterInfo(LimelightInfo) ) {
+            System.out.println(value);
         }
+    }
 
-        //System.out.println("Code exited with code: 0");
-        //System.exit(0);
+    public static double[] getShooterInfo(double[] LLData) {
+
+        double LimelightFluidAngle = LLData[2]; 
+        double distance = 0;
+
+        // Check if target is present in FOV if not spin till found
+        // Maximum Horizontal FOV IS 54°
+        // Maximum Vertical FOV is 41°
+
+        distance = HEIGHTDIFFERENCE / (Math.tan(((Math.toRadians(LIME_FIXED_ANGLE)) + (Math.toRadians(LimelightFluidAngle)))));
+        double angle = calculateAngle(distance);
+        double velocity = calculateVelocity(distance, angle);
+
+        double[] shooterInfo = {distance, angle, velocity};
+        return shooterInfo;
+
     }
 
     public static double calculateAngle(double d) { // Takes distance between shooter and the hub (will be from limelight)
