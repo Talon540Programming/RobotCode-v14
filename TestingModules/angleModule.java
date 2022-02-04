@@ -24,9 +24,10 @@ class Main {
         double Tl = 1;
         double[] LimelightInfo = {Tv,Tx,Ty,Tl};
 
-        for(double value : getShooterInfo(LimelightInfo) ) {
-            System.out.println(value);
-        }
+        double[] shooterCalculations = getShooterInfo(LimelightInfo);
+        System.out.println("Distance: "+shooterCalculations[0]+" m");
+        System.out.println("Shooter Angle: "+shooterCalculations[1]+"°");
+        System.out.println("Ideal Ball Velocity :"+shooterCalculations[2]+" m/s");
     }
 
     public static double[] getShooterInfo(double[] LLData) {
