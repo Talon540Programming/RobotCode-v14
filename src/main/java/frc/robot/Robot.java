@@ -131,4 +131,8 @@ public class Robot extends TimedRobot {
     frontRight.set(ControlMode.PercentOutput, -right);
     backRight.set(ControlMode.PercentOutput, -right);
   }
+
+  public void getAngleLL() {
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
+  }
 }
