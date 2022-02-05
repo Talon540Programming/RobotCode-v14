@@ -95,9 +95,12 @@ public class Robot extends TimedRobot {
     drive();
 
     double[] shooterCalculations = getData();
-    System.out.println("Distance: "+shooterCalculations[0]+" m");
-    System.out.println("Shooter Angle: "+shooterCalculations[1]+"°");
-    System.out.println("Ideal Ball Velocity :"+shooterCalculations[2]+" m/s");
+    if(shooterCalculations != null) {
+      System.out.println("Distance: "+shooterCalculations[0]+" m");
+      System.out.println("Shooter Angle: "+shooterCalculations[1]+"°");
+      System.out.println("Ideal Ball Velocity :"+shooterCalculations[2]+" m/s");
+    }
+
   }
 
   /** This function is called once when the robot is disabled. */
