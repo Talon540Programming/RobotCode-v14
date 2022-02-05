@@ -141,21 +141,20 @@ public class Robot extends TimedRobot {
   }
 
   public static double[] getData() {
+    double heightDifference = ((72/39.37)-(17/39.37));
+    double fixedLLANGLE = 14.7734450937;
+
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
-    NetworkTableEntry ta = table.getEntry("ta");
     NetworkTableEntry tv = table.getEntry("tv");
-    NetworkTableEntry tl = table.getEntry("tl");
+    //NetworkTableEntry tl = table.getEntry("tl");
+    //NetworkTableEntry ta = table.getEntry("ta");
+    double[] LimelightInfo = new double[3];
 
     double targetPresent = tv.getDouble(0.0);
     double horizontalAngle = tx.getDouble(0.0);
     double verticalAngle = ty.getDouble(0.0);
-    double limelightLatency = tl.getDouble(0.0);
-
-    double[] LimelightInfo = new double[3];
-    double heightDifference = ((72/39.37)-(17/39.37));
-    double fixedLLANGLE = 14.7734450937;
 
     if(targetPresent == 1) {
       double distance = heightDifference / (Math.tan(((Math.toRadians(fixedLLANGLE)) + (Math.toRadians(verticalAngle)))));
@@ -165,8 +164,10 @@ public class Robot extends TimedRobot {
       LimelightInfo[1] = angle;
       LimelightInfo[2] = velocity;
     } else {
+      //spin shooter till it is detected
       return null;
     }
+    
     return LimelightInfo;
   }
 }
