@@ -5,7 +5,7 @@ for stuff like the hub height, dimensions, and other feild parameters for the sh
 
 class Main {
     // Height to top of hubs in Meters from the floor
-    private static final double HUB_HEIGHT = 73.5/39.37;
+    private static final double HUB_HEIGHT = 72/39.37;
     // Height to Limelight from floor in meters on 13.0
     private static final double LIMELIGHT_HEIGHT = 17/39.37; //meters
     // Height difference between Hubs and Limelight
@@ -20,7 +20,7 @@ class Main {
         //Get Data from Limelight (Tv, Tx, Ty, Tl)
         double Tv = 1; // 0 if no Target 1 if Target
         double Tx = 1; // Degree Measure from Straight forward target (horizontal)
-        double Ty = 11; // Degree measure from Fixed Angle: https://www.desmos.com/calculator/6vvjdedpc6
+        double Ty = 3.53; // Degree measure from Fixed Angle: https://www.desmos.com/calculator/6vvjdedpc6
         double Tl = 1;
         double[] LimelightInfo = {Tv,Tx,Ty,Tl};
 

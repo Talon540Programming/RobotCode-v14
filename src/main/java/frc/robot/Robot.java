@@ -152,12 +152,15 @@ public class Robot extends TimedRobot {
     double horizontalAngle = tx.getDouble(0.0);
     double verticalAngle = ty.getDouble(0.0);
     double limelightLatency = tl.getDouble(0.0);
+
     double[] LimelightInfo = new double[3];
+    double heightDifference = ((72/39.37)-(17/39.37));
+    double fixedLLANGLE = 14.7734450937;
 
     if(targetPresent == 1) {
-      double distance = ((73.5/39.37)-(17/39.37)) / (Math.tan(((Math.toRadians(14.7734450937)) + (Math.toRadians(verticalAngle)))));
-      double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-45)) * (distance)-(2 * ((73.5/39.37)-(17/39.37)))) / (-distance)));
-      double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * ((73.5/39.37)-(17/39.37)))-(2 * distance * Math.tan(Math.toRadians(angle))))));
+      double distance = heightDifference / (Math.tan(((Math.toRadians(fixedLLANGLE)) + (Math.toRadians(verticalAngle)))));
+      double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-45)) * (distance)-(2 * heightDifference)) / (-distance)));
+      double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * heightDifference)-(2 * distance * Math.tan(Math.toRadians(angle))))));
       LimelightInfo[0] = distance;
       LimelightInfo[1] = angle;
       LimelightInfo[2] = velocity;
