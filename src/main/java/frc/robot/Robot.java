@@ -93,6 +93,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive();
+
+    double[] shooterCalculations = getData();
+    System.out.println("Distance: "+shooterCalculations[0]+" m");
+    System.out.println("Shooter Angle: "+shooterCalculations[1]+"°");
+    System.out.println("Ideal Ball Velocity :"+shooterCalculations[2]+" m/s");
   }
 
   /** This function is called once when the robot is disabled. */
@@ -132,7 +137,30 @@ public class Robot extends TimedRobot {
     backRight.set(ControlMode.PercentOutput, -right);
   }
 
-  public void getAngleLL() {
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
+  public static double[] getData() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry tx = table.getEntry("tx");
+    NetworkTableEntry ty = table.getEntry("ty");
+    NetworkTableEntry ta = table.getEntry("ta");
+    NetworkTableEntry tv = table.getEntry("tv");
+    NetworkTableEntry tl = table.getEntry("tl");
+
+    double targetPresent = tv.getDouble(0.0);
+    double horizontalAngle = tx.getDouble(0.0);
+    double verticalAngle = ty.getDouble(0.0);
+    double limelightLatency = tl.getDouble(0.0);
+    double[] LimelightInfo = new double[3];
+
+    if(targetPresent == 1) {
+      double distance = ((73.5/39.37)-(17/39.37)) / (Math.tan(((Math.toRadians(14.7734450937)) + (Math.toRadians(verticalAngle)))));
+      double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-45)) * (distance)-(2 * ((73.5/39.37)-(17/39.37)))) / (-distance)));
+      double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * ((73.5/39.37)-(17/39.37)))-(2 * distance * Math.tan(Math.toRadians(angle))))));
+      LimelightInfo[0] = distance;
+      LimelightInfo[1] = angle;
+      LimelightInfo[2] = velocity;
+    } else {
+      return null;
+    }
+    return LimelightInfo;
   }
 }
