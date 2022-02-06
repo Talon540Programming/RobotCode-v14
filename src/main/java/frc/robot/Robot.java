@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
 
   public static double[] getData() {
     double heightDifference = ((72/39.37)-(17/39.37));
-    double fixedLLANGLE = 14.7734450937;
+    double fixedLLANGLE = 14.7734450937; //13.0 Angle
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
