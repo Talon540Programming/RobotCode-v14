@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     drive();
 
-    double[][] shooterCalculations = getData();
+    double[][] shooterCalculations = getLimelightData();
     if(shooterCalculations != null) {
       System.out.println("Distance: "+shooterCalculations[0][0]+" m");
       System.out.println("Shooter Angle: "+shooterCalculations[0][1]+"°");
@@ -144,7 +144,7 @@ public class Robot extends TimedRobot {
     backRight.set(ControlMode.PercentOutput, -right);
   }
 
-  public static double[][] getData() {
+  public static double[][] getLimelightData() {
     double heightDifference = ((72/39.37)-(17/39.37)); //Tape height - Limelight Height
     double fixedLLANGLE = 14.7734450937; //13.0 Angle
 
