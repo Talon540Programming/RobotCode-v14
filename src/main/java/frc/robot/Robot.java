@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
   }
 
   public static double[][] getLimelightData() {
-    double heightDifference = ((72/39.37)-(17/39.37)); //Tape height - Limelight Height
+    double heightDifference = ((72/39.37)-(17/39.37)); //Tape height (photo room) - Limelight Height
     double fixedLLANGLE = 14.7734450937; //13.0 Angle
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");

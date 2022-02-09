@@ -20,7 +20,7 @@ class Main {
         //Get Data from Limelight (Tv, Tx, Ty, Tl)
         double Tv = 1; // 0 if no Target 1 if Target
         double Tx = 1; // Degree Measure from Straight forward target (horizontal)
-        double Ty = 3.53; // Degree measure from Fixed Angle: https://www.desmos.com/calculator/6vvjdedpc6
+        double Ty = 1.66; // Degree measure from Fixed Angle: https://www.desmos.com/calculator/6vvjdedpc6
         double Tl = 1;
         double[] LimelightInfo = {Tv,Tx,Ty,Tl};
 
