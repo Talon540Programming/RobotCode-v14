@@ -87,20 +87,24 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     drive();
 
-    double[] shooterCalculations = getData();
+    double[][] shooterCalculations = getData();
     if(shooterCalculations != null) {
-      System.out.println("Distance: "+shooterCalculations[0]+" m");
-      System.out.println("Shooter Angle: "+shooterCalculations[1]+"°");
-      System.out.println("Ideal Ball Velocity :"+shooterCalculations[2]+" m/s");
+      System.out.println("Distance: "+shooterCalculations[0][0]+" m");
+      System.out.println("Shooter Angle: "+shooterCalculations[0][1]+"°");
+      System.out.println("Ideal Ball Velocity :"+shooterCalculations[0][2]+" m/s");
+      System.out.println("Target Presence: "+shooterCalculations[1][0]);
+      System.out.println("Horizontal Angle: "+shooterCalculations[1][1]+"°");
+      System.out.println("Vertical Angle: "+shooterCalculations[1][2]+"°");
+      System.out.println("Latency: "+shooterCalculations[1][3]+" ms");
     }
-
   }
 
   /** This function is called once when the robot is disabled. */
@@ -140,29 +144,34 @@ public class Robot extends TimedRobot {
     backRight.set(ControlMode.PercentOutput, -right);
   }
 
-  public static double[] getData() {
-    double heightDifference = ((72/39.37)-(17/39.37));
+  public static double[][] getData() {
+    double heightDifference = ((72/39.37)-(17/39.37)); //Tape height - Limelight Height
     double fixedLLANGLE = 14.7734450937; //13.0 Angle
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
     NetworkTableEntry ty = table.getEntry("ty");
     NetworkTableEntry tv = table.getEntry("tv");
-    //NetworkTableEntry tl = table.getEntry("tl");
-    //NetworkTableEntry ta = table.getEntry("ta");
-    double[] LimelightInfo = new double[3];
+    NetworkTableEntry tl = table.getEntry("tl");
 
+    double[][] LimelightInfo = {{0,0,0},{0,0,0,0}};
     double targetPresent = tv.getDouble(0.0);
     double horizontalAngle = tx.getDouble(0.0);
     double verticalAngle = ty.getDouble(0.0);
+    double limelightLatency = tl.getDouble(0.0);
 
     if(targetPresent == 1) {
       double distance = heightDifference / (Math.tan(((Math.toRadians(fixedLLANGLE)) + (Math.toRadians(verticalAngle)))));
       double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-45)) * (distance)-(2 * heightDifference)) / (-distance)));
       double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * heightDifference)-(2 * distance * Math.tan(Math.toRadians(angle))))));
-      LimelightInfo[0] = distance;
-      LimelightInfo[1] = angle;
-      LimelightInfo[2] = velocity;
+      LimelightInfo[0][0] = distance; //Horizontal distance between the hubs and the limelight
+      LimelightInfo[0][1] = angle; //Optimal Shooter Angle
+      LimelightInfo[0][2] = velocity; //Optimal Ball velocity
+      LimelightInfo[1][0] = targetPresent; //Is the retroreflecter present?
+      LimelightInfo[1][1] = horizontalAngle; //Horizontal angle between the limelight and the retroreflector
+      LimelightInfo[1][2] = verticalAngle; //Vertical angle between limelight and retroreflector
+      LimelightInfo[1][3] = limelightLatency; // Latency for limelight calculations
+
     } else {
       //spin shooter till it is detected
       return null;
