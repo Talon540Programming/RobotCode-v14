@@ -15,6 +15,7 @@
 	* Determines ideal flywheel speed
 		* Interpolated from the ball velocity needed- WILL NEED TESTING
  * Sets motors accordingly 
+ * Also aim the bot directly facing the target: https://gist.github.com/alexanderswerdlow/5bf8fb220dcb9532d31d457902398ca0
     
 ### Ball Detection and Intake/Index - Use camera and Raspberry Pi to find balls
 **Ball tracking and navigation team:**
