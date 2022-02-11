@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
   private TalonFX backLeft, backRight, frontLeft, frontRight;
   private Joystick leftJoy, rightJoy;
 
+  private static NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -42,6 +43,9 @@ public class Robot extends TimedRobot {
     backRight = new TalonFX(1);
     frontLeft = new TalonFX(2);
     backLeft = new TalonFX(3);
+
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
   }
 
   /**
@@ -94,16 +98,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     drive();
-
-    double[][] shooterCalculations = getLimelightData();
-    if(shooterCalculations != null) {
-      SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
-      SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
-      SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
-      SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
-      SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
-      SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
-    }
   }
 
   /** This function is called once when the robot is disabled. */
@@ -120,7 +114,24 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    drive();
+
+    double[][] shooterCalculations = getLimelightData();
+    if(shooterCalculations != null) {
+      SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
+      SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
+      SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
+      SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
+      SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
+      SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+    }
+
+    if(rightJoy.getRawButton(0) || leftJoy.getRawButton(0)) { //idk if 0 is the right button but we will see
+      centerAim();
+    }
+
+  }
 
   public void drive() {
     double right = -rightJoy.getY();
@@ -136,27 +147,24 @@ public class Robot extends TimedRobot {
     setMotors(left, right);
   }
 
-  public void setMotors(double left, double right) {
+  public void setMotors(double left, double right) { //(left,right)
     frontLeft.set(ControlMode.PercentOutput, left);
     backLeft.set(ControlMode.PercentOutput, left);
     frontRight.set(ControlMode.PercentOutput, -right);
     backRight.set(ControlMode.PercentOutput, -right);
   }
 
-
-  public static double[][] getLimelightData() {
+  public double[][] getLimelightData() {
     double heightDifference = ((72/39.37)-(17/39.37)); //Tape height (photo room) - Limelight Height
     double fixedLLANGLE = 14.7734450937; //13.0 Angle
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-
 
     double[][] LimelightInfo = {{0,0,0},{0,0,0}};
 
     if(table.getEntry("tv").getDouble(0) == 1) { // If target is present
 
-      double horizontalAngle = table.getEntry("tx").getDouble(0.0);
-      double verticalAngle = table.getEntry("ty").getDouble(0.0);
-      double limelightLatency = table.getEntry("tl").getDouble(0.0);
+      double horizontalAngle = table.getEntry("tx").getDouble(0);
+      double verticalAngle = table.getEntry("ty").getDouble(0);
+      double limelightLatency = table.getEntry("tl").getDouble(0);
 
       double distance = heightDifference / (Math.tan(((Math.toRadians(fixedLLANGLE)) + (Math.toRadians(verticalAngle)))));
       double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-45)) * (distance)-(2 * heightDifference)) / (-distance)));
@@ -170,10 +178,30 @@ public class Robot extends TimedRobot {
       LimelightInfo[1][2] = limelightLatency; // Latency for limelight calculations
 
     } else {
-      //spin shooter till it is detected
+      centerAim();
       return null;
     }
     
     return LimelightInfo;
+  }
+
+  //Not a periodic command, only ran before attempting to fire & while the retroreflector is in the current viewing angle
+  public void centerAim() { 
+    //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
+    double deadbandAngleRange = 0.5;
+    double horizontalAngle = table.getEntry("tx").getDouble(0);
+
+    if(horizontalAngle>0) { //Target to the Right
+      if(Math.abs(horizontalAngle)>deadbandAngleRange) {
+        // Turn right
+        setMotors(-0.15, 0.15);
+      }
+    } else if(horizontalAngle<0) { //Target to the left
+      if(Math.abs(horizontalAngle)>deadbandAngleRange) {
+        // Turn left
+        setMotors(0.15, -0.15);
+      }
+    }
+
   }
 }
