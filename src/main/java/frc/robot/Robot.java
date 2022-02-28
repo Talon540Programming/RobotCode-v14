@@ -143,7 +143,54 @@ public class Robot extends TimedRobot {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
     NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("alliance").setString("red");
   }
-  
+
+  /** This function is called once when test mode is enabled. */
+  @Override
+  public void testInit() {
+    SmartDashboard.putNumber("Target RPM", 0);
+    SmartDashboard.putNumber("Target Velocity", 0);
+    SmartDashboard.putNumber("Target Angle", 0);
+  }
+
+  /** This function is called periodically during test mode. */
+  @Override
+  public void testPeriodic() {
+    double[][] shooterCalculations = getLimelightData();
+    if(shooterCalculations != null) {
+      SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
+      SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
+      SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
+      SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
+      SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
+      SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+      SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
+      SmartDashboard.putNumber("Current Angle", gyro.getRoll());
+    }
+
+    double targetrpm = SmartDashboard.getNumber("Target RPM", 0);
+    double targetvelocity = SmartDashboard.getNumber("Target Velocity", 0);
+    double targetangle = SmartDashboard.getNumber("Target Angle", 0);
+
+    if (controller.getRightBumper()) { // sets shooter to the target rpm to test PID loop
+      shooterFly.set(ControlMode.Velocity, 4*targetrpm*2048); //TODO: Gear ratio multiplier MIGHT HAVE TO MULTIPLY BY 2048- will test later
+    }
+
+    else if (controller.getLeftBumper()) { // sets shooter to the target velocity for ball shooting
+      double rpm = getRPM(targetvelocity, 1);
+      shooterFly.set(ControlMode.Velocity, rpm);
+    }
+
+    if (controller.getXButton()) { // actuates hood to the proper angle
+      if ((gyro.getRoll() > targetangle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
+        hood.set(ControlMode.PercentOutput, 0.1);
+        ready = false;
+      }
+      else if ((gyro.getRoll() < targetangle-5) && !lowerShooterLimit.get()) {
+        hood.set(ControlMode.PercentOutput, -0.1);
+        ready = false;
+      }
+    }
+  }
 
   @Override
   public void autonomousInit() {
@@ -320,7 +367,7 @@ public class Robot extends TimedRobot {
     if (!intakeLimit.get()) {
       wrist.set(ControlMode.PercentOutput, 0.75);
     }
-    shooterFly.set(ControlMode.Velocity, 4*rpm); //TODO: Gear ratio multiplier MIGHT HAVE TO MULTIPLY BY 2048- will test later
+    shooterFly.set(ControlMode.Velocity, 4*rpm*2048); //TODO: Gear ratio multiplier MIGHT HAVE TO MULTIPLY BY 2048- will test later
     if ((gyro.getRoll() > idealAngle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
       hood.set(ControlMode.PercentOutput, 0.1);
       ready = false;
