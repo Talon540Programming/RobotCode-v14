@@ -36,30 +36,32 @@ public class Robot extends TimedRobot {
   private boolean stage1;  // auto staging
 
   // CONSTANTS
-  private static final double WHEEL_DIAMETER = 6; // inches
-  //NEED TO FIGURE OUT ENCODER MODEL- changes CPR for drive
-  private static final double cpr = 360; //if am-3132
-  //private static final double cpr = 7/4; //if am-2861a
-  // private static final double cpr = 5; //if am-3314a
-  // private static final double cpr = 1024; //if am-3445
-  // private static final double cpr = 64; //if am-4027
-  private static final double drive_dpp = (Math.PI*WHEEL_DIAMETER/cpr); // Gives in inches per rev FOR DRIVETRAIN WHEELS ONLY
+  // private static final double WHEEL_DIAMETER = 6; // inches
+  // //NEED TO FIGURE OUT ENCODER MODEL- changes CPR for drive
+  // private static final double cpr = 360; //if am-3132
+  // //private static final double cpr = 7/4; //if am-2861a
+  // // private static final double cpr = 5; //if am-3314a
+  // // private static final double cpr = 1024; //if am-3445
+  // // private static final double cpr = 64; //if am-4027
+  // private static final double drive_dpp = (Math.PI*WHEEL_DIAMETER/cpr); // Gives in inches per rev FOR DRIVETRAIN WHEELS ONLY
 
   // TODO: Check what motors should be inverted (.setInverted(false))
   // MOTOR VARIABLES
-  private WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster, climbRotation, climbExtension, shooterFly, wrist; //Falcon 500s
-  private TalonSRX rollers, hood; // 775s or BAG motors
+  private WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster, climbExtension, shooterFly, wrist; //Falcon 500s
+  //private WPI_TalonFX climbRotation
+  private TalonSRX rollers
+  //private TalonSRX hood; // 775s or BAG motors
 
   //CONTROLLERS
   private Joystick leftJoy, rightJoy; //Used for tank drive
   private XboxController controller; // Used for button man mechanism controls
 
   // SENSORS
-  private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
+  //private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
 
-  private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
-  private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position 
-  private DigitalInput intakeLimit; // Limit switch to know if intake is ready to kickup
+  // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
+  // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position 
+  // private DigitalInput intakeLimit; // Limit switch to know if intake is ready to kickup
 
   // MISCELLANEOUS
   private double nonZeroLimelightHorAng; // Used to orient bot
@@ -86,16 +88,16 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
     
     // SENSOR INITIALIZATIONS
-    gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
+    //gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
     // ALL Ports subject to change from Electrical
-    leftEncoder = new Encoder(0, 1);
-    leftEncoder.setDistancePerPulse(drive_dpp);
-    rightEncoder = new Encoder(2, 3);
-    rightEncoder.setDistancePerPulse(drive_dpp);
-    // Limit switches- CHANGE PORTS BASED ON ELECTRICAL
-    lowerShooterLimit = new DigitalInput(4);
-    upperShooterLimit = new DigitalInput(5);
-    intakeLimit = new DigitalInput(6);
+    //leftEncoder = new Encoder(0, 1);
+    // leftEncoder.setDistancePerPulse(drive_dpp);
+    // rightEncoder = new Encoder(2, 3);
+    // rightEncoder.setDistancePerPulse(drive_dpp);
+    // // Limit switches- CHANGE PORTS BASED ON ELECTRICAL
+    // lowerShooterLimit = new DigitalInput(4);
+    // upperShooterLimit = new DigitalInput(5);
+    // intakeLimit = new DigitalInput(6);
 
     // MOTORS
     //Drivetrain motors and configuration
@@ -106,11 +108,11 @@ public class Robot extends TimedRobot {
     leftSlave = new WPI_TalonFX(RobotMap.DRIVETRAIN_BACKLEFT);
     leftSlave.follow(leftMaster);
     // Set integrated sensor position to 0 for encoder use
-    leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-    rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
+    // leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
+    // rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
 
     //Climb Motors
-    climbRotation = new WPI_TalonFX(RobotMap.CLIMBROTATION);
+    //climbRotation = new WPI_TalonFX(RobotMap.CLIMBROTATION);
     climbExtension = new WPI_TalonFX(RobotMap.CLIMBEXTENSION);
 
     //Intake Motors
@@ -118,7 +120,7 @@ public class Robot extends TimedRobot {
     rollers = new TalonSRX(RobotMap.INTAKE_ROLLERS);
 
     //Hood Motor
-    hood = new TalonSRX(RobotMap.SHOOTER_HOOD);
+    //hood = new TalonSRX(RobotMap.SHOOTER_HOOD);
 
     //Shooter Motors
     shooterFly = new WPI_TalonFX(RobotMap.SHOOTER_FLY); 
@@ -130,10 +132,10 @@ public class Robot extends TimedRobot {
     shooterFly.setInverted(false);
     shooterFly.setSensorPhase(false);
     // config P,I,D,F values- start by doubling F, then P, then D, then I (middle values) then increase/decrease over time
-    shooterFly.config_kF(0, 0.007, 1); // (F) Feed Forward Term
-    shooterFly.config_kP(0, 0.8192, 1); // (P) Proportional Term
-    shooterFly.config_kI(0, 0.0008, 1); // (I) Integral term
-    shooterFly.config_kD(0, 0.0256, 1); // (D) Differentiable Term
+    // shooterFly.config_kF(0, 0.007, 1); // (F) Feed Forward Term
+    // shooterFly.config_kP(0, 0.8192, 1); // (P) Proportional Term
+    // shooterFly.config_kI(0, 0.0008, 1); // (I) Integral term
+    // shooterFly.config_kD(0, 0.0256, 1); // (D) Differentiable Term
     
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
@@ -141,7 +143,7 @@ public class Robot extends TimedRobot {
     // TODO- make this choose from sendable chooser to set alliance color
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
-    NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("alliance").setString("red");
+    //NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("alliance").setString("red");
   }
 
   /** This function is called once when test mode is enabled. */
@@ -216,35 +218,52 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("Current Angle", gyro.getRoll());
     }
 
-    // Resets hood to position 0 and uses that as the 0-angle.
-    if (!lowerShooterLimit.get()) {
-      hood.set(ControlMode.PercentOutput, -0.1);
-    }
-    gyro.reset(); //sets gyro value to 0
+    if (shooterCalculations[0][0] < 2.3) { // Counter
+      drive.tankDrive(-0.1, -0.1);
+      ready = false;
+    } else {
+      drive.tankDrive(0,0);
+      ready = true;
+      // Spin flywheel to speed
+      // Intake ball using wrist
+      // PRAY()
 
-    if ((Math.abs(shooterCalculations[0][0]) < 1.5)) { 
-      drive.tankDrive(-0.8, -0.8); // backs up until 1.5 meters away
     }
-    if ((Math.abs(shooterCalculations[0][0]) >= 1.5) && (Math.abs(shooterCalculations[1][0]) > 1)) { // TODO: adjust to reduce bouncing
-      centerAim("top_hub"); // fires a shot into the hub
+
+    if(ready) {
+      // Push ball into flywheel
+      // flywheel should be running at speed
     }
-    if (Math.abs(shooterCalculations[1][0]) < 1 && (Math.abs(shooterCalculations[0][0]) >= 1.5) && stage1) {
-      if (counter < 1000) { // TODO: adjust based on how long it takes to shoot a ball
-        fire(); // shoots ball-> changes stage1 to false after having shot a ball
-        counter++;
-      }
-      else if (counter >= 1000) {
-        stage1 = false;
-      }
-    }
-    if (!stage1 && !ballSeen()) { // Locates ball if it can't see after shooting one
-      centerAim("ball_tracking");
-      rollers.set(ControlMode.PercentOutput, 0);
-    }
-    if (!stage1 && ballSeen()) { // Drives forward if it sees the ball
-      drive.tankDrive(0.8, 0.8);
-      rollers.set(ControlMode.PercentOutput, 1);
-    }
+
+    // // Resets hood to position 0 and uses that as the 0-angle.
+    // // if (!lowerShooterLimit.get()) {
+    // //   hood.set(ControlMode.PercentOutput, -0.1);
+    // // }
+    // gyro.reset(); //sets gyro value to 0
+
+    // if ((Math.abs(shooterCalculations[0][0]) < 1.5)) { 
+    //   drive.tankDrive(-0.8, -0.8); // backs up until 1.5 meters away
+    // }
+    // if ((Math.abs(shooterCalculations[0][0]) >= 1.5) && (Math.abs(shooterCalculations[1][0]) > 1)) { // TODO: adjust to reduce bouncing
+    //   centerAim("top_hub"); // fires a shot into the hub
+    // }
+    // if (Math.abs(shooterCalculations[1][0]) < 1 && (Math.abs(shooterCalculations[0][0]) >= 1.5) && stage1) {
+    //   if (counter < 1000) { // TODO: adjust based on how long it takes to shoot a ball
+    //     fire(); // shoots ball-> changes stage1 to false after having shot a ball
+    //     counter++;
+    //   }
+    //   else if (counter >= 1000) {
+    //     stage1 = false;
+    //   }
+    // }
+    // if (!stage1 && !ballSeen()) { // Locates ball if it can't see after shooting one
+    //   centerAim("ball_tracking");
+    //   rollers.set(ControlMode.PercentOutput, 0);
+    // }
+    // if (!stage1 && ballSeen()) { // Drives forward if it sees the ball
+    //   drive.tankDrive(0.8, 0.8);
+    //   rollers.set(ControlMode.PercentOutput, 1);
+    // }
   }
   
   /**
@@ -268,9 +287,9 @@ public class Robot extends TimedRobot {
     if(leftJoy.getTrigger()) { //center robot on top hub (retro reflector)
       centerAim("top_hub");
     }
-    if(rightJoy.getTrigger()) { //center robot on ball from Raspberry Pi Data
-      centerAim("ball_tracking");
-    }
+    // if(rightJoy.getTrigger()) { //center robot on ball from Raspberry Pi Data
+    //   centerAim("ball_tracking");
+    // }
     
     // DRIVE CALL
     if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) drive.tankDrive(-rightJoy.getY(), -leftJoy.getY());// TODO: adjust deadzones
@@ -292,10 +311,10 @@ public class Robot extends TimedRobot {
 
   public double[][] getLimelightData() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    double heightDifference = ((72/39.37)-(17/39.37)); //13.0 (photo room)
-    // double heightDifference = ((104/39.37)-(24.025/39.37)); //14.0 https://www.desmos.com/calculator/zmzfln2j6v
-    double fixedLLANGLE = 14.7734450937; //13.0 Angle
-    // double fixedLLANGLE = 40; //14.0 Angle https://www.desmos.com/calculator/zmzfln2j6v
+    // double heightDifference = ((72/39.37)-(17/39.37)); //13.0 (photo room)
+    double heightDifference = ((104/39.37)-(22.76/39.37)); //14.0 https://www.desmos.com/calculator/zmzfln2j6v
+    // double fixedLLANGLE = 14.7734450937; //13.0 Angle
+    double fixedLLANGLE = 40; //14.0 Angle https://www.desmos.com/calculator/zmzfln2j6v
 
     double[][] LimelightInfo = {{0,0,0},{0,0,0}};
 
@@ -353,40 +372,43 @@ public class Robot extends TimedRobot {
     }
   }
 
-  private boolean ballSeen() {// TODO: Sriman/Ayush code this so we know if there's a ball
-    return true;
-  } 
+  // private boolean ballSeen() {// TODO: Sriman/Ayush code this so we know if there's a ball
+  //   return true;
+  // } 
 
-  public void fire() {
-    double transferPercent = 0.35; 
-    double[][] limelightData = getLimelightData();
-    double idealAngle = limelightData[0][1];
-    double idealVelocity = limelightData[0][2]; // flywheel diameter in meters
+  // public void fire() {
+  //   double transferPercent = 0.35; 
+  //   double[][] limelightData = getLimelightData();
+  //   double idealAngle = limelightData[0][1];
+  //   double idealVelocity = limelightData[0][2]; // flywheel diameter in meters
 
-    double rpm = getRPM(idealVelocity, transferPercent);
-    if (!intakeLimit.get()) {
-      wrist.set(ControlMode.PercentOutput, 0.75);
-    }
-    shooterFly.set(ControlMode.Velocity, 4*rpm*2048); //TODO: Gear ratio multiplier MIGHT HAVE TO MULTIPLY BY 2048- will test later
-    if ((gyro.getRoll() > idealAngle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
-      hood.set(ControlMode.PercentOutput, 0.1);
-      ready = false;
-    }
-    else if ((gyro.getRoll() < idealAngle-5) && !lowerShooterLimit.get()) {
-      hood.set(ControlMode.PercentOutput, -0.1);
-      ready = false;
-    }
-    else {
-      ready = true;
-    }
-    if (ready) {
-      rollers.set(ControlMode.PercentOutput, 1);
-    }
-    //adjust to fine tuning 
-    // double OneRPM = (60*idealVelocity)/(8*Math.PI); //RPM required if 100% of speed from flywheel is transferred to the ball
-    // double actualRPM = 10*OneRPM; //RPM needed bearing 10% of velocity is transferred from flywheel to ball
-    // double flywheelMotor = actualRPM/the maximum rpm of the motor; //The motor output in percentage of the flywheel motor
-  }
+  //   double rpm = getRPM(idealVelocity, transferPercent);
+  //   if (!intakeLimit.get()) {
+  //     wrist.set(ControlMode.PercentOutput, 0.75);
+  //   }
+  //   shooterFly.set(ControlMode.Velocity, 4*rpm*2048); //TODO: Gear ratio multiplier MIGHT HAVE TO MULTIPLY BY 2048- will test later
+  //   if ((gyro.getRoll() > idealAngle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
+  //     hood.set(ControlMode.PercentOutput, 0.1);
+  //     ready = false;
+  //   }
+  //   else if ((gyro.getRoll() < idealAngle-5) && !lowerShooterLimit.get()) {
+  //     hood.set(ControlMode.PercentOutput, -0.1);
+  //     ready = false;
+  //   }
+  //   else {
+  //     ready = true;
+  //   }
+  //   if (ready) {
+  //     rollers.set(ControlMode.PercentOutput, 1);
+  //   }
+  //   else {
+  //     climbRotation.set(ControlMode.PercentOutput, 0);
+  //   }
+  //   //adjust to fine tuning 
+  //   // double OneRPM = (60*idealVelocity)/(8*Math.PI); //RPM required if 100% of speed from flywheel is transferred to the ball
+  //   // double actualRPM = 10*OneRPM; //RPM needed bearing 10% of velocity is transferred from flywheel to ball
+  //   // double flywheelMotor = actualRPM/the maximum rpm of the motor; //The motor output in percentage of the flywheel motor
+  // }
 
  //TODO: Determines the RPM to set flywheel based on what RPM corresponds to what ball velocity
   public double getRPM(double idealVelocity, double transferPercent) {
@@ -422,9 +444,9 @@ public class Robot extends TimedRobot {
   //Wrist for intake, no encoder (for teleop)
   public void wrist() {
     if (controller.getBButton()) { //sets intake in position to feed ball into flywheel
-      wrist.set(ControlMode.PercentOutput, 0.75);
+      wrist.set(ControlMode.PercentOutput, 0.2);
     } else if (controller.getXButton()) { //sets intake in position to pick balls off field
-        wrist.set(ControlMode.PercentOutput, -0.4);
+        wrist.set(ControlMode.PercentOutput, -0.2);
     } else {
         wrist.set(ControlMode.PercentOutput, 0);
     }
