@@ -208,7 +208,7 @@ public class Robot extends TimedRobot {
    * This function is called periodically during autonomous.
    */
   @Override
-  public void autonomousPeriodic() {
+  public void autonomousPeriodic() { //Two ball auto
     NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(SmartDashboard.getString("Alliance Color", "RED"));
     // // Display information relayed by Limelight and RPM information for testing
     double[][] shooterCalculations = getLimelightData();
@@ -221,7 +221,14 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
-
+    //Taxi Code (Front Bumper needs to fully cross the tarmac)
+    if(hubPresent() && (shooterCalculations[0][0]<3)) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+      drive.tankDrive(-0.1, -0.1);
+    } else if(hubPresent() && (shooterCalculations[0][0]>3.5)) { //If we overshoot the target
+      drive.tankDrive(0.1, 0.1);
+    } else {
+      drive.tankDrive(0,0);
+    }
     // if ((shooterCalcuations[0][0] < 2.3) && !ready) { // Counter
     //   drive.tankDrive(-0.1, -0.1);
     // } 
@@ -244,10 +251,6 @@ public class Robot extends TimedRobot {
       // if (counter2  >= 100) {
       //   ready2 = true;
       // }
-      
-      // Spin flywheel to speed
-      // Intake ball using wrist
-      // PRAY()
     // }
     // if (ready2) {
     //   shooterFly.set(ControlMode.PercentOutput, 0);
@@ -291,15 +294,18 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double[][] shooterCalculations = getLimelightData();
-    if(shooterCalculations != null) {
-      SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
-      SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
-      SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
-      SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
-      SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
-      SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
-      SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
-     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
+    SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
+    SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
+    SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
+    SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
+    SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
+    SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
+    // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
+
+    // DRIVE CALL
+    if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
+      drive.tankDrive(-rightJoy.getY() * 0.8, leftJoy.getY() * 0.8);// TODO: adjust deadzones
     }
 
     // Driver aims to top hub or to balls
@@ -313,11 +319,6 @@ public class Robot extends TimedRobot {
     //   centerAim("ball_tracking");
     // }
     
-    // DRIVE CALL
-    
-    if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
-      drive.tankDrive(-rightJoy.getY() * 0.8, leftJoy.getY() * 0.8);// TODO: adjust deadzones
-    }
     //climbrotation();
     climb();
     // if (controller.getAButton()) fire();
