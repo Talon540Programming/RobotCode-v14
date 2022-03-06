@@ -1,0 +1,19 @@
+Connect Limelight:
+    Ensure that data is being written to NetworkTables
+Connect Raspberry Pi
+    *LATER
+    %Camera
+Connect Driver Camera
+    Ensure connection to roboRIO
+Connect Hood gyro
+    Ensure accurate data
+
+Code Flywheel RPM functions
+    Figure out encoder and gearbox ratios. Might need to be updated.
+Code automatic hood functions
+    Test gyro
+Code Fire function using both Flywheel, Hood, and Limelight Data
+    Code and test
+
+- Test/Update PID loop for limelight due to changing VARIABLES
+- Test Flywheel motor gearbox ratios

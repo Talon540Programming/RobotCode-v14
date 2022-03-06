@@ -22,18 +22,20 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import com.kauailabs.navx.frc.AHRS;
+// import com.kauailabs.navx.frc.AHRS;
 
 
 public class Robot extends TimedRobot {
   // AUTONOMOUS VARIABLES
   private int counter = 0;// TODO: Simple initialization for autonomous duration it takes to kickup counter-> can be adjusted on line 176
-  private boolean ready; // Simple flag used for autonomous staging
+  private int counter2 = 0;
+  private boolean ready, ready2; // Simple flag used for autonomous staging
   private static final String kDefaultAuto = "Default"; //types of autos- not used
   private static final String kCustomAuto = "My Auto"; //types of autos- not currently used
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private boolean stage1;  // auto staging
+  private String allianceColor = "red";
 
   // CONSTANTS
   // private static final double WHEEL_DIAMETER = 6; // inches
@@ -45,11 +47,10 @@ public class Robot extends TimedRobot {
   // // private static final double cpr = 64; //if am-4027
   // private static final double drive_dpp = (Math.PI*WHEEL_DIAMETER/cpr); // Gives in inches per rev FOR DRIVETRAIN WHEELS ONLY
 
-  // TODO: Check what motors should be inverted (.setInverted(false))
   // MOTOR VARIABLES
   private WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster, climbExtension, shooterFly, wrist; //Falcon 500s
   //private WPI_TalonFX climbRotation
-  private TalonSRX rollers
+  private TalonSRX rollers;
   //private TalonSRX hood; // 775s or BAG motors
 
   //CONTROLLERS
@@ -74,8 +75,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // STAGING FLAGS
-    stage1 = true; // Auto starts in stage 1 and turns into stage 2
+    stage1 = false; // Auto starts in stage 1 and turns into stage 2
     ready = false; // Not ready to shoot by default
+    ready2 = false;
+    counter = 0;
+    counter2 = 0;
 
     // CONTROLLER PORTS
     controller = new XboxController(2);
@@ -143,7 +147,7 @@ public class Robot extends TimedRobot {
     // TODO- make this choose from sendable chooser to set alliance color
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
-    //NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("alliance").setString("red");
+    SmartDashboard.putString("Alliance Color", "Waiting for Alliance Color");
   }
 
   /** This function is called once when test mode is enabled. */
@@ -166,7 +170,7 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
       SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
       SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
-      SmartDashboard.putNumber("Current Angle", gyro.getRoll());
+      //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
     }
 
     double targetrpm = SmartDashboard.getNumber("Target RPM", 0);
@@ -182,22 +186,22 @@ public class Robot extends TimedRobot {
       shooterFly.set(ControlMode.Velocity, rpm);
     }
 
-    if (controller.getXButton()) { // actuates hood to the proper angle
-      if ((gyro.getRoll() > targetangle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
-        hood.set(ControlMode.PercentOutput, 0.1);
-        ready = false;
-      }
-      else if ((gyro.getRoll() < targetangle-5) && !lowerShooterLimit.get()) {
-        hood.set(ControlMode.PercentOutput, -0.1);
-        ready = false;
-      }
-    }
+    // if (controller.getXButton()) { // actuates hood to the proper angle
+    //   if ((gyro.getRoll() > targetangle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
+    //     hood.set(ControlMode.PercentOutput, 0.1);
+    //     ready = false;
+    //   }
+    //   else if ((gyro.getRoll() < targetangle-5) && !lowerShooterLimit.get()) {
+    //     hood.set(ControlMode.PercentOutput, -0.1);
+    //     ready = false;
+    //   }
+    // }
   }
 
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    System.out.println("Auto selected: " + m_autoSelected);
+    // m_autoSelected = m_chooser.getSelected();
+    // System.out.println("Auto selected: " + m_autoSelected);
   }
 
   /**
@@ -205,35 +209,50 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    // Display information relayed by Limelight and RPM information for testing
+    NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(SmartDashboard.getString("Alliance Color", "RED"));
+    // // Display information relayed by Limelight and RPM information for testing
     double[][] shooterCalculations = getLimelightData();
-    if(shooterCalculations != null) {
-      SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
-      SmartDashboard.putNumber("Needed Shooter Angle: ",shooterCalculations[0][1]);
-      SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
-      SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
-      SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
-      SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
-      SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
-      SmartDashboard.putNumber("Current Angle", gyro.getRoll());
-    }
+    SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
+    SmartDashboard.putNumber("Needed Shooter Angle: ",shooterCalculations[0][1]);
+    SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
+    SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
+    SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
+    SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
+    //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
-    if (shooterCalculations[0][0] < 2.3) { // Counter
-      drive.tankDrive(-0.1, -0.1);
-      ready = false;
-    } else {
-      drive.tankDrive(0,0);
-      ready = true;
+
+    // if ((shooterCalcuations[0][0] < 2.3) && !ready) { // Counter
+    //   drive.tankDrive(-0.1, -0.1);
+    // } 
+    // else if ((shooterCalculations[0][0] >= 2.3) && !ready) {
+    //   ready = true;
+    // }
+    // if (ready && !ready2) {
+    //   drive.tankDrive(0,0);
+      // if (stage1) {
+      //   shooterFly.set(ControlMode.PercentOutput, 0.7); 
+      //   counter++;
+      //   if ((counter < 100)) {
+      //     stage1 = false;
+      //   }
+      // }
+      // if (counter >= 100) {
+      //   rollers.set(ControlMode.PercentOutput, 0.4);
+      //   counter2++;
+      // }
+      // if (counter2  >= 100) {
+      //   ready2 = true;
+      // }
+      
       // Spin flywheel to speed
       // Intake ball using wrist
       // PRAY()
-
-    }
-
-    if(ready) {
-      // Push ball into flywheel
-      // flywheel should be running at speed
-    }
+    // }
+    // if (ready2) {
+    //   shooterFly.set(ControlMode.PercentOutput, 0);
+    //   rollers.set(ControlMode.PercentOutput, 0);
+    // }
 
     // // Resets hood to position 0 and uses that as the 0-angle.
     // // if (!lowerShooterLimit.get()) {
@@ -280,11 +299,14 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
       SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
       SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
-      SmartDashboard.putNumber("Current Angle", gyro.getRoll());
+     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
     }
 
     // Driver aims to top hub or to balls
-    if(leftJoy.getTrigger()) { //center robot on top hub (retro reflector)
+    // if(leftJoy.getTrigger()) { //center robot on top hub (retro reflector)
+    //   centerAim("top_hub");
+    // }
+    if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button)
       centerAim("top_hub");
     }
     // if(rightJoy.getTrigger()) { //center robot on ball from Raspberry Pi Data
@@ -292,31 +314,41 @@ public class Robot extends TimedRobot {
     // }
     
     // DRIVE CALL
-    if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) drive.tankDrive(-rightJoy.getY(), -leftJoy.getY());// TODO: adjust deadzones
-
-    climbrotation();
+    
+    if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
+      drive.tankDrive(-rightJoy.getY() * 0.8, leftJoy.getY() * 0.8);// TODO: adjust deadzones
+    }
+    //climbrotation();
     climb();
-    if (controller.getAButton()) fire();
-    else ready = false;
+    // if (controller.getAButton()) fire();
+    // else ready = false;
     shooter();
-    hood();
+    //hood();
     wrist();
     intake();
-    // Reset function (deprecated)
-    // if (leftJoy.getTrigger()) {
-    //   leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-    //   rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-    // }
+  }
+
+  public boolean hubPresent() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    double targetPresence = table.getEntry("tv").getDouble(0);
+    if(targetPresence == 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public double[][] getLimelightData() {
+    double[][] LimelightInfo = {{0,0,0},{0,0,0}};
+    boolean targetPresence = hubPresent();
+    if (targetPresence) {
+      return LimelightInfo;
+    } else {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     // double heightDifference = ((72/39.37)-(17/39.37)); //13.0 (photo room)
     double heightDifference = ((104/39.37)-(22.76/39.37)); //14.0 https://www.desmos.com/calculator/zmzfln2j6v
     // double fixedLLANGLE = 14.7734450937; //13.0 Angle
     double fixedLLANGLE = 40; //14.0 Angle https://www.desmos.com/calculator/zmzfln2j6v
-
-    double[][] LimelightInfo = {{0,0,0},{0,0,0}};
 
     double horizontalAngle = table.getEntry("tx").getDouble(0);
     double verticalAngle = table.getEntry("ty").getDouble(0);
@@ -332,12 +364,13 @@ public class Robot extends TimedRobot {
     LimelightInfo[1][0] = horizontalAngle; //Horizontal angle between the limelight and the retroreflector
     LimelightInfo[1][1] = verticalAngle; //Vertical angle between limelight and retroreflector
     LimelightInfo[1][2] = limelightLatency; // Latency for limelight calculations
-    
+
     if(horizontalAngle != 0) {
       nonZeroLimelightHorAng = horizontalAngle;
     }
 
     return LimelightInfo;
+    }
   }
 
   public void centerAim(String target) { 
@@ -365,16 +398,10 @@ public class Robot extends TimedRobot {
         break;
 
       case "ball_tracking": // TODO: actually make this work- Sriman and Ayush
-        NetworkTable piTable = NetworkTableInstance.getDefault().getTable("TalonPi");
-        double piAngle = piTable.getEntry("ang").getDouble(0);
-
+      // pray
         break;
     }
   }
-
-  // private boolean ballSeen() {// TODO: Sriman/Ayush code this so we know if there's a ball
-  //   return true;
-  // } 
 
   // public void fire() {
   //   double transferPercent = 0.35; 
@@ -416,30 +443,30 @@ public class Robot extends TimedRobot {
   }
 
   //Spinny part of intake, no encoder
-  public void intake() {
-    if (Math.abs(controller.getRightY()) > 0.2) { //Right trigger spins intake from field to robot
-      rollers.set(ControlMode.PercentOutput, controller.getRightTriggerAxis());
+  public void intake() { // Had absolute value of getRightY, would never be below zero!
+    if (controller.getYButton()) { //Right trigger spins intake from field to robot
+      rollers.set(ControlMode.PercentOutput, 1);
     } 
-    else if(Math.abs(controller.getRightY()) < -0.2 ) { //Left trigger spins intake from entrance of robot to flywheel
-      rollers.set(ControlMode.PercentOutput, -controller.getLeftTriggerAxis());
+    else if(controller.getAButton()) { //Left trigger spins intake from entrance of robot to flywheel
+      rollers.set(ControlMode.PercentOutput, -1);
       } 
     else {
       rollers.set(ControlMode.PercentOutput, 0);
     }
   }
 
-  // Manual hood actuation
-  public void hood() {
-    if (controller.getXButton()) {
-      hood.set(ControlMode.PercentOutput, 0.1);
-    }
-    else if (controller.getYButton()) {
-      hood.set(ControlMode.PercentOutput, -0.1);
-    }
-    else { 
-      hood.set(ControlMode.PercentOutput, 0);
-    }
-  }
+  // // Manual hood actuation
+  // public void hood() {
+  //   if (controller.getXButton()) {
+  //     hood.set(ControlMode.PercentOutput, 0.1);
+  //   }
+  //   else if (controller.getYButton()) {
+  //     hood.set(ControlMode.PercentOutput, -0.1);
+  //   }
+  //   else { 
+  //     hood.set(ControlMode.PercentOutput, 0);
+  //   }
+  // }
 
   //Wrist for intake, no encoder (for teleop)
   public void wrist() {
@@ -461,7 +488,6 @@ public class Robot extends TimedRobot {
     }
   }
 
-
   //Vertical Climb, no encoder
   public void climb() {
     if (controller.getPOV() == 0) { //Up on D pad
@@ -474,15 +500,15 @@ public class Robot extends TimedRobot {
   }
 
   //Climb Rotation, no encoder
-  public void climbrotation() {
-    if (controller.getPOV() == 90) { // Right on the D pad
-      climbRotation.set(ControlMode.PercentOutput, 1);
-    }
-    else if (controller.getPOV() == 270) { //Left on the D pad
-      climbRotation.set(ControlMode.PercentOutput, -1);
-    }
-    else {
-      climbRotation.set(ControlMode.PercentOutput, 0);
-    }
-  }
+  // public void climbrotation() {
+  //   if (controller.getPOV() == 90) { // Right on the D pad
+  //     climbRotation.set(ControlMode.PercentOutput, 1);
+  //   }
+  //   else if (controller.getPOV() == 270) { //Left on the D pad
+  //     climbRotation.set(ControlMode.PercentOutput, -1);
+  //   }
+  //   else {
+  //     climbRotation.set(ControlMode.PercentOutput, 0);
+  //   }
+  // }
 }
