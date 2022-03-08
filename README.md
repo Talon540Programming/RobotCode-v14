@@ -19,5 +19,4 @@
 ⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⣀⣀⠀⣀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 ```
-
-![Secret](https://c.tenor.com/3isOAaPzSlMAAAAC/the-rock-dwayne-johnson.gif)
+<!-- ![Secret](https://c.tenor.com/3isOAaPzSlMAAAAC/the-rock-dwayne-johnson.gif) -->
