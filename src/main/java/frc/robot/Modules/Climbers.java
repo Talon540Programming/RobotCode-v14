@@ -18,13 +18,11 @@ public class Climbers {
     //Climb Rotation, no encoder
     public static void climbrotation() {
         if (Robot.controller.getPOV() == 90) { // Right on the D pad
-        Robot.climbRotation.set(ControlMode.PercentOutput, 1);
+            Robot.climbRotation.set(ControlMode.PercentOutput, 1);
+        } else if (Robot.controller.getPOV() == 270) { //Left on the D pad
+            Robot.climbRotation.set(ControlMode.PercentOutput, -1);
+        } else {
+            Robot.climbRotation.set(ControlMode.PercentOutput, 0);
         }
-        else if (Robot.controller.getPOV() == 270) { //Left on the D pad
-        Robot.climbRotation.set(ControlMode.PercentOutput, -1);
-        }
-        else {
-        Robot.climbRotation.set(ControlMode.PercentOutput, 0);
-          }
     }
 }

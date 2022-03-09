@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.Limelight;
-import frc.robot.Modules.RobotMap;
 import frc.robot.Modules.AimFire;
 import frc.robot.Modules.BallTracking;
 import frc.robot.Modules.Climbers;
 import frc.robot.Modules.Flywheel;
 import frc.robot.Modules.Intake;
+import frc.robot.Modules.RobotInformation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
@@ -42,17 +42,6 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private boolean stage1;  // auto staging
-  private String allianceColor = "red";
-
-  // CONSTANTS
-  // private static final double WHEEL_DIAMETER = 6; // inches
-  // //NEED TO FIGURE OUT ENCODER MODEL- changes CPR for drive
-  // private static final double cpr = 360; //if am-3132
-  // //private static final double cpr = 7/4; //if am-2861a
-  // // private static final double cpr = 5; //if am-3314a
-  // // private static final double cpr = 1024; //if am-3445
-  // // private static final double cpr = 64; //if am-4027
-  // private static final double drive_dpp = (Math.PI*WHEEL_DIAMETER/cpr); // Gives in inches per rev FOR DRIVETRAIN WHEELS ONLY
 
   // MOTOR VARIABLES
   private WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; //Falcon 500s
@@ -110,29 +99,29 @@ public class Robot extends TimedRobot {
 
     // MOTORS
     //Drivetrain motors and configuration
-    rightMaster = new WPI_TalonFX(RobotMap.DRIVETRAIN_FRONTRIGHT);
-    rightSlave = new WPI_TalonFX(RobotMap.DRIVETRAIN_BACKRIGHT);
+    rightMaster = new WPI_TalonFX(RobotInformation.DRIVETRAIN_FRONTRIGHT);
+    rightSlave = new WPI_TalonFX(RobotInformation.DRIVETRAIN_BACKRIGHT);
     rightSlave.follow(rightMaster);
-    leftMaster = new WPI_TalonFX(RobotMap.DRIVETRAIN_FRONTLEFT);
-    leftSlave = new WPI_TalonFX(RobotMap.DRIVETRAIN_BACKLEFT);
+    leftMaster = new WPI_TalonFX(RobotInformation.DRIVETRAIN_FRONTLEFT);
+    leftSlave = new WPI_TalonFX(RobotInformation.DRIVETRAIN_BACKLEFT);
     leftSlave.follow(leftMaster);
     // Set integrated sensor position to 0 for encoder use
     // leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
     // rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
 
     //Climb Motors
-    //climbRotation = new WPI_TalonFX(RobotMap.CLIMBROTATION);
-    climbExtension = new WPI_TalonFX(RobotMap.CLIMBEXTENSION);
+    //climbRotation = new WPI_TalonFX(RobotInformation.CLIMBROTATION);
+    climbExtension = new WPI_TalonFX(RobotInformation.CLIMBEXTENSION);
 
     //Intake Motors
-    wrist = new WPI_TalonFX(RobotMap.INTAKE_WRIST);
-    rollers = new TalonSRX(RobotMap.INTAKE_ROLLERS);
+    wrist = new WPI_TalonFX(RobotInformation.INTAKE_WRIST);
+    rollers = new TalonSRX(RobotInformation.INTAKE_ROLLERS);
 
     //Hood Motor
-    //hood = new TalonSRX(RobotMap.SHOOTER_HOOD);
+    //hood = new TalonSRX(RobotInformation.SHOOTER_HOOD);
 
     //Shooter Motors
-    shooterFly = new WPI_TalonFX(RobotMap.SHOOTER_FLY); 
+    shooterFly = new WPI_TalonFX(RobotInformation.SHOOTER_FLY); 
     shooterFly.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 1); // Tells to use in-built falcon 500 sensor
     shooterFly.configNominalOutputForward(0, 1);
     shooterFly.configNominalOutputReverse(0, 1);
@@ -164,12 +153,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     double[][] shooterCalculations = Limelight.getLimelightData();
-    SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
-    SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
-    SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
-    SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
-    SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
-    SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+    Limelight.updateSmartDashboard();
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
@@ -205,23 +189,19 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() { //Two ball auto
+  public void autonomousPeriodic() { //Two ball auto in theory
     BallTracking.autoinit();
     // // Display information relayed by Limelight and RPM information for testing
     double[][] shooterCalculations = Limelight.getLimelightData();
-    SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
-    SmartDashboard.putNumber("Needed Shooter Angle: ",shooterCalculations[0][1]);
-    SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
-    SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
-    SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
-    SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+    Limelight.updateSmartDashboard();
+
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     //Taxi Code (Front Bumper needs to fully cross the tarmac)
-    if(Limelight.hubPresent() && (shooterCalculations[0][0]<3)) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+    if(Limelight.hubPresent() && (shooterCalculations[0][0]<(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
       drive.tankDrive(-0.1, -0.1);
-    } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>3.5)) { //If we overshoot the target
+    } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters+0.6))) { //If we overshoot the target
       drive.tankDrive(0.1, 0.1);
     } else {
       drive.tankDrive(0,0);
@@ -288,18 +268,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     double[][] shooterCalculations = Limelight.getLimelightData();
-    SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
-    SmartDashboard.putNumber("Shooter Angle: ",shooterCalculations[0][1]);
-    SmartDashboard.putNumber("Ideal Ball Velocity :",shooterCalculations[0][2]);
-    SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
-    SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
-    SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+    Limelight.updateSmartDashboard();
+
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     // DRIVE CALL
     if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
-      drive.tankDrive(-rightJoy.getY() * 0.8, leftJoy.getY() * 0.8);// TODO: adjust deadzones
+      drive.tankDrive(-rightJoy.getY() * RobotInformation.driverPercentage, leftJoy.getY() *RobotInformation.driverPercentage);// TODO: adjust deadzones
     }
 
     // Driver aims to top hub or to balls
@@ -322,5 +298,4 @@ public class Robot extends TimedRobot {
     Intake.wrist();
     Intake.intake();
   }
-
 }

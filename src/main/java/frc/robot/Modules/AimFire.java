@@ -2,6 +2,7 @@ package frc.robot.Modules;
 
 import frc.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import frc.robot.Modules.RobotInformation;
 
 public class AimFire {
     //Shooter, will probably be replaced with autonomous shooter stuff, need encoder
@@ -15,25 +16,24 @@ public class AimFire {
     
     public static void centerAim(String target) { 
         //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
-        double deadbandAngleRange = 0.5; //close enough
-        
+      
         switch(target) {
         case "top_hub":
             Limelight.setPipeline(0);
             Limelight.getLimelightData();
-            if(Math.abs(Limelight.nonZeroLimelightHorAng)>deadbandAngleRange) { //Is the number within the deadband range?
-            if(Limelight.nonZeroLimelightHorAng>0) { //Positive
-                // Turn right
-                double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
-                motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-                Robot.drive.tankDrive(motorSpeed, -motorSpeed);
-            }
-            if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
-                // Turn left
-                double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
-                motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-                Robot.drive.tankDrive(-motorSpeed, motorSpeed);
-            }
+            if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) { //Is the number within the deadband range?
+                if(Limelight.nonZeroLimelightHorAng>0) { //Positive
+                    // Turn right
+                    double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
+                    motorSpeed = Math.round(motorSpeed * 100) / 100.0;
+                    Robot.drive.tankDrive(motorSpeed, -motorSpeed);
+                }
+                if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
+                    // Turn left
+                    double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
+                    motorSpeed = Math.round(motorSpeed * 100) / 100.0;
+                    Robot.drive.tankDrive(-motorSpeed, motorSpeed);
+                }
             }
             break;
         }
