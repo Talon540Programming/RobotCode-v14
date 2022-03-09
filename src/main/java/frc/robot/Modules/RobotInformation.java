@@ -11,16 +11,16 @@ public class RobotInformation {
     // Robot information
     public static final double robotWeight = 86.484;
 
-    public static final double botlengthInches = 0; //TODO
+    public static final double botlengthInches = 30;
     public static final double botlengthMeters = (botlengthInches/39.37);
 
-    public static final double botwidthInches = 0; //TODO
+    public static final double botwidthInches = 28;
     public static final double botwidthMeters = (botwidthInches/39.37);
 
-    public static final double botlengthBumpersInches = 0; //TODO
+    public static final double botlengthBumpersInches = 38.478;
     public static final double botlengthBumpersMeters = (botlengthBumpersInches/39.37);
 
-    public static final double botwidthBumpersInches = 0; //TODO
+    public static final double botwidthBumpersInches = 36.478;
     public static final double botwidthBumpersMeters = (botwidthBumpersInches/39.37);
 
     // Limelight Measurements
