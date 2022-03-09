@@ -68,12 +68,12 @@ public class RobotInformation {
 
     // CONSTANTS
     // private static final double WHEEL_DIAMETER = 6; // inches
-    // //NEED TO FIGURE OUT ENCODER MODEL- changes CPR for drive
+    // NEED TO FIGURE OUT ENCODER MODEL- changes CPR for drive
     // private static final double cpr = 360; //if am-3132
-    // //private static final double cpr = 7/4; //if am-2861a
-    // // private static final double cpr = 5; //if am-3314a
-    // // private static final double cpr = 1024; //if am-3445
-    // // private static final double cpr = 64; //if am-4027
+    // private static final double cpr = 7/4; //if am-2861a
+    // private static final double cpr = 5; //if am-3314a
+    // private static final double cpr = 1024; //if am-3445
+    // private static final double cpr = 64; //if am-4027
     // private static final double drive_dpp = (Math.PI*WHEEL_DIAMETER/cpr); // Gives in inches per rev FOR DRIVETRAIN WHEELS ONLY
 
     // 13.0
