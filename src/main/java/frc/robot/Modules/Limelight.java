@@ -2,9 +2,7 @@ package frc.robot.Modules;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Modules.RobotInformation;
 
 public class Limelight {
     public static double nonZeroLimelightHorAng; // Used to orient bot
