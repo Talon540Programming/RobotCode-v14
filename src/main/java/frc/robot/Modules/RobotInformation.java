@@ -9,10 +9,10 @@ public class RobotInformation {
     public static final double driverPercentage = 0.8;
 
     // Robot information
-    public static final double robotWeight = 0; 
-    public static final double botlengthInches = 0;
+    public static final double robotWeight = 0; //TODO
+    public static final double botlengthInches = 0; //TODO
     public static final double botlengthMeters = (botlengthInches/39.37);
-    public static final double botwidthInches = 0;
+    public static final double botwidthInches = 0; //TODO
     public static final double botwidthMeters = (botwidthInches/39.37);
 
     // Limelight Measurements
