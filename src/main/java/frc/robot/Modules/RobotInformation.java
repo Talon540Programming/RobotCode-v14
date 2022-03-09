@@ -9,11 +9,19 @@ public class RobotInformation {
     public static final double driverPercentage = 0.8;
 
     // Robot information
-    public static final double robotWeight = 0; //TODO
+    public static final double robotWeight = 86.484;
+
     public static final double botlengthInches = 0; //TODO
     public static final double botlengthMeters = (botlengthInches/39.37);
+
     public static final double botwidthInches = 0; //TODO
     public static final double botwidthMeters = (botwidthInches/39.37);
+
+    public static final double botlengthBumpersInches = 0; //TODO
+    public static final double botlengthBumpersMeters = (botlengthBumpersInches/39.37);
+
+    public static final double botwidthBumpersInches = 0; //TODO
+    public static final double botwidthBumpersMeters = (botwidthBumpersInches/39.37);
 
     // Limelight Measurements
     public static final double LimelightAngleDegrees = 40; //Degrees: https://www.desmos.com/calculator/zmzfln2j6v
