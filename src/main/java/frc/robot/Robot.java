@@ -50,7 +50,6 @@ public class Robot extends TimedRobot {
   public static WPI_TalonFX wrist;
   public static WPI_TalonFX climbRotation;
   public static TalonSRX rollers;
-  //private TalonSRX hood; // 775s or BAG motors
 
   //CONTROLLERS
   public Joystick leftJoy, rightJoy; //Used for tank drive
@@ -189,9 +188,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() { //Two ball auto in theory
+  public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
     BallTracking.autoinit();
-    // // Display information relayed by Limelight and RPM information for testing
+    // Display information relayed by Limelight and RPM information for testing
     double[][] shooterCalculations = Limelight.getLimelightData();
     Limelight.updateSmartDashboard();
 

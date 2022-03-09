@@ -18,28 +18,32 @@ public class AimFire {
         //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
       
         switch(target) {
-        case "top_hub":
-            Limelight.setPipeline(0);
-            Limelight.getLimelightData();
-            if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) { //Is the number within the deadband range?
-                if(Limelight.nonZeroLimelightHorAng>0) { //Positive
-                    // Turn right
-                    double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
-                    motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-                    Robot.drive.tankDrive(motorSpeed, -motorSpeed);
+            case "top_hub": // TODO: check PID on Triclops
+                Limelight.setPipeline(0);
+                Limelight.getLimelightData();
+                if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) { //Is the number within the deadband range?
+                    if(Limelight.nonZeroLimelightHorAng>0) { //Positive
+                        // Turn right
+                        double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
+                        motorSpeed = Math.round(motorSpeed * 100) / 100.0;
+                        Robot.drive.tankDrive(motorSpeed, -motorSpeed);
+                    }
+                    if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
+                        // Turn left
+                        double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
+                        motorSpeed = Math.round(motorSpeed * 100) / 100.0;
+                        Robot.drive.tankDrive(-motorSpeed, motorSpeed);
+                    }
                 }
-                if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
-                    // Turn left
-                    double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
-                    motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-                    Robot.drive.tankDrive(-motorSpeed, motorSpeed);
-                }
-            }
-            break;
-        }
-  }
+                break;
 
-    /** One click fire code
+            case "ball":
+
+                break;
+        }
+    }
+
+    /** One click fire code //TODO: One click fire code
     public void fire() {
         double transferPercent = 0.35; 
         double[][] limelightData = getLimelightData();
@@ -73,20 +77,6 @@ public class AimFire {
         // double actualRPM = 10*OneRPM; //RPM needed bearing 10% of velocity is transferred from flywheel to ball
         // double flywheelMotor = actualRPM/the maximum rpm of the motor; //The motor output in percentage of the flywheel motor
     } 
-    */
-
-    /** Hood Code
-    public void hood() {
-        if (Robot.controller.getXButton()) {
-        hood.set(ControlMode.PercentOutput, 0.1);
-        }
-        else if (Robot.controller.getYButton()) {
-        hood.set(ControlMode.PercentOutput, -0.1);
-        }
-        else { 
-        hood.set(ControlMode.PercentOutput, 0);
-        }
-    }
     */
 
 }
