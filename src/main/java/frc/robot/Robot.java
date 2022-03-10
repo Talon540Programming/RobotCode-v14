@@ -116,9 +116,6 @@ public class Robot extends TimedRobot {
     wrist = new WPI_TalonFX(RobotInformation.INTAKE_WRIST);
     rollers = new TalonSRX(RobotInformation.INTAKE_ROLLERS);
 
-    //Hood Motor
-    //hood = new TalonSRX(RobotInformation.SHOOTER_HOOD);
-
     //Shooter Motors
     shooterFly = new WPI_TalonFX(RobotInformation.SHOOTER_FLY); 
     shooterFly.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 1); // Tells to use in-built falcon 500 sensor
@@ -137,9 +134,8 @@ public class Robot extends TimedRobot {
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
 
-    // TODO- make this choose from sendable chooser to set alliance color
     Limelight.init();
-    BallTracking.maininit();
+    BallTracking.maininit(); //TODO: create sendableChooser for alliance COLOR
   }
 
   @Override
@@ -169,16 +165,6 @@ public class Robot extends TimedRobot {
       shooterFly.set(ControlMode.Velocity, rpm);
     }
 
-    // if (controller.getXButton()) { // actuates hood to the proper angle
-    //   if ((gyro.getRoll() > targetangle + 5) && !upperShooterLimit.get()) { // TODO: Adjust degrees of freedom +- 5
-    //     hood.set(ControlMode.PercentOutput, 0.1);
-    //     ready = false;
-    //   }
-    //   else if ((gyro.getRoll() < targetangle-5) && !lowerShooterLimit.get()) {
-    //     hood.set(ControlMode.PercentOutput, -0.1);
-    //     ready = false;
-    //   }
-    // }
   }
 
   @Override
@@ -202,66 +188,12 @@ public class Robot extends TimedRobot {
       drive.tankDrive(-0.1, -0.1);
     } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters+0.6))) { //If we overshoot the target
       drive.tankDrive(0.1, 0.1);
+    } else if(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters < shooterCalculations[0][0] && shooterCalculations[0][0] <  (RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters + 0.2)) {
+      // shoot
     } else {
       drive.tankDrive(0,0);
     }
-    // if ((shooterCalcuations[0][0] < 2.3) && !ready) { // Counter
-    //   drive.tankDrive(-0.1, -0.1);
-    // } 
-    // else if ((shooterCalculations[0][0] >= 2.3) && !ready) {
-    //   ready = true;
-    // }
-    // if (ready && !ready2) {
-    //   drive.tankDrive(0,0);
-      // if (stage1) {
-      //   shooterFly.set(ControlMode.PercentOutput, 0.7); 
-      //   counter++;
-      //   if ((counter < 100)) {
-      //     stage1 = false;
-      //   }
-      // }
-      // if (counter >= 100) {
-      //   rollers.set(ControlMode.PercentOutput, 0.4);
-      //   counter2++;
-      // }
-      // if (counter2  >= 100) {
-      //   ready2 = true;
-      // }
-    // }
-    // if (ready2) {
-    //   shooterFly.set(ControlMode.PercentOutput, 0);
-    //   rollers.set(ControlMode.PercentOutput, 0);
-    // }
-
-    // // Resets hood to position 0 and uses that as the 0-angle.
-    // // if (!lowerShooterLimit.get()) {
-    // //   hood.set(ControlMode.PercentOutput, -0.1);
-    // // }
-    // gyro.reset(); //sets gyro value to 0
-
-    // if ((Math.abs(shooterCalculations[0][0]) < 1.5)) { 
-    //   drive.tankDrive(-0.8, -0.8); // backs up until 1.5 meters away
-    // }
-    // if ((Math.abs(shooterCalculations[0][0]) >= 1.5) && (Math.abs(shooterCalculations[1][0]) > 1)) { // TODO: adjust to reduce bouncing
-    //   centerAim("top_hub"); // fires a shot into the hub
-    // }
-    // if (Math.abs(shooterCalculations[1][0]) < 1 && (Math.abs(shooterCalculations[0][0]) >= 1.5) && stage1) {
-    //   if (counter < 1000) { // TODO: adjust based on how long it takes to shoot a ball
-    //     fire(); // shoots ball-> changes stage1 to false after having shot a ball
-    //     counter++;
-    //   }
-    //   else if (counter >= 1000) {
-    //     stage1 = false;
-    //   }
-    // }
-    // if (!stage1 && !ballSeen()) { // Locates ball if it can't see after shooting one
-    //   centerAim("ball_tracking");
-    //   rollers.set(ControlMode.PercentOutput, 0);
-    // }
-    // if (!stage1 && ballSeen()) { // Drives forward if it sees the ball
-    //   drive.tankDrive(0.8, 0.8);
-    //   rollers.set(ControlMode.PercentOutput, 1);
-    // }
+    
   }
   
   @Override
@@ -274,27 +206,23 @@ public class Robot extends TimedRobot {
 
     // DRIVE CALL
     if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
-      drive.tankDrive(-rightJoy.getY() * RobotInformation.driverPercentage, leftJoy.getY() *RobotInformation.driverPercentage);// TODO: adjust deadzones
+      drive.tankDrive((-rightJoy.getY() * RobotInformation.driverPercentage), (leftJoy.getY() * RobotInformation.driverPercentage));// TODO: adjust deadzones
     }
 
     // Driver aims to top hub or to balls
-    // if(leftJoy.getTrigger()) { //center robot on top hub (retro reflector)
-    //   centerAim("top_hub");
-    // }
-    if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button)
+    if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
       AimFire.centerAim("top_hub");
     }
-    // if(rightJoy.getTrigger()) { //center robot on ball from Raspberry Pi Data
-    //   centerAim("ball_tracking");
-    // }
     
-    //climbrotation();
+    if(rightJoy.getRawButton(1)) { 
+      AimFire.fire();
+    }
+
     Climbers.climb();
-    // if (controller.getAButton()) fire();
-    // else ready = false;
+    Climbers.climbrotation();
     AimFire.shooter();
-    //hood();
     Intake.wrist();
     Intake.intake();
+
   }
 }
