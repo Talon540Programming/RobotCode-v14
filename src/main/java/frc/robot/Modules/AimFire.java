@@ -2,7 +2,6 @@ package frc.robot.Modules;
 
 import frc.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import frc.robot.Modules.RobotInformation;
 
 public class AimFire {
   //Shooter, will probably be replaced with autonomous shooter stuff, need encoder
