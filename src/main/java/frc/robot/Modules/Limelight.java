@@ -15,13 +15,11 @@ public class Limelight {
         SmartDashboard.putNumber("Limelight H-Angle: ",shooterCalculations[1][0]);
         SmartDashboard.putNumber("Limelight V-Angle: ",shooterCalculations[1][1]);
         SmartDashboard.putNumber("Limelight Latency: ",shooterCalculations[1][2]);
+        SmartDashboard.putNumber("Non Zero Angle", nonZeroLimelightHorAng);
     }
     
     public static double[][] getLimelightData() {
         double[][] LimelightInfo = {{0,0,0},{0,0,0}};
-        if (hubPresent()) {
-          return LimelightInfo;
-        } else {
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     
         double horizontalAngle = table.getEntry("tx").getDouble(0);
@@ -44,7 +42,6 @@ public class Limelight {
         }
     
         return LimelightInfo;
-        }
       }
 
     public static boolean hubPresent() {

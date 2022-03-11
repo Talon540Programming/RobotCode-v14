@@ -4,14 +4,15 @@ import frc.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class Climbers {
+
     //Vertical Climb, no encoder
     public static void climb() {
         if (Robot.controller.getPOV() == 0) { //Up on D pad
-        Robot.climbExtension.set(ControlMode.PercentOutput, 1);
+            Robot.climbExtension.set(ControlMode.PercentOutput, 1);
         } else if (Robot.controller.getPOV() == 180) { //Down on D pad
-        Robot.climbExtension.set(ControlMode.PercentOutput, -1);
+            Robot.climbExtension.set(ControlMode.PercentOutput, -1);
         } else {
-        Robot.climbExtension.set(ControlMode.PercentOutput, 0);
+            Robot.climbExtension.set(ControlMode.PercentOutput, 0);
         }
     }
 

@@ -3,6 +3,8 @@ package frc.robot.Modules;
 import frc.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class AimFire {
   //Shooter, will probably be replaced with autonomous shooter stuff, need encoder
   public static void shooter() {
@@ -25,13 +27,15 @@ public class AimFire {
             // Turn right
             double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
             motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-            Robot.drive.tankDrive(motorSpeed, -motorSpeed);
+            Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeed);
+            Robot.rightMaster.set(ControlMode.PercentOutput, motorSpeed);
           }
           if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
             // Turn left
             double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
             motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-            Robot.drive.tankDrive(-motorSpeed, motorSpeed);
+            Robot.leftMaster.set(ControlMode.PercentOutput, -motorSpeed);
+            Robot.rightMaster.set(ControlMode.PercentOutput, -motorSpeed);
           }
         }
         break;

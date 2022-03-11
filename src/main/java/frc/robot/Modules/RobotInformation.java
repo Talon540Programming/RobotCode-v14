@@ -39,6 +39,13 @@ public class RobotInformation {
         // Driver Information - Ojas!!
         /** What percent of input speed is translated to actual speed */
         public static final double driverPercentage = 0.8;
+
+        /** Intake Transfer Percentage */
+        public static final double wristTransferPercentage = 0.15;
+
+        /** Roller Speed */
+        public static final double rollerBTransferPercentage = 1;
+        public static final double rollerLBTransferPercentage = 0.5;
     }
 
     /** 
@@ -81,24 +88,24 @@ public class RobotInformation {
         /** Limelight PID values */
         public class limelight {
             /** Feed Forward Term */
-            double kF = 0;
+            public static final double kF = 0;
             /** Proportional Term */
-            double kP = 0;
+            public static final double kP = 0;
             /** Integral term */
-            double kI = 0;
+            public static final double kI = 0;
             /** Differentiable Term */
-            double kD = 0;
+            public static final double kD = 0;
         }
         /** Flywheel PID values */
         public class flywheel {
             /** Feed Forward Term */
-            double kF = 0;
+            public static final double kF = 0;
             /** Proportional Term */
-            double kP = 0;
+            public static final double kP = 0;
             /** Integral term */
-            double kI = 0;
+            public static final double kI = 0;
             /** Differentiable Term */
-            double kD = 0;
+            public static final double kD = 0;
         }
     }
 
@@ -130,7 +137,6 @@ public class RobotInformation {
 
             // Shooter ports
             public static final int SHOOTER_FLY = 3;
-            public static final int SHOOTER_HOOD = 3;
 
             // Intake ports
             public static final int INTAKE_WRIST = 1;
@@ -138,7 +144,7 @@ public class RobotInformation {
 
             // Climb port
             public static final int CLIMBEXTENSION = 7;
-            public static final int CLIMBROTATION = 7;
+            public static final int CLIMBROTATION = 6;
         }
 
         /** Physical Measurements */

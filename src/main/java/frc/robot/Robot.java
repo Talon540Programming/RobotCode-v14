@@ -25,13 +25,15 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import com.kauailabs.navx.frc.AHRS;
+// import com.kauailabs.navx.frc.AHRS;
 
 
 public class Robot extends TimedRobot {
@@ -46,7 +48,7 @@ public class Robot extends TimedRobot {
   private boolean stage1;  // auto staging
 
   // MOTOR VARIABLES
-  private WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; //Falcon 500s
+  public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; //Falcon 500s
   public static WPI_TalonFX climbExtension;
   public static WPI_TalonFX shooterFly;
   public static WPI_TalonFX wrist;
@@ -58,7 +60,7 @@ public class Robot extends TimedRobot {
   public static XboxController controller; // Used for button man mechanism controls
 
   // SENSORS
-  private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
+  // private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
 
   // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
   // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position 
@@ -84,42 +86,15 @@ public class Robot extends TimedRobot {
     wrist = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.INTAKE_WRIST);
     rollers = new TalonSRX(RobotInformation.RobotData.RobotPorts.INTAKE_ROLLERS);
 
-    //Shooter Motors
+    // Declare Shooter Motors
     shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY); 
-
-    // Set all motor behavior to default settings to remove recidule calls also used for future config changes (brake mode)
-
-    leftSlave.configFactoryDefault();
-    rightSlave.configFactoryDefault();
-    leftMaster.configFactoryDefault();
-    rightMaster.configFactoryDefault();
-    climbExtension.configFactoryDefault();
-    shooterFly.configFactoryDefault();
-    wrist.configFactoryDefault();
-    climbRotation.configFactoryDefault();
-    rollers.configFactoryDefault();
 
     // Follow master motors
     rightSlave.follow(rightMaster);
     leftSlave.follow(leftMaster);
 
-    // Configure Shooter Flywheel
-    shooterFly.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 1); // Tells to use in-built falcon 500 sensor
-    shooterFly.configNominalOutputForward(0, 1);
-    shooterFly.configNominalOutputReverse(0, 1);
-    shooterFly.configPeakOutputForward(1, 1);
-    shooterFly.configPeakOutputReverse(-1, 1);
-    shooterFly.setInverted(false);
-    shooterFly.setSensorPhase(false);
-    // config P,I,D,F values- start by doubling F, then P, then D, then I (middle values) then increase/decrease over time
-    // shooterFly.config_kF(0, 0.007, 1); // (F) Feed Forward Term
-    // shooterFly.config_kP(0, 0.8192, 1); // (P) Proportional Term
-    // shooterFly.config_kI(0, 0.0008, 1); // (I) Integral term
-    // shooterFly.config_kD(0, 0.0256, 1); // (D) Differentiable Term
-    
-    // Set Climb rotation to be in brake mode by default
-    climbRotation.setNeutralMode(NeutralMode.Brake);
-    climbExtension.setNeutralMode(NeutralMode.Brake);
+    // Initalise motor values (Climbers, Flywheel)
+    MotorControl.motor_init();
 
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
@@ -142,7 +117,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     // SENSOR INITIALIZATIONS
-    gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
+    // gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
     // ALL Ports subject to change from Electrical
     //leftEncoder = new Encoder(0, 1);
     // leftEncoder.setDistancePerPulse(drive_dpp);
@@ -163,31 +138,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    SmartDashboard.putNumber("Target RPM", 0);
-    SmartDashboard.putNumber("Target Velocity", 0);
-    SmartDashboard.putNumber("Target Angle", 0);
+
   }
 
   @Override
   public void testPeriodic() {
-    double[][] shooterCalculations = Limelight.getLimelightData();
-    Limelight.updateSmartDashboard();
-    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
-
-    //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
-
-    double targetrpm = SmartDashboard.getNumber("Target RPM", 0);
-    double targetvelocity = SmartDashboard.getNumber("Target Velocity", 0);
-    double targetangle = SmartDashboard.getNumber("Target Angle", 0);
-
-    if (controller.getRightBumper()) { // sets shooter to the target rpm to test PID loop
-      shooterFly.set(ControlMode.Velocity, 4*targetrpm*2048); //TODO: Gear ratio multiplier MIGHT HAVE TO MULTIPLY BY 2048- will test later
-    }
-
-    else if (controller.getLeftBumper()) { // sets shooter to the target velocity for ball shooting
-      double rpm = MotorControl.getRPM(targetvelocity, 1);
-      shooterFly.set(ControlMode.Velocity, rpm);
-    }
 
   }
 
@@ -227,6 +182,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Limelight.setLEDS("on");
   }
 
   @Override
@@ -239,18 +195,15 @@ public class Robot extends TimedRobot {
 
     // Driver aims to top hub or to balls
     if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
+      Limelight.setLEDS("on");
       AimFire.centerAim("top_hub");
     }
     
-    if(rightJoy.getRawButton(1)) { 
-      AimFire.fire();
-    }
-
     Climbers.climb();
     Climbers.climbrotation();
     AimFire.shooter();
     Intake.wrist();
-    Intake.intake();
+    Intake.rollers();
     DriveCode.tankDrive();
     MotorControl.flywheel();
 
@@ -258,9 +211,8 @@ public class Robot extends TimedRobot {
   
   @Override
   public void teleopExit() { // Run apon exiting teleop
-
+    Limelight.setLEDS("off");
   }
-
   // Sim Code (eww)
   /**
   // @Override
