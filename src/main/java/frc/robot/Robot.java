@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -131,6 +132,10 @@ public class Robot extends TimedRobot {
     // shooterFly.config_kI(0, 0.0008, 1); // (I) Integral term
     // shooterFly.config_kD(0, 0.0256, 1); // (D) Differentiable Term
     
+    // Set Climb rotation to be in brake mode by default
+    climbRotation.setNeutralMode(NeutralMode.Brake);
+    climbExtension.setNeutralMode(NeutralMode.Brake);
+
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
 
