@@ -88,7 +88,4 @@ public class Limelight {
         }
     }
 
-    public static void RAVE_MODE() {
-        setLEDS("blink");
-    }
 }
