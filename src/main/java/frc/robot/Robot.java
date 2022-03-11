@@ -237,11 +237,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
-    // DRIVE CALL
-    if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
-      drive.tankDrive((-rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));// TODO: adjust deadzones
-    }
-
     // Driver aims to top hub or to balls
     if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
       AimFire.centerAim("top_hub");
