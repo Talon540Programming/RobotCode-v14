@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.Limelight;
+import frc.robot.Modules.MotorContol;
 import frc.robot.Modules.AimFire;
 import frc.robot.Modules.BallTracking;
 import frc.robot.Modules.Climbers;
-import frc.robot.Modules.Flywheel;
 import frc.robot.Modules.Intake;
 import frc.robot.Modules.RobotInformation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -68,57 +68,41 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    // STAGING FLAGS
-    stage1 = false; // Auto starts in stage 1 and turns into stage 2
-    ready = false; // Not ready to shoot by default
-    ready2 = false;
-    counter = 0;
-    counter2 = 0;
-
-    // CONTROLLER PORTS
-    controller = new XboxController(2);
-    leftJoy = new Joystick(0);
-    rightJoy = new Joystick(1);
-
-    // Used to select autonomous mode
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-
-    // SENSOR INITIALIZATIONS
-    //gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
-    // ALL Ports subject to change from Electrical
-    //leftEncoder = new Encoder(0, 1);
-    // leftEncoder.setDistancePerPulse(drive_dpp);
-    // rightEncoder = new Encoder(2, 3);
-    // rightEncoder.setDistancePerPulse(drive_dpp);
-    // // Limit switches- CHANGE PORTS BASED ON ELECTRICAL
-    // lowerShooterLimit = new DigitalInput(4);
-    // upperShooterLimit = new DigitalInput(5);
-    // intakeLimit = new DigitalInput(6);
-
     // MOTORS
-    //Drivetrain motors and configuration
-    rightMaster = new WPI_TalonFX(RobotInformation.DRIVETRAIN_FRONTRIGHT);
-    rightSlave = new WPI_TalonFX(RobotInformation.DRIVETRAIN_BACKRIGHT);
-    rightSlave.follow(rightMaster);
-    leftMaster = new WPI_TalonFX(RobotInformation.DRIVETRAIN_FRONTLEFT);
-    leftSlave = new WPI_TalonFX(RobotInformation.DRIVETRAIN_BACKLEFT);
-    leftSlave.follow(leftMaster);
-    // Set integrated sensor position to 0 for encoder use
-    // leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-    // rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
+    //Declare Drivetrain motors
+    rightMaster = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.DRIVETRAIN_FRONTRIGHT);
+    rightSlave = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.DRIVETRAIN_BACKRIGHT);
+    leftMaster = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.DRIVETRAIN_FRONTLEFT);
+    leftSlave = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.DRIVETRAIN_BACKLEFT);
 
-    //Climb Motors
-    //climbRotation = new WPI_TalonFX(RobotInformation.CLIMBROTATION);
-    climbExtension = new WPI_TalonFX(RobotInformation.CLIMBEXTENSION);
+    // Declare Climb Motors
+    climbRotation = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.CLIMBROTATION);
+    climbExtension = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.CLIMBEXTENSION);
 
-    //Intake Motors
-    wrist = new WPI_TalonFX(RobotInformation.INTAKE_WRIST);
-    rollers = new TalonSRX(RobotInformation.INTAKE_ROLLERS);
+    // Declare Intake Motors
+    wrist = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.INTAKE_WRIST);
+    rollers = new TalonSRX(RobotInformation.RobotData.RobotPorts.INTAKE_ROLLERS);
 
     //Shooter Motors
-    shooterFly = new WPI_TalonFX(RobotInformation.SHOOTER_FLY); 
+    shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY); 
+
+    // Set all motor behavior to default settings to remove recidule calls also used for future config changes (brake mode)
+
+    leftSlave.configFactoryDefault();
+    rightSlave.configFactoryDefault();
+    leftMaster.configFactoryDefault();
+    rightMaster.configFactoryDefault();
+    climbExtension.configFactoryDefault();
+    shooterFly.configFactoryDefault();
+    wrist.configFactoryDefault();
+    climbRotation.configFactoryDefault();
+    rollers.configFactoryDefault();
+
+    // Follow master motors
+    rightSlave.follow(rightMaster);
+    leftSlave.follow(leftMaster);
+
+    // Configure Shooter Flywheel
     shooterFly.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 1); // Tells to use in-built falcon 500 sensor
     shooterFly.configNominalOutputForward(0, 1);
     shooterFly.configNominalOutputReverse(0, 1);
@@ -139,6 +123,39 @@ public class Robot extends TimedRobot {
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
 
+    // AUTO AND TELEOP STAGING FLAGS
+    stage1 = false; // Auto starts in stage 1 and turns into stage 2
+    ready = false; // Not ready to shoot by default
+    ready2 = false;
+    counter = 0;
+    counter2 = 0;
+
+    // CONTROLLER PORTS
+    leftJoy = new Joystick(0);
+    rightJoy = new Joystick(1);
+    controller = new XboxController(2);
+
+    // Used to select autonomous mode
+    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.addOption("My Auto", kCustomAuto);
+    SmartDashboard.putData("Auto choices", m_chooser);
+
+    // SENSOR INITIALIZATIONS
+    //gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
+    // ALL Ports subject to change from Electrical
+    //leftEncoder = new Encoder(0, 1);
+    // leftEncoder.setDistancePerPulse(drive_dpp);
+    // rightEncoder = new Encoder(2, 3);
+    // rightEncoder.setDistancePerPulse(drive_dpp);
+    // // Limit switches- CHANGE PORTS BASED ON ELECTRICAL
+    // lowerShooterLimit = new DigitalInput(4);
+    // upperShooterLimit = new DigitalInput(5);
+    // intakeLimit = new DigitalInput(6);
+
+    // Set integrated sensor position to 0 for encoder use
+    // leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
+    // rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
+
     Limelight.init();
     BallTracking.maininit(); //TODO: create sendableChooser for alliance COLOR
   }
@@ -155,6 +172,7 @@ public class Robot extends TimedRobot {
     double[][] shooterCalculations = Limelight.getLimelightData();
     Limelight.updateSmartDashboard();
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
+
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     double targetrpm = SmartDashboard.getNumber("Target RPM", 0);
@@ -166,7 +184,7 @@ public class Robot extends TimedRobot {
     }
 
     else if (controller.getLeftBumper()) { // sets shooter to the target velocity for ball shooting
-      double rpm = Flywheel.getRPM(targetvelocity, 1);
+      double rpm = MotorContol.getRPM(targetvelocity, 1);
       shooterFly.set(ControlMode.Velocity, rpm);
     }
 
@@ -189,11 +207,11 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     //Taxi Code (Front Bumper needs to fully cross the tarmac)
-    if(Limelight.hubPresent() && (shooterCalculations[0][0]<(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+    if(Limelight.hubPresent() && (shooterCalculations[0][0]<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
       drive.tankDrive(-0.1, -0.1);
-    } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters+0.6))) { //If we overshoot the target
+    } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters+0.6))) { //If we overshoot the target
       drive.tankDrive(0.1, 0.1);
-    } else if(RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters < shooterCalculations[0][0] && shooterCalculations[0][0] <  (RobotInformation.botlengthMeters+RobotInformation.tarmacLengthMeters + 0.2)) {
+    } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters < shooterCalculations[0][0] && shooterCalculations[0][0] <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters + 0.2)) {
       // shoot
     } else {
       drive.tankDrive(0,0);
@@ -201,6 +219,15 @@ public class Robot extends TimedRobot {
     
   }
   
+  @Override
+  public void autonomousExit() { // Run apon exiting auto
+
+  }
+
+  @Override
+  public void teleopInit() {
+  }
+
   @Override
   public void teleopPeriodic() {
     double[][] shooterCalculations = Limelight.getLimelightData();
@@ -211,7 +238,7 @@ public class Robot extends TimedRobot {
 
     // DRIVE CALL
     if ((Math.abs(rightJoy.getY()) > 0.2) || Math.abs(leftJoy.getY()) > 0.2) {
-      drive.tankDrive((-rightJoy.getY() * RobotInformation.driverPercentage), (leftJoy.getY() * RobotInformation.driverPercentage));// TODO: adjust deadzones
+      drive.tankDrive((-rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));// TODO: adjust deadzones
     }
 
     // Driver aims to top hub or to balls
@@ -230,4 +257,72 @@ public class Robot extends TimedRobot {
     Intake.intake();
 
   }
+  
+  @Override
+  public void teleopExit() { // Run apon exiting teleop
+
+  }
+
+  // Sim Code (eww)
+  /**
+  // @Override
+  // public void simulationInit() {
+
+  // }
+  */
+
+  /**
+  // @Override
+  // public void simulationPeriodic() {
+
+  // }
+  */
+
+  @Override
+  public void disabledPeriodic() { // Run when in Disabled mode
+    Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
+  }
 }
+
+/**
+ * IterativeRobotBase implements a specific type of robot program framework, extending the RobotBase
+ * class.
+ *
+ * <p>The IterativeRobotBase class does not implement startCompetition(), so it should not be used
+ * by teams directly.
+ *
+ * <p>This class provides the following functions which are called by the main loop,
+ * startCompetition(), at the appropriate times:
+ *
+ * <p>robotInit() -- provide for initialization at robot power-on
+ *
+ * <p>init() functions -- each of the following functions is called once when the appropriate mode
+ * is entered:
+ *
+ * <ul>
+ *   <li>disabledInit() -- called each and every time disabled is entered from another mode
+ *   <li>autonomousInit() -- called each and every time autonomous is entered from another mode
+ *   <li>teleopInit() -- called each and every time teleop is entered from another mode
+ *   <li>testInit() -- called each and every time test is entered from another mode
+ * </ul>
+ *
+ * <p>periodic() functions -- each of these functions is called on an interval:
+ *
+ * <ul>
+ *   <li>robotPeriodic()
+ *   <li>disabledPeriodic()
+ *   <li>autonomousPeriodic()
+ *   <li>teleopPeriodic()
+ *   <li>testPeriodic()
+ * </ul>
+ *
+ * <p>final() functions -- each of the following functions is called once when the appropriate mode
+ * is exited:
+ *
+ * <ul>
+ *   <li>disabledExit() -- called each and every time disabled is exited
+ *   <li>autonomousExit() -- called each and every time autonomous is exited
+ *   <li>teleopExit() -- called each and every time teleop is exited
+ *   <li>testExit() -- called each and every time test is exited
+ * </ul>
+ */

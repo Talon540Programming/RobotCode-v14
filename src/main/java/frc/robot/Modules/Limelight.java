@@ -28,9 +28,9 @@ public class Limelight {
         double verticalAngle = table.getEntry("ty").getDouble(0);
         double limelightLatency = table.getEntry("tl").getDouble(0);
     
-        double distance = (RobotInformation.upperHubHeightMeters-RobotInformation.LimelightHeightMeters) / (Math.tan((RobotInformation.LimelightAngleRadians + Math.toRadians(verticalAngle))));
-        double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-RobotInformation.hubEntryAngle)) * (distance)-(2 * (RobotInformation.upperHubHeightMeters-RobotInformation.LimelightHeightMeters))) / (-distance)));
-        double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * (RobotInformation.upperHubHeightMeters-RobotInformation.LimelightHeightMeters))-(2 * distance * Math.tan(Math.toRadians(angle))))));
+        double distance = (RobotInformation.FeildData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters) / (Math.tan((RobotInformation.RobotData.RobotMeasurement.LimelightAngleRadians + Math.toRadians(verticalAngle))));
+        double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-RobotInformation.RobotData.ShooterData.hubEntryAngle)) * (distance)-(2 * (RobotInformation.FeildData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters))) / (-distance)));
+        double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * (RobotInformation.FeildData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters))-(2 * distance * Math.tan(Math.toRadians(angle))))));
     
         LimelightInfo[0][0] = distance; //Horizontal distance between the hubs and the limelight
         LimelightInfo[0][1] = angle; //Optimal Shooter Angle
@@ -58,11 +58,40 @@ public class Limelight {
     }
 
     public static void init() {
+        setLEDS("on");
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
     }
 
     public static void setPipeline(double pipeline) {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline); //Sets the pipeline to pipeline
+    }
+
+    public static void disabled() {
+        setLEDS("off"); // Turns off the god damm limelight cause im going to go blind and gouge my eyes out because wtf does it need to be so bright like holy hell
+    }
+
+    public static void setLEDS(String mode) {
+        switch (mode) {
+            case "off":
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1); // light off
+                break;
+            
+            case "blink":
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(2); //light blinking
+                break;
+            
+            case "on":
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3); // light on
+                break;
+            
+            default:
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(0); // as per pipeline mode (usually on)
+
+        }
+    }
+
+    public static void RAVE_MODE() {
+        setLEDS("blink");
     }
 }
