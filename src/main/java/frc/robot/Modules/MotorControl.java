@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 
 
-public class MotorContol {
+public class MotorControl {
     public static double getRPM(double idealVelocity, double transferPercent) {
         return (((idealVelocity*(1/transferPercent))/(Math.PI*0.1016))*60); // rudimentary calculation that's 90% wrong
     }
@@ -23,6 +23,14 @@ public class MotorContol {
 
     public static double getCurrentPosition(WPI_TalonFX motor) { // If using a TalonFX motor only
         return (motor.getSensorCollection().getIntegratedSensorPosition());
+    }
+
+    public static void flywheel() {
+        if(Robot.controller.getRightBumper()) {
+            Robot.shooterFly.set(ControlMode.PercentOutput, -0.8);
+        } else {
+            Robot.shooterFly.set(ControlMode.PercentOutput, 0);
+        }
     }
     
 }

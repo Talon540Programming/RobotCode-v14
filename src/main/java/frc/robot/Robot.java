@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.Limelight;
-import frc.robot.Modules.MotorContol;
+import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
+import frc.robot.Modules.DriveCode;
 import frc.robot.Modules.BallTracking;
 import frc.robot.Modules.Climbers;
 import frc.robot.Modules.Intake;
@@ -30,7 +31,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-// import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
 
 
 public class Robot extends TimedRobot {
@@ -53,11 +54,11 @@ public class Robot extends TimedRobot {
   public static TalonSRX rollers;
 
   //CONTROLLERS
-  public Joystick leftJoy, rightJoy; //Used for tank drive
+  public static Joystick leftJoy, rightJoy; //Used for tank drive
   public static XboxController controller; // Used for button man mechanism controls
 
   // SENSORS
-  //private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
+  private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
 
   // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
   // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position 
@@ -141,7 +142,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     // SENSOR INITIALIZATIONS
-    //gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
+    gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
     // ALL Ports subject to change from Electrical
     //leftEncoder = new Encoder(0, 1);
     // leftEncoder.setDistancePerPulse(drive_dpp);
@@ -184,7 +185,7 @@ public class Robot extends TimedRobot {
     }
 
     else if (controller.getLeftBumper()) { // sets shooter to the target velocity for ball shooting
-      double rpm = MotorContol.getRPM(targetvelocity, 1);
+      double rpm = MotorControl.getRPM(targetvelocity, 1);
       shooterFly.set(ControlMode.Velocity, rpm);
     }
 
@@ -255,6 +256,8 @@ public class Robot extends TimedRobot {
     AimFire.shooter();
     Intake.wrist();
     Intake.intake();
+    DriveCode.tankDrive();
+    MotorControl.flywheel();
 
   }
   
