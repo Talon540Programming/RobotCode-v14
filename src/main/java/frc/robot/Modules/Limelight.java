@@ -26,9 +26,9 @@ public class Limelight {
         double verticalAngle = table.getEntry("ty").getDouble(0);
         double limelightLatency = table.getEntry("tl").getDouble(0);
     
-        double distance = (RobotInformation.FeildData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters) / (Math.tan((RobotInformation.RobotData.RobotMeasurement.LimelightAngleRadians + Math.toRadians(verticalAngle))));
-        double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-RobotInformation.RobotData.ShooterData.hubEntryAngle)) * (distance)-(2 * (RobotInformation.FeildData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters))) / (-distance)));
-        double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * (RobotInformation.FeildData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters))-(2 * distance * Math.tan(Math.toRadians(angle))))));
+        double distance = (RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters) / (Math.tan((RobotInformation.RobotData.RobotMeasurement.LimelightAngleRadians + Math.toRadians(verticalAngle))));
+        double angle = Math.toDegrees(Math.atan((Math.tan(Math.toRadians(-RobotInformation.RobotData.ShooterData.hubEntryAngle)) * (distance)-(2 * (RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters))) / (-distance)));
+        double velocity = Math.sqrt(-1 * ((9.8 * distance * distance * (1 + (Math.pow(Math.tan(Math.toRadians(angle)), 2))) )/((2 * (RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters))-(2 * distance * Math.tan(Math.toRadians(angle))))));
     
         LimelightInfo[0][0] = distance; //Horizontal distance between the hubs and the limelight
         LimelightInfo[0][1] = angle; //Optimal Shooter Angle

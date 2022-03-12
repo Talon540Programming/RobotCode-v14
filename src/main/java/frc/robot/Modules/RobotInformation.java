@@ -56,7 +56,7 @@ public class RobotInformation {
     *   <li>Tarmac Width and Height - Tarmac Width and Height in both meters and inches
     * </ul>
      */
-    public static class FeildData {
+    public static class FieldData {
         // Feild Data
         /** Upper hub height in inches */
         public static final double upperHubHeightInches = 104;
