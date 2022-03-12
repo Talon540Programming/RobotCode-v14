@@ -26,15 +26,18 @@ public class AimFire {
             // Turn right
             double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
             motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-            MotorControl.oldDriveTrain(motorSpeed, motorSpeed);
+            DriveCode.oldDriveTrain(motorSpeed, motorSpeed);
           }
           if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
             // Turn left
             double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
             motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-            MotorControl.oldDriveTrain(-motorSpeed, -motorSpeed);
+            DriveCode.oldDriveTrain(-motorSpeed, -motorSpeed);
           }
-        }
+        } 
+        // else { 
+        //   DriveCode.oldDriveTrain(0, 0);
+        // }
         break;
 
       case "ball":

@@ -14,4 +14,9 @@ public class DriveCode {
     public static void moveBack() {
         Robot.drive.tankDrive(-0.1, -0.1);
     }
+
+    public static void oldDriveTrain(double motorSpeedLeft, double motorSpeedRight) {
+        Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
+        Robot.rightMaster.set(ControlMode.PercentOutput, motorSpeedRight);
+    }
 }

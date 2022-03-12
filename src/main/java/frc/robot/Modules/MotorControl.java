@@ -1,6 +1,7 @@
 package frc.robot.Modules;
 
 import frc.robot.Robot;
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -33,11 +34,6 @@ public class MotorControl {
         } else {
             Robot.shooterFly.set(ControlMode.PercentOutput, 0);
         }
-    }
-
-    public static void oldDriveTrain(double motorSpeedLeft, double motorSpeedRight) {
-        Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
-        Robot.rightMaster.set(ControlMode.PercentOutput, motorSpeedRight);
     }
 
     public static void motor_init() {
@@ -73,5 +69,26 @@ public class MotorControl {
         // Robot.shooterFly.config_kD(0, RobotInformation.PID_Values.flywheel.kD, 1); // (D) Differentiable Term
 
     }
+    /** Two parameters: motor, mode (RPM or Velocity) */
+    public static void setRPM(MotorPositions position, int RPM) {
+        switch(position) {
+            case Shooter:
+                WPI_TalonFX motor = RobotInformation.RobotData.MotorData.Shooter.Flywheel.motor;
+                double current_velocity = getCurrentVelocity(motor);
+                double current_RPM = (60 * current_velocity) / (2 * Math.PI);
+                break;
+            case Rollers:
 
+                break;
+            case Extension:
+            
+                break;
+            case Rotation:
+
+                break;
+            default:
+
+                break;
+        }
+    }
 }

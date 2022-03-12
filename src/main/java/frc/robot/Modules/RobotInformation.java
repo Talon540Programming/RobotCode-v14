@@ -1,5 +1,10 @@
 package frc.robot.Modules;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import frc.robot.Robot;
+
 public class RobotInformation {
     // General Information
 
@@ -87,7 +92,7 @@ public class RobotInformation {
      */
     public static class PID_Values {
         /** Flywheel PID values */
-        public class flywheel {
+        public static class flywheel {
             /** Feed Forward Term */
             public static final double kF = 0;
             /** Proportional Term */
@@ -212,56 +217,98 @@ public class RobotInformation {
                 * <li>Dolores
              * </ul>
              */
-            public class motorTypes {
-                public class Falcon500 {
+            public static class motorTypes {
+                public static enum MotorPositions {
+                    Drivetrain,
+                    Shooter,
+                    Wrist,
+                    Rollers,
+                    Extension,
+                    Rotation
+                }
+                
+                public static enum SpeedTypes {
+                    Velocity,
+                    RPM
+                }
+                
+                public static class Falcon500 {
                     public static final double maxRPM = 6380;
                 }
 
-                public class LOREM {
-
-                }
-                public class IPSUM {
-
-                }
-                public class Dolores {
-
+                public static class M_775 {
+                    public static final double maxRPM = 0; //TODO: Find This
                 }
             }
 
             /** Drivetrain Motors */
-            public class Drivetrain {
+            public static class Drivetrain {
                 // Drivetrain Motors
                 /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
+                public static final double gearRatio = 0; //TODO: Find This
                 /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio); // Max possible velocity m/s
+                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                public static final double maxRPM = motorTypes.Falcon500.maxRPM;
+                public static WPI_TalonFX leftSide = Robot.leftMaster;
+                public static WPI_TalonFX rightSide = Robot.rightMaster;
             }
 
             /** Climber Motors */
-            public class Climbers {
-                // Climber Motors
-                /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
-                /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+            public static class Climbers {
+                /** Climb Rotation Motor */
+                public static class ClimbRotation {
+                    /** Gear Ratio of Motor */
+                    public static final double gearRatio = 0; //TODO: Find This
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final double maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.climbRotation;
+                }
+                /** Climb Extension Motor */
+                public static class ClimbExtension {
+                    /** Gear Ratio of Motor */
+                    public static final double gearRatio = 0; //TODO: Find This
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final double maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.climbExtension;
+                }
             }
 
             /** Shooter Motors */
-            public class Shooter {
-                // Shooter Motors
-                /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
-                /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+            public static class Shooter {
+                /** Flywheel Motor */
+                public static class Flywheel {
+                    /** Gear Ratio of Motor */
+                    public static final double gearRatio = 0; //TODO: Find This
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final double maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.shooterFly;
+                }
             }
 
             /** Intake Motors */
-            public class Intake {
-                // Intake and Roller Motors
-                /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
-                /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+            public static class Intake {
+                /** Roller Motor */
+                public static class Rollers {
+                    /** Gear Ratio of Motor */
+                    public static final double gearRatio = 0; //TODO: Find This
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.M_775.maxRPM/600) * (2048/gearRatio);
+                    public static final double maxRPM = motorTypes.M_775.maxRPM;
+                    public static TalonSRX motor = Robot.rollers;
+                }
+                /** Wrist Motor */
+                public static class Wrist {
+                    /** Gear Ratio of Motor */
+                    public static final double gearRatio = 0; //TODO: Find This
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final double maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.wrist;
+
+                }
             }
         }
     }

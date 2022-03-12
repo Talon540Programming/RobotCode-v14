@@ -33,6 +33,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
 // import com.kauailabs.navx.frc.AHRS;
 
 
@@ -110,12 +112,24 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-
+    SmartDashboard.putNumber("Test RPM", 0);
   }
 
   @Override
   public void testPeriodic() {
+    double testRPM = SmartDashboard.getNumber("Test RPM", 0);
+    // MotorControl.setRPM(MotorPositions.Shooter, 10);
+    if(rightJoy.getRawButton(1)) {
+      Robot.shooterFly.set(ControlMode.PercentOutput, 1);
+    } else {
+      Robot.shooterFly.set(ControlMode.PercentOutput, 0);
+    }
 
+    double current_velocity = MotorControl.getCurrentVelocity(shooterFly);
+    double current_RPM = (60 * current_velocity) / (2 * Math.PI);
+
+    SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
+    SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
   }
 
   @Override
