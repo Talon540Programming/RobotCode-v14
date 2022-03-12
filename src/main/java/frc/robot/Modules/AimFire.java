@@ -17,7 +17,6 @@ public class AimFire {
 
   public static void centerAim(String target) {
   //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
-
     switch(target) {
       case "top_hub": // TODO: check PID on Triclops
         Limelight.setPipeline(0);

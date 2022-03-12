@@ -37,15 +37,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 
 public class Robot extends TimedRobot {
-  // AUTONOMOUS VARIABLES
-  private int counter = 0;// TODO: Simple initialization for autonomous duration it takes to kickup counter-> can be adjusted on line 176
-  private int counter2 = 0;
-  private boolean ready, ready2; // Simple flag used for autonomous staging
   private static final String kDefaultAuto = "Default"; //types of autos- not used
   private static final String kCustomAuto = "My Auto"; //types of autos- not currently used
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private boolean stage1;  // auto staging
 
   // MOTOR VARIABLES
   public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; //Falcon 500s
@@ -109,22 +104,6 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    // SENSOR INITIALIZATIONS
-    // gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
-    // ALL Ports subject to change from Electrical
-    //leftEncoder = new Encoder(0, 1);
-    // leftEncoder.setDistancePerPulse(drive_dpp);
-    // rightEncoder = new Encoder(2, 3);
-    // rightEncoder.setDistancePerPulse(drive_dpp);
-    // // Limit switches- CHANGE PORTS BASED ON ELECTRICAL
-    // lowerShooterLimit = new DigitalInput(4);
-    // upperShooterLimit = new DigitalInput(5);
-    // intakeLimit = new DigitalInput(6);
-
-    // Set integrated sensor position to 0 for encoder use
-    // leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-    // rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-
     Limelight.init();
     BallTracking.maininit(); //TODO: create sendableChooser for alliance COLOR
   }
@@ -143,6 +122,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // m_autoSelected = m_chooser.getSelected();
     // System.out.println("Auto selected: " + m_autoSelected);
+    Limelight.setLEDS("on");
   }
 
   @Override
@@ -170,7 +150,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() { // Run apon exiting auto
-
+    Limelight.setLEDS("off");
   }
 
   @Override
@@ -180,7 +160,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double[][] shooterCalculations = Limelight.getLimelightData();
     Limelight.updateSmartDashboard();
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
@@ -205,20 +184,6 @@ public class Robot extends TimedRobot {
   public void teleopExit() { // Run apon exiting teleop
     Limelight.setLEDS("off");
   }
-  // Sim Code (eww)
-  /**
-  // @Override
-  // public void simulationInit() {
-
-  // }
-  */
-
-  /**
-  // @Override
-  // public void simulationPeriodic() {
-
-  // }
-  */
 
   @Override
   public void disabledPeriodic() { // Run when in Disabled mode
