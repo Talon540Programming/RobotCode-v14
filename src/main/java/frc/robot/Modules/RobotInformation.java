@@ -280,7 +280,7 @@ public class RobotInformation {
                 /** Flywheel Motor */
                 public static class Flywheel {
                     /** Gear Ratio of Motor */
-                    public static final double gearRatio = 0; //TODO: Find This
+                    public static final double gearRatio = 4;
                     /** Max Velocity of Motor*/
                     public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
                     public static final double maxRPM = motorTypes.Falcon500.maxRPM;
