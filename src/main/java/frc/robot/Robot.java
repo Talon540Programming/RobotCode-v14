@@ -99,13 +99,6 @@ public class Robot extends TimedRobot {
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
 
-    // AUTO AND TELEOP STAGING FLAGS
-    stage1 = false; // Auto starts in stage 1 and turns into stage 2
-    ready = false; // Not ready to shoot by default
-    ready2 = false;
-    counter = 0;
-    counter2 = 0;
-
     // CONTROLLER PORTS
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
@@ -206,7 +199,6 @@ public class Robot extends TimedRobot {
     Intake.rollers();
     DriveCode.tankDrive();
     MotorControl.flywheel();
-
   }
 
   @Override
