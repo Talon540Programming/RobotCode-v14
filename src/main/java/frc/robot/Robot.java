@@ -138,12 +138,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-
+    counter = 0;
   }
 
   @Override
   public void testPeriodic() {
-
+    if (counter < 200) {
+      shooterFly.set(ControlMode.PercentOutput, 0.8);
+      counter++;
+    }
+    if (counter > 150 && counter < 200) {
+      rollers.set(ControlMode.PercentOutput, -0.25);
+    }
+    else {
+      shooterFly.set(ControlMode.PercentOutput, 0);
+      rollers.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   @Override
