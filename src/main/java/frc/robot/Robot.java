@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
   // private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
 
   // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
-  // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position 
+  // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position
   // private DigitalInput intakeLimit; // Limit switch to know if intake is ready to kickup
 
   // MISCELLANEOUS
@@ -87,7 +87,7 @@ public class Robot extends TimedRobot {
     rollers = new TalonSRX(RobotInformation.RobotData.RobotPorts.INTAKE_ROLLERS);
 
     // Declare Shooter Motors
-    shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY); 
+    shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY);
 
     // Follow master motors
     rightSlave.follow(rightMaster);
@@ -172,9 +172,9 @@ public class Robot extends TimedRobot {
     } else {
       drive.tankDrive(0,0);
     }
-    
+
   }
-  
+
   @Override
   public void autonomousExit() { // Run apon exiting auto
 
@@ -198,7 +198,7 @@ public class Robot extends TimedRobot {
       Limelight.setLEDS("on");
       AimFire.centerAim("top_hub");
     }
-    
+
     Climbers.climb();
     Climbers.climbrotation();
     AimFire.shooter();
@@ -208,7 +208,7 @@ public class Robot extends TimedRobot {
     MotorControl.flywheel();
 
   }
-  
+
   @Override
   public void teleopExit() { // Run apon exiting teleop
     Limelight.setLEDS("off");

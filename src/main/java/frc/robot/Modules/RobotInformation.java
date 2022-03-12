@@ -21,7 +21,7 @@ public class RobotInformation {
     // 13.0
     /** Fixed Limelight Angle on Talon540 2021 13.0 */
     public static final double oldlimelightAngle = 14.7734450937;
-    /** 
+    /**
     * <p> Limelight Height on Talon540 2021 13.0:
     * <ul>
     *   <li>note - this is most likely wrong due to inaccurate cad measurments
@@ -29,7 +29,7 @@ public class RobotInformation {
      */
     public static final double oldlimelightHeight = 17; // inches
 
-    /** 
+    /**
     * <p> Information specific to Robot Driver and ButtonMan:
     * <ul>
     *   <li>driverPercentage - What percent of input is translated to robot speed (slows the bot down).
@@ -48,7 +48,7 @@ public class RobotInformation {
         public static final double rollerLBTransferPercentage = 0.5;
     }
 
-    /** 
+    /**
     * <p> Information specific to 2022 RAPID REACTᵀᴹ Feild:
     * <ul>
     *   <li>Upper Hub Height - Height to Upper Hub in both meters and inches
@@ -77,7 +77,7 @@ public class RobotInformation {
         public static final double tarmacWidthMeters = (tarmacWidthInches/39.37);
     }
 
-    /** 
+    /**
     * <p> PID values for different motors
     * <ul>
     *   <li>LOL: https://github.com/team422/FRC-22/commit/404fcaf11cdc40c7e1d994e7b2edd22b0ad7d308
@@ -154,13 +154,13 @@ public class RobotInformation {
 
             public static final double botlengthInches = 30;
             public static final double botlengthMeters = (botlengthInches/39.37);
-    
+
             public static final double botwidthInches = 28;
             public static final double botwidthMeters = (botwidthInches/39.37);
-    
+
             public static final double botlengthBumpersInches = 38.478;
             public static final double botlengthBumpersMeters = (botlengthBumpersInches/39.37);
-    
+
             public static final double botwidthBumpersInches = 36.478;
             public static final double botwidthBumpersMeters = (botwidthBumpersInches/39.37);
 
@@ -211,7 +211,7 @@ public class RobotInformation {
             * </ul>
          * </ul>
          */
-        public static class MotorData { 
+        public static class MotorData {
             // TalonFX integrated sensor is 2048 units per rotation
             /**
              * Different Motor Types

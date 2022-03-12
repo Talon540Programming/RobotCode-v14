@@ -34,7 +34,12 @@ public class MotorControl {
             Robot.shooterFly.set(ControlMode.PercentOutput, 0);
         }
     }
-    
+
+    public static void oldDriveTrain(double motorSpeedLeft, double motorSpeedRight) {
+        Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
+        Robot.rightMaster.set(ControlMode.PercentOutput, motorSpeedRight);
+    }
+
     public static void motor_init() {
         Robot.rightMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.rightMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
@@ -66,6 +71,7 @@ public class MotorControl {
         // Robot.shooterFly.config_kP(0, RobotInformation.PID_Values.flywheel.kP, 1); // (P) Proportional Term
         // Robot.shooterFly.config_kI(0, RobotInformation.PID_Values.flywheel.kI, 1); // (I) Integral term
         // Robot.shooterFly.config_kD(0, RobotInformation.PID_Values.flywheel.kD, 1); // (D) Differentiable Term
-    
+
     }
+
 }

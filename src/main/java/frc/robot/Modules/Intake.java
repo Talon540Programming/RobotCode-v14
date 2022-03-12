@@ -15,7 +15,7 @@ public class Intake {
             Robot.rollers.set(ControlMode.PercentOutput, 0);
         }
     }
-   
+
     /** The stupid thing that looks cool but doesnt really work // edit: it works apparently */
     public static void wrist() {
         if(Math.abs(Robot.controller.getLeftY()) > 0.2) {
