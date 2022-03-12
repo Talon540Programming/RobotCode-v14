@@ -55,15 +55,15 @@ public class RobotInformation {
     }
 
     /**
-    * <p> Information specific to 2022 RAPID REACTᵀᴹ Feild:
+    * <p> Information specific to 2022 RAPID REACTᵀᴹ Field:
     * <ul>
     *   <li>Upper Hub Height - Height to Upper Hub in both meters and inches
     *   <li>Lower Hub Height - Height to Lower Hub in both meters and inches
     *   <li>Tarmac Width and Height - Tarmac Width and Height in both meters and inches
     * </ul>
      */
-    public static class FeildData {
-        // Feild Data
+    public static class FieldData {
+        // Field Data
         /** Upper hub height in inches */
         public static final double upperHubHeightInches = 104;
         /** Upper hub height in meters */
