@@ -237,7 +237,7 @@ public class RobotInformation {
                 }
 
                 public static class M_775 {
-                    public static final double maxRPM = 0; //TODO: Find This
+                    public static final double maxRPM = 18700;
                 }
             }
 

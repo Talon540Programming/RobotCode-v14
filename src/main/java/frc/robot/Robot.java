@@ -128,6 +128,8 @@ public class Robot extends TimedRobot {
     double current_velocity = MotorControl.getCurrentVelocity(shooterFly);
     double current_RPM = (60 * current_velocity) / (2 * Math.PI);
 
+    SmartDashboard.putNumber("Max Velocity",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxVelocity);
+    SmartDashboard.putNumber("Max RPM",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxRPM);
     SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
   }
