@@ -104,11 +104,13 @@ public class MotorControl {
     public static void setRPM(MotorPositions position, int RPM) {
         switch(position) {
             case Shooter:
-                WPI_TalonFX motor = RobotInformation.RobotData.MotorData.Shooter.Flywheel.motor;
-                double current_velocity = getCurrentVelocity(motor);
+                WPI_TalonFX flywheel_motor = RobotInformation.RobotData.MotorData.Shooter.Flywheel.motor;
+                double current_velocity = getCurrentVelocity(flywheel_motor);
                 double current_RPM = (60 * current_velocity) / (2 * Math.PI);
+                
                 break;
             case Rollers:
+                TalonSRX roller_motor = RobotInformation.RobotData.MotorData.Intake.Rollers.motor;
 
                 break;
             case Extension:

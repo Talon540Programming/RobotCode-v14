@@ -31,6 +31,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -132,6 +134,16 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Max RPM",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxRPM);
     SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
+
+
+    // PIDController FlywheelPIDController = new PIDController(RobotInformation.PID_Values.flywheel.kP, RobotInformation.PID_Values.flywheel.kI, RobotInformation.PID_Values.flywheel.kD);
+    // FlywheelPIDController.calculate(shooterFly.getSensorCollection().getIntegratedSensorAbsolutePosition());
+    // FlywheelPIDController.close();
+    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition());
+  }
+
+  @Override
+  public void testExit() {
   }
 
   @Override
