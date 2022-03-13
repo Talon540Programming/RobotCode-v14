@@ -8,6 +8,12 @@ public class Limelight {
     /** The last angle seen by the limelight that wasn't zero */
     public static double nonZeroLimelightHorAng; // Used to orient bot
 
+    public static enum Limelight_Light_States {
+        on,
+        off,
+        blink
+    }
+
 /**
  * This function is used to update the SmartDashboard with the current values of the Limelight
  */
@@ -81,7 +87,7 @@ public class Limelight {
  * Initialises the Limelight for Top Hub tracking: Sets the LEDS to on, sets the pipeline to 0, and sets the Limelight as a Vision Processor
  */
     public static void init() {
-        setLEDS("on");
+        setLEDS(Limelight_Light_States.on);
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
     }
@@ -99,7 +105,7 @@ public class Limelight {
  * Code run for limelight when robot is in a disabled state
  */
     public static void disabled() {
-        setLEDS("off"); // Turns off the god damm limelight cause im going to go blind and gouge my eyes out because wtf does it need to be so bright like holy hell
+        setLEDS(Limelight_Light_States.off); // Turns off the god damm limelight cause im going to go blind and gouge my eyes out because wtf does it need to be so bright like holy hell
     }
 
 /**
@@ -107,18 +113,18 @@ public class Limelight {
  * 
  * @param mode The LED mode. ("off", "blink", "on")
  */
-    public static void setLEDS(String mode) {
+    public static void setLEDS(Limelight_Light_States mode) {
         switch (mode) {
-            case "off":
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1); // light off
-                break;
-
-            case "blink":
-                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(2); //light blinking
-                break;
-
-            case "on":
+            case on:
                 NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3); // light on
+                break;
+
+            case off:
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1); //light off
+                break;
+
+            case blink:
+                NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(2); //light blinking
                 break;
 
             default:

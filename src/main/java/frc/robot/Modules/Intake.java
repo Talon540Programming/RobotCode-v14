@@ -20,9 +20,7 @@ public class Intake {
         }
     }
 
-    /** The stupid thing that looks cool but doesnt really work // edit: it works apparently */
-
-    /**
+    /** The stupid thing that looks cool but doesnt really work // edit: it works apparently
      * This function is called when the left joystick is moved in the Y direction. 
      * If the joystick is moved up, the wrist is set to the output of the joystick multiplied by the
      * transfer percentage. 
@@ -35,5 +33,23 @@ public class Intake {
             Robot.wrist.set(ControlMode.PercentOutput, 0);
         }
       }
+
+    public static Boolean wristInside() {
+        double wrist_position = MotorControl.getCurrentPosition(Robot.wrist);
+        if(0 < wrist_position && wrist_position < 1) { //TODO: find wrist sensor positions that constitute the wrist is inside
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Boolean wristDown() {
+        double wrist_position = MotorControl.getCurrentPosition(Robot.wrist);
+        if(0 < wrist_position && wrist_position < 1) { //TODO: find wrist sensor positions that constitute the wrist is down
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

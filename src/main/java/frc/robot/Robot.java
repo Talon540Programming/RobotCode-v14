@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.Limelight;
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
-import frc.robot.Modules.DriveCode;
 import frc.robot.Modules.BallTracking;
 import frc.robot.Modules.Climbers;
 import frc.robot.Modules.Intake;
 import frc.robot.Modules.RobotInformation;
+import frc.robot.Modules.Limelight.Limelight_Light_States;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
@@ -37,6 +37,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
+import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;;
 // import com.kauailabs.navx.frc.AHRS;
 
 
@@ -47,15 +48,15 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   // MOTOR VARIABLES
-  public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; //Falcon 500s
-  public static WPI_TalonFX climbExtension;
-  public static WPI_TalonFX shooterFly;
-  public static WPI_TalonFX wrist;
-  public static WPI_TalonFX climbRotation;
-  public static TalonSRX rollers;
+  public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; // Drivetrain Motors
+  public static WPI_TalonFX climbExtension; // Climb Extension motor
+  public static WPI_TalonFX shooterFly; // Flywheel motor
+  public static WPI_TalonFX wrist; // Wrist motor
+  public static WPI_TalonFX climbRotation; // Climb Rotation motor
+  public static TalonSRX rollers; // Roller motor
 
   //CONTROLLERS
-  public static Joystick leftJoy, rightJoy; //Used for tank drive
+  public static Joystick leftJoy, rightJoy; //Used for tank drive and for other things
   public static XboxController controller; // Used for button man mechanism controls
 
   // SENSORS
@@ -144,13 +145,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testExit() {
+  
   }
 
   @Override
   public void autonomousInit() {
     // m_autoSelected = m_chooser.getSelected();
     // System.out.println("Auto selected: " + m_autoSelected);
-    Limelight.setLEDS("on");
+    Limelight.setLEDS(Limelight_Light_States.on);
   }
 
   @Override
@@ -178,12 +180,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() { // Run apon exiting auto
-    Limelight.setLEDS("off");
+    Limelight.setLEDS(Limelight_Light_States.off);
   }
 
   @Override
   public void teleopInit() {
-    Limelight.setLEDS("on");
+    Limelight.setLEDS(Limelight_Light_States.on);
   }
 
   @Override
@@ -195,8 +197,8 @@ public class Robot extends TimedRobot {
 
     // Driver aims to top hub or to balls
     if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
-      Limelight.setLEDS("on");
-      AimFire.centerAim("top_hub");
+      Limelight.setLEDS(Limelight_Light_States.on);
+      AimFire.centerAim(ValidTargets.top_hub);
     }
 
     Climbers.climb();
@@ -204,13 +206,13 @@ public class Robot extends TimedRobot {
     AimFire.shooter();
     Intake.wrist();
     Intake.rollers();
-    DriveCode.tankDrive();
+    MotorControl.DriveCode.tankDrive();
     MotorControl.flywheel();
   }
 
   @Override
   public void teleopExit() { // Run apon exiting teleop
-    Limelight.setLEDS("off");
+    Limelight.setLEDS(Limelight_Light_States.off);
   }
 
   @Override

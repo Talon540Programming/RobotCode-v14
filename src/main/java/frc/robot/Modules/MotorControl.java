@@ -16,23 +16,23 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 
 public class MotorControl {
-    /**
-     * Given the ideal velocity and the transfer percentage, return the RPM
-     * 
-     * @param idealVelocity the velocity you want to achieve in meters per second
-     * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
-     * @return The RPM of the motor.
-     */
+/**
+ * Given the ideal velocity and the transfer percentage, return the RPM
+ * 
+ * @param idealVelocity the velocity you want to achieve in meters per second
+ * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
+ * @return The RPM of the motor.
+ */
     public static double getRPM(double idealVelocity, double transferPercent) {
         return (((idealVelocity*(1/transferPercent))/(Math.PI*0.1016))*60); // rudimentary calculation that's 90% wrong
     }
 
-    /**
-     * This function returns the current velocity of the motor. The motor must be a Falcon500
-     * 
-     * @param motor The motor you want to get the velocity of.
-     * @return The integrated sensor velocity of the motor.
-     */
+/**
+ * This function returns the current velocity of the motor. The motor must be a Falcon500
+ * 
+ * @param motor The motor you want to get the velocity of.
+ * @return The integrated sensor velocity of the motor.
+ */
     public static double getCurrentVelocity(WPI_TalonFX motor) { // If using a TalonFX motor only
         return (motor.getSensorCollection().getIntegratedSensorVelocity());
     }
@@ -44,7 +44,7 @@ public class MotorControl {
  * @return The current position of the motor.
  */
     public static double getCurrentPosition(WPI_TalonFX motor) { // If using a TalonFX motor only
-        return (motor.getSensorCollection().getIntegratedSensorPosition());
+        return (motor.getSensorCollection().getIntegratedSensorAbsolutePosition());
     }
 
 /**
@@ -70,6 +70,8 @@ public class MotorControl {
         Robot.leftMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.leftSlave.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.leftSlave.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
+
+        Robot.rightMaster.setInverted(true);
 
         // Initialize Climber's and their Motor Brakes
         Robot.climbRotation.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 80, .5));
@@ -107,7 +109,7 @@ public class MotorControl {
                 WPI_TalonFX flywheel_motor = RobotInformation.RobotData.MotorData.Shooter.Flywheel.motor;
                 double current_velocity = getCurrentVelocity(flywheel_motor);
                 double current_RPM = (60 * current_velocity) / (2 * Math.PI);
-                
+
                 break;
             case Rollers:
                 TalonSRX roller_motor = RobotInformation.RobotData.MotorData.Intake.Rollers.motor;
@@ -122,6 +124,31 @@ public class MotorControl {
             default:
 
                 break;
+        }
+    }
+
+    public static class DriveCode {
+        /** Main Drive Call */
+        public static void tankDrive() {
+            if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
+                Robot.drive.tankDrive((-Robot.rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));// TODO: adjust deadzones
+            }
+        }
+        
+        /** Move the Robot Backwards at -0.1 speed (should be a PID loop imo) */
+        public static void moveBack() {
+            Robot.drive.tankDrive(-0.1, -0.1);
+        }
+    
+        /**
+         * Drive the robot using the left and right master motors at the given motor speeds.*
+         * 
+         * @param motorSpeedLeft The speed that you want the left motor to go.
+         * @param motorSpeedRight The speed that you want the right side to go.
+         */
+        public static void oldDriveTrain(double motorSpeedLeft, double motorSpeedRight) {
+            Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
+            Robot.rightMaster.set(ControlMode.PercentOutput, -motorSpeedRight);
         }
     }
 }

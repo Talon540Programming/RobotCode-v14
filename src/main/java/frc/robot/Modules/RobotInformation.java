@@ -9,7 +9,7 @@ public class RobotInformation {
     // General Information
 
     /** Minimum Angle that wont trigger the robot moving */
-    public static final double deadbandAngle = 0.5;
+    public static final double deadbandAngle = 0.3; // Last Known Working = 0.5
     /** Our Alliance Color */
     public static String allianceColor = "red"; // not final because it is not final
 
@@ -81,6 +81,12 @@ public class RobotInformation {
         public static final double tarmacWidthInches = 153;
         /** Tarmac width in meters */
         public static final double tarmacWidthMeters = (tarmacWidthInches/39.37);
+
+        public static enum ValidTargets {
+            top_hub,
+            lower_hub,
+            ball
+        }
     }
 
     /**

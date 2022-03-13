@@ -1,6 +1,8 @@
 package frc.robot.Modules;
 
 import frc.robot.Robot;
+import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,10 +24,11 @@ public class AimFire {
  * 
  * @param target The name of the target to aim at. ("top_hub","ball")
  */
-  public static void centerAim(String target) {
+  public static void centerAim(ValidTargets target) {
   //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
-    switch(target.toLowerCase()) {
-      case "top_hub": // TODO: check PID on Triclops
+
+    switch(target) {
+      case top_hub:
         Limelight.setPipeline(0);
         Limelight.getLimelightData();
         if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) { //Is the number within the deadband range?
@@ -33,13 +36,34 @@ public class AimFire {
             // Turn right
             double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
             motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-            DriveCode.oldDriveTrain(motorSpeed, motorSpeed);
+            MotorControl.DriveCode.oldDriveTrain(motorSpeed, -motorSpeed);
           }
           if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
             // Turn left
             double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
             motorSpeed = Math.round(motorSpeed * 100) / 100.0;
-            DriveCode.oldDriveTrain(-motorSpeed, -motorSpeed);
+            MotorControl.DriveCode.oldDriveTrain(-motorSpeed, motorSpeed);
+          }
+        } 
+        // else { 
+        //   DriveCode.oldDriveTrain(0, 0);
+        // }
+        break;
+      case lower_hub:
+        Limelight.setPipeline(0);
+        Limelight.getLimelightData();
+        if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) { //Is the number within the deadband range?
+          if(Limelight.nonZeroLimelightHorAng>0) { //Positive
+            // Turn right
+            double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
+            motorSpeed = Math.round(motorSpeed * 100) / 100.0;
+            MotorControl.DriveCode.oldDriveTrain(motorSpeed, -motorSpeed);
+          }
+          if(Limelight.nonZeroLimelightHorAng<0) { //Negetive
+            // Turn left
+            double motorSpeed = (Math.abs(Limelight.nonZeroLimelightHorAng * .9)/59.6)+.05;
+            motorSpeed = Math.round(motorSpeed * 100) / 100.0;
+            MotorControl.DriveCode.oldDriveTrain(-motorSpeed, motorSpeed);
           }
         } 
         // else { 
@@ -47,7 +71,7 @@ public class AimFire {
         // }
         break;
 
-      case "ball":
+      case ball:
 
           break;
     }
@@ -57,8 +81,12 @@ public class AimFire {
 /**
  * One click fire function
  */
-  public static void fire() { //TODO: One click fire
+  public static void fire(ValidTargets target) { //TODO: One click fire
+    if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) {
+      centerAim(target);
+    } else if(Math.abs(Limelight.nonZeroLimelightHorAng)<RobotInformation.deadbandAngle) {
 
+    }
   }
 
 }
