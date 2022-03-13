@@ -16,18 +16,40 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 
 public class MotorControl {
+    /**
+     * Given the ideal velocity and the transfer percentage, return the RPM
+     * 
+     * @param idealVelocity the velocity you want to achieve in meters per second
+     * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
+     * @return The RPM of the motor.
+     */
     public static double getRPM(double idealVelocity, double transferPercent) {
         return (((idealVelocity*(1/transferPercent))/(Math.PI*0.1016))*60); // rudimentary calculation that's 90% wrong
     }
 
+    /**
+     * This function returns the current velocity of the motor. The motor must be a Falcon500
+     * 
+     * @param motor The motor you want to get the velocity of.
+     * @return The integrated sensor velocity of the motor.
+     */
     public static double getCurrentVelocity(WPI_TalonFX motor) { // If using a TalonFX motor only
         return (motor.getSensorCollection().getIntegratedSensorVelocity());
     }
 
+/**
+ * This function returns the current position of the motor. The motor must be a Falcon500
+ * 
+ * @param motor The motor you want to get the current position of.
+ * @return The current position of the motor.
+ */
     public static double getCurrentPosition(WPI_TalonFX motor) { // If using a TalonFX motor only
         return (motor.getSensorCollection().getIntegratedSensorPosition());
     }
 
+/**
+ * If the right bumper is pressed, run the flywheel at full power.
+ */
     public static void flywheel() {
         if(Robot.controller.getRightBumper()) {
             Robot.shooterFly.set(ControlMode.PercentOutput, 1);
@@ -36,6 +58,9 @@ public class MotorControl {
         }
     }
 
+/**
+ * Initializes the motors for the robot
+ */
     public static void motor_init() {
         Robot.rightMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.rightMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
@@ -69,7 +94,13 @@ public class MotorControl {
         // Robot.shooterFly.config_kD(0, RobotInformation.PID_Values.flywheel.kD, 1); // (D) Differentiable Term
 
     }
-    /** Two parameters: motor, mode (RPM or Velocity) */
+    
+/**
+ * This function sets the RPM of a motor
+ * 
+ * @param position The motor position to set the RPM for.
+ * @param RPM The RPM of the motor.
+ */
     public static void setRPM(MotorPositions position, int RPM) {
         switch(position) {
             case Shooter:

@@ -15,6 +15,12 @@ public class DriveCode {
         Robot.drive.tankDrive(-0.1, -0.1);
     }
 
+/**
+ * Drive the robot using the left and right master motors at the given motor speeds.*
+ * 
+ * @param motorSpeedLeft The speed that you want the left motor to go.
+ * @param motorSpeedRight The speed that you want the right side to go.
+ */
     public static void oldDriveTrain(double motorSpeedLeft, double motorSpeedRight) {
         Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
         Robot.rightMaster.set(ControlMode.PercentOutput, motorSpeedRight);

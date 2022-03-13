@@ -6,7 +6,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AimFire {
-  //Shooter, will probably be replaced with autonomous shooter stuff, need encoder
+/**
+ * If the right bumper is pressed, run the shooter flywheel at full speed. Otherwise, stop it
+ */
   public static void shooter() {
         if(Robot.controller.getRightBumper()) {
           Robot.shooterFly.set(ControlMode.PercentOutput, 1);
@@ -15,9 +17,14 @@ public class AimFire {
         }
       }
 
+/**
+ * The function that will center the robot's aim on the target.
+ * 
+ * @param target The name of the target to aim at. ("top_hub","ball")
+ */
   public static void centerAim(String target) {
   //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
-    switch(target) {
+    switch(target.toLowerCase()) {
       case "top_hub": // TODO: check PID on Triclops
         Limelight.setPipeline(0);
         Limelight.getLimelightData();
@@ -46,6 +53,10 @@ public class AimFire {
     }
   }
 
+
+/**
+ * One click fire function
+ */
   public static void fire() { //TODO: One click fire
 
   }

@@ -5,8 +5,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Limelight {
+    /** The last angle seen by the limelight that wasn't zero */
     public static double nonZeroLimelightHorAng; // Used to orient bot
 
+/**
+ * This function is used to update the SmartDashboard with the current values of the Limelight
+ */
     public static void updateSmartDashboard() {
         double[][] shooterCalculations = Limelight.getLimelightData();
         SmartDashboard.putNumber("Distance: ",shooterCalculations[0][0]);
@@ -18,6 +22,20 @@ public class Limelight {
         SmartDashboard.putNumber("Non Zero Angle", nonZeroLimelightHorAng);
     }
 
+/**
+ * This function returns the distance between the limelight and the retroreflector, the optimal angle
+ * to shoot at, and the optimal ball velocity
+ * 
+ * @return The horizontal angle, vertical angle, and latency of the limelight.
+ *  <ul> 
+        <li>LimelightInfo[0][0] = distance; //Horizontal distance between the hubs and the limelight
+        <li>LimelightInfo[0][1] = angle; //Optimal Shooter Angle
+        <li>LimelightInfo[0][2] = velocity; //Optimal Ball velocity
+        <li>LimelightInfo[1][0] = horizontalAngle; //Horizontal angle between the limelight and the retroreflector
+        <li>LimelightInfo[1][1] = verticalAngle; //Vertical angle between limelight and retroreflector
+        <li>LimelightInfo[1][2] = limelightLatency; // Latency for limelight calculations
+ *  </ul>
+ */
     public static double[][] getLimelightData() {
         double[][] LimelightInfo = {{0,0,0},{0,0,0}};
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -44,6 +62,11 @@ public class Limelight {
         return LimelightInfo;
       }
 
+/**
+ * Is the top hub present in the FOV?
+ * 
+ * @return A boolean value.
+ */
     public static boolean hubPresent() {
         NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
         double targetPresence = table.getEntry("tv").getDouble(0);
@@ -54,20 +77,36 @@ public class Limelight {
         }
     }
 
+/**
+ * Initialises the Limelight for Top Hub tracking: Sets the LEDS to on, sets the pipeline to 0, and sets the Limelight as a Vision Processor
+ */
     public static void init() {
         setLEDS("on");
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
     }
 
+/**
+ * Sets the pipeline to the value of pipeline
+ * 
+ * @param pipeline 0-10
+ */
     public static void setPipeline(double pipeline) {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline); //Sets the pipeline to pipeline
     }
 
+/**
+ * Code run for limelight when robot is in a disabled state
+ */
     public static void disabled() {
         setLEDS("off"); // Turns off the god damm limelight cause im going to go blind and gouge my eyes out because wtf does it need to be so bright like holy hell
     }
 
+/**
+ * This function sets the LED mode of the limelight
+ * 
+ * @param mode The LED mode. ("off", "blink", "on")
+ */
     public static void setLEDS(String mode) {
         switch (mode) {
             case "off":
