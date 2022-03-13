@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class MotorControl {
 /**
  * Given the ideal velocity and the transfer percentage, return the RPM
- * 
+ *
  * @param idealVelocity the velocity you want to achieve in meters per second
  * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
  * @return The RPM of the motor.
@@ -29,7 +29,7 @@ public class MotorControl {
 
 /**
  * This function returns the current velocity of the motor. The motor must be a Falcon500
- * 
+ *
  * @param motor The motor you want to get the velocity of.
  * @return The integrated sensor velocity of the motor.
  */
@@ -39,7 +39,7 @@ public class MotorControl {
 
 /**
  * This function returns the current position of the motor. The motor must be a Falcon500
- * 
+ *
  * @param motor The motor you want to get the current position of.
  * @return The current position of the motor.
  */
@@ -96,10 +96,10 @@ public class MotorControl {
         // Robot.shooterFly.config_kD(0, RobotInformation.PID_Values.flywheel.kD, 1); // (D) Differentiable Term
 
     }
-    
+
 /**
  * This function sets the RPM of a motor
- * 
+ *
  * @param position The motor position to set the RPM for.
  * @param RPM The RPM of the motor.
  */
@@ -116,7 +116,7 @@ public class MotorControl {
 
                 break;
             case Extension:
-            
+
                 break;
             case Rotation:
 
@@ -127,6 +127,9 @@ public class MotorControl {
         }
     }
 
+/**
+ * This class is used to control the drivetrain of the robot
+ */
     public static class DriveCode {
         /** Main Drive Call */
         public static void tankDrive() {
@@ -134,15 +137,15 @@ public class MotorControl {
                 Robot.drive.tankDrive((-Robot.rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));// TODO: adjust deadzones
             }
         }
-        
+
         /** Move the Robot Backwards at -0.1 speed (should be a PID loop imo) */
         public static void moveBack() {
             Robot.drive.tankDrive(-0.1, -0.1);
         }
-    
+
         /**
          * Drive the robot using the left and right master motors at the given motor speeds.*
-         * 
+         *
          * @param motorSpeedLeft The speed that you want the left motor to go.
          * @param motorSpeedRight The speed that you want the right side to go.
          */

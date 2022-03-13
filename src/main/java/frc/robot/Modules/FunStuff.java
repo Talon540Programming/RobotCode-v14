@@ -1,6 +1,6 @@
 package frc.robot.Modules;
 
-import frc.robot.Modules.Limelight.Limelight_Light_States;
+import frc.robot.Modules.VisionSystems.Limelight.Limelight_Light_States;
 
 public class FunStuff {
     public static enum Music {
@@ -9,7 +9,7 @@ public class FunStuff {
     }
 
     public static void RAVE_MODE() {
-        Limelight.setLEDS(Limelight_Light_States.blink);
+        VisionSystems.Limelight.setLEDS(Limelight_Light_States.blink);
         MotorControl.DriveCode.oldDriveTrain(0.6, -0.6);
     }
 

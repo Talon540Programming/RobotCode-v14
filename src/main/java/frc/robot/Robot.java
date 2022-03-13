@@ -10,14 +10,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Modules.Limelight;
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
-import frc.robot.Modules.BallTracking;
 import frc.robot.Modules.Climbers;
 import frc.robot.Modules.Intake;
 import frc.robot.Modules.RobotInformation;
-import frc.robot.Modules.Limelight.Limelight_Light_States;
+import frc.robot.Modules.VisionSystems;
+import frc.robot.Modules.VisionSystems.Limelight.Limelight_Light_States;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
@@ -42,11 +41,6 @@ import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;;
 
 
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default"; //types of autos- not used
-  private static final String kCustomAuto = "My Auto"; //types of autos- not currently used
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
   // MOTOR VARIABLES
   public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; // Drivetrain Motors
   public static WPI_TalonFX climbExtension; // Climb Extension motor
@@ -68,6 +62,12 @@ public class Robot extends TimedRobot {
 
   // MISCELLANEOUS
   public static DifferentialDrive drive; //Used for monitoring tank drive motion
+
+  @Override
+  public void robotPeriodic() {
+    // Display information relayed by Limelight and RPM information for testing
+    VisionSystems.Limelight.updateSmartDashboard();
+  }
 
   @Override
   public void robotInit() {
@@ -104,13 +104,8 @@ public class Robot extends TimedRobot {
     rightJoy = new Joystick(1);
     controller = new XboxController(2);
 
-    // Used to select autonomous mode
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-
-    Limelight.init();
-    BallTracking.maininit(); //TODO: create sendableChooser for alliance COLOR
+    VisionSystems.Limelight.init();
+    VisionSystems.BallTracking.initializeAllianceChooser(); //TODO: create sendableChooser for alliance COLOR
   }
 
   @Override
@@ -145,32 +140,29 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testExit() {
-  
+
   }
 
   @Override
   public void autonomousInit() {
     // m_autoSelected = m_chooser.getSelected();
     // System.out.println("Auto selected: " + m_autoSelected);
-    Limelight.setLEDS(Limelight_Light_States.on);
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
   }
 
   @Override
   public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
-    BallTracking.autoinit();
-    // Display information relayed by Limelight and RPM information for testing
-    double[][] shooterCalculations = Limelight.getLimelightData();
-    Limelight.updateSmartDashboard();
+    VisionSystems.BallTracking.updateAllianceColor();
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     //Taxi Code (Front Bumper needs to fully cross the tarmac)
-    if(Limelight.hubPresent() && (shooterCalculations[0][0]<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+    if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
       drive.tankDrive(-0.1, -0.1);
-    } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.6))) { //If we overshoot the target
+    } else if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.6))) { //If we overshoot the target
       drive.tankDrive(0.1, 0.1);
-    } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < shooterCalculations[0][0] && shooterCalculations[0][0] <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
+    } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < VisionSystems.Limelight.getDistanceFromHubStack() && VisionSystems.Limelight.getDistanceFromHubStack() <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
       // shoot
     } else {
       drive.tankDrive(0,0);
@@ -180,25 +172,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() { // Run apon exiting auto
-    Limelight.setLEDS(Limelight_Light_States.off);
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
   }
 
   @Override
   public void teleopInit() {
-    Limelight.setLEDS(Limelight_Light_States.on);
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
   }
 
   @Override
   public void teleopPeriodic() {
-    Limelight.updateSmartDashboard();
-
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     // Driver aims to top hub or to balls
     if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
-      Limelight.setLEDS(Limelight_Light_States.on);
-      AimFire.centerAim(ValidTargets.top_hub);
+      VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
+      AimFire.centerAim(ValidTargets.upper_hub);
     }
 
     Climbers.climb();
@@ -212,13 +202,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopExit() { // Run apon exiting teleop
-    Limelight.setLEDS(Limelight_Light_States.off);
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
   }
 
   @Override
   public void disabledPeriodic() { // Run when in Disabled mode
-    Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
+    VisionSystems.Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
   }
+
 }
 
 /**

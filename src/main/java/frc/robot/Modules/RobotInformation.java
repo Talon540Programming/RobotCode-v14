@@ -83,7 +83,7 @@ public class RobotInformation {
         public static final double tarmacWidthMeters = (tarmacWidthInches/39.37);
 
         public static enum ValidTargets {
-            top_hub,
+            upper_hub,
             lower_hub,
             ball
         }
@@ -170,6 +170,11 @@ public class RobotInformation {
             public static final double LimelightAngleRadians = Math.toRadians(40);
             public static final double LimelightHeightInches = 22.76;
             public static final double LimelightHeightMeters = (LimelightHeightInches/39.37);
+
+            // Flywheel Measurements
+            public static final double shooterHoodAngle = 70; //TODO: Find this after mechanical changes it
+            public static final double flywheelHeightInches = 0; //TODO: Find this (used for calculating the optimal release ball velocity)
+            public static final double flywheelHeightMeters = (flywheelHeightInches/39.37);
         }
 
         /** Shooter and Flywheel specifc measurments */
@@ -232,12 +237,7 @@ public class RobotInformation {
                     Extension,
                     Rotation
                 }
-                
-                public static enum SpeedTypes {
-                    Velocity,
-                    RPM
-                }
-                
+
                 public static class Falcon500 {
                     public static final int maxRPM = 6380;
                 }

@@ -21,9 +21,9 @@ public class Intake {
     }
 
     /** The stupid thing that looks cool but doesnt really work // edit: it works apparently
-     * This function is called when the left joystick is moved in the Y direction. 
+     * This function is called when the left joystick is moved in the Y direction.
      * If the joystick is moved up, the wrist is set to the output of the joystick multiplied by the
-     * transfer percentage. 
+     * transfer percentage.
      * If the joystick is moved down, the wrist is set to 0
      */
     public static void wrist() {
