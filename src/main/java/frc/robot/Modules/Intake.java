@@ -3,7 +3,7 @@ package frc.robot.Modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// TODO: TESTing issue
+
 public class Intake {
     /** The spinny part that is duct taped together by "The Contractor"
          * If the right bumper is pressed, the intake spins from the field to the robot. If the left bumper is
