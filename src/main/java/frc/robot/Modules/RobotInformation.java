@@ -1,10 +1,15 @@
 package frc.robot.Modules;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
+import frc.robot.Robot;
+
 public class RobotInformation {
     // General Information
 
     /** Minimum Angle that wont trigger the robot moving */
-    public static final double deadbandAngle = 0.5;
+    public static final double deadbandAngle = 0.3; // Last Known Working = 0.5
     /** Our Alliance Color */
     public static String allianceColor = "red"; // not final because it is not final
 
@@ -21,7 +26,8 @@ public class RobotInformation {
     // 13.0
     /** Fixed Limelight Angle on Talon540 2021 13.0 */
     public static final double oldlimelightAngle = 14.7734450937;
-    /** 
+
+    /**
     * <p> Limelight Height on Talon540 2021 13.0:
     * <ul>
     *   <li>note - this is most likely wrong due to inaccurate cad measurments
@@ -29,7 +35,7 @@ public class RobotInformation {
      */
     public static final double oldlimelightHeight = 17; // inches
 
-    /** 
+    /**
     * <p> Information specific to Robot Driver and ButtonMan:
     * <ul>
     *   <li>driverPercentage - What percent of input is translated to robot speed (slows the bot down).
@@ -48,16 +54,16 @@ public class RobotInformation {
         public static final double rollerLBTransferPercentage = 0.5;
     }
 
-    /** 
-    * <p> Information specific to 2022 RAPID REACTᵀᴹ Feild:
+    /**
+    * <p> Information specific to 2022 RAPID REACTᵀᴹ Field:
     * <ul>
     *   <li>Upper Hub Height - Height to Upper Hub in both meters and inches
     *   <li>Lower Hub Height - Height to Lower Hub in both meters and inches
     *   <li>Tarmac Width and Height - Tarmac Width and Height in both meters and inches
     * </ul>
      */
-    public static class FeildData {
-        // Feild Data
+    public static class FieldData {
+        // Field Data
         /** Upper hub height in inches */
         public static final double upperHubHeightInches = 104;
         /** Upper hub height in meters */
@@ -75,9 +81,15 @@ public class RobotInformation {
         public static final double tarmacWidthInches = 153;
         /** Tarmac width in meters */
         public static final double tarmacWidthMeters = (tarmacWidthInches/39.37);
+
+        public static enum ValidTargets {
+            upper_hub,
+            lower_hub,
+            ball
+        }
     }
 
-    /** 
+    /**
     * <p> PID values for different motors
     * <ul>
     *   <li>LOL: https://github.com/team422/FRC-22/commit/404fcaf11cdc40c7e1d994e7b2edd22b0ad7d308
@@ -85,8 +97,8 @@ public class RobotInformation {
     * </ul>
      */
     public static class PID_Values {
-        /** Limelight PID values */
-        public class limelight {
+        /** Flywheel PID values */
+        public static class flywheel {
             /** Feed Forward Term */
             public static final double kF = 0;
             /** Proportional Term */
@@ -96,8 +108,8 @@ public class RobotInformation {
             /** Differentiable Term */
             public static final double kD = 0;
         }
-        /** Flywheel PID values */
-        public class flywheel {
+
+        public static class wrist {
             /** Feed Forward Term */
             public static final double kF = 0;
             /** Proportional Term */
@@ -150,17 +162,17 @@ public class RobotInformation {
         /** Physical Measurements */
         public static class RobotMeasurement { // One time Chirayu told me we should do all one unit for Robot Code, I laughed and added all data in kilometers
             // Robot information
-            public static final double robotWeight = 86.484;
+            public static final double robotWeight = 86.484; // lbs
 
             public static final double botlengthInches = 30;
             public static final double botlengthMeters = (botlengthInches/39.37);
-    
+
             public static final double botwidthInches = 28;
             public static final double botwidthMeters = (botwidthInches/39.37);
-    
+
             public static final double botlengthBumpersInches = 38.478;
             public static final double botlengthBumpersMeters = (botlengthBumpersInches/39.37);
-    
+
             public static final double botwidthBumpersInches = 36.478;
             public static final double botwidthBumpersMeters = (botwidthBumpersInches/39.37);
 
@@ -169,12 +181,17 @@ public class RobotInformation {
             public static final double LimelightAngleRadians = Math.toRadians(40);
             public static final double LimelightHeightInches = 22.76;
             public static final double LimelightHeightMeters = (LimelightHeightInches/39.37);
+
+            // Flywheel Measurements
+            public static final double shooterHoodAngle = 70; //TODO: Find this after mechanical changes it
+            public static final double flywheelHeightInches = 0; //TODO: Find this (used for calculating the optimal release ball velocity)
+            public static final double flywheelHeightMeters = (flywheelHeightInches/39.37);
         }
 
         /** Shooter and Flywheel specifc measurments */
         public static class ShooterData {
             // Shooter
-            public static final double hubEntryAngle = 45; //What angle we want to enter the hub at
+            public static final int hubEntryAngle = 45; //What angle we want to enter the hub at
 
             // Flywheel
             public static final double flywheelTransferPercentage = 0.35;
@@ -211,7 +228,7 @@ public class RobotInformation {
             * </ul>
          * </ul>
          */
-        public static class MotorData { 
+        public static class MotorData {
             // TalonFX integrated sensor is 2048 units per rotation
             /**
              * Different Motor Types
@@ -222,56 +239,93 @@ public class RobotInformation {
                 * <li>Dolores
              * </ul>
              */
-            public class motorTypes {
-                public class Falcon500 {
-                    public static final double maxRPM = 6380;
+            public static class motorTypes {
+                public static enum MotorPositions {
+                    Drivetrain,
+                    Shooter,
+                    Wrist,
+                    Rollers,
+                    Extension,
+                    Rotation
                 }
 
-                public class LOREM {
-
+                public static class Falcon500 {
+                    public static final int maxRPM = 6380;
                 }
-                public class IPSUM {
 
-                }
-                public class Dolores {
-
+                public static class M_775 {
+                    public static final int maxRPM = 18700;
                 }
             }
 
             /** Drivetrain Motors */
-            public class Drivetrain {
+            public static class Drivetrain {
                 // Drivetrain Motors
                 /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
+                public static final int gearRatio = 0; //TODO: Find This
                 /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio); // Max possible velocity m/s
+                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                public static final int maxRPM = motorTypes.Falcon500.maxRPM;
+                public static WPI_TalonFX leftMotor = Robot.leftMaster;
+                public static WPI_TalonFX rightMotor = Robot.rightMaster;
             }
 
             /** Climber Motors */
-            public class Climbers {
-                // Climber Motors
-                /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
-                /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+            public static class Climbers {
+                /** Climb Rotation Motor */
+                public static class ClimbRotation {
+                    /** Gear Ratio of Motor */
+                    public static final int gearRatio = 10;
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final int maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.climbRotation;
+                }
+                /** Climb Extension Motor */
+                public static class ClimbExtension {
+                    /** Gear Ratio of Motor */
+                    public static final int gearRatio = 10;
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final int maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.climbExtension;
+                }
             }
 
             /** Shooter Motors */
-            public class Shooter {
-                // Shooter Motors
-                /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
-                /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+            public static class Shooter {
+                /** Flywheel Motor */
+                public static class Flywheel {
+                    /** Gear Ratio of Motor */
+                    public static final int gearRatio = 4;
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final int maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.shooterFly;
+                }
             }
 
             /** Intake Motors */
-            public class Intake {
-                // Intake and Roller Motors
-                /** Gear Ratio of Motor */
-                public static final double gearRatio = 0;
-                /** Max Velocity of Motor*/
-                public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+            public static class Intake {
+                /** Roller Motor */
+                public static class Rollers {
+                    /** Gear Ratio of Motor */
+                    public static final int gearRatio = 7;
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.M_775.maxRPM/600) * (2048/gearRatio);
+                    public static final int maxRPM = motorTypes.M_775.maxRPM;
+                    public static TalonSRX motor = Robot.rollers;
+                }
+                /** Wrist Motor */
+                public static class Wrist {
+                    /** Gear Ratio of Motor */
+                    public static final int gearRatio = 10;
+                    /** Max Velocity of Motor*/
+                    public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
+                    public static final int maxRPM = motorTypes.Falcon500.maxRPM;
+                    public static WPI_TalonFX motor = Robot.wrist;
+
+                }
             }
         }
     }

@@ -10,14 +10,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Modules.Limelight;
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
-import frc.robot.Modules.DriveCode;
-import frc.robot.Modules.BallTracking;
 import frc.robot.Modules.Climbers;
 import frc.robot.Modules.Intake;
 import frc.robot.Modules.RobotInformation;
+import frc.robot.Modules.VisionSystems;
+import frc.robot.Modules.VisionSystems.Limelight.Limelight_Light_States;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
@@ -31,43 +30,44 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
+import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;;
 // import com.kauailabs.navx.frc.AHRS;
 
 
 public class Robot extends TimedRobot {
-  // AUTONOMOUS VARIABLES
-  private int counter = 0;// TODO: Simple initialization for autonomous duration it takes to kickup counter-> can be adjusted on line 176
-  private int counter2 = 0;
-  private boolean ready, ready2; // Simple flag used for autonomous staging
-  private static final String kDefaultAuto = "Default"; //types of autos- not used
-  private static final String kCustomAuto = "My Auto"; //types of autos- not currently used
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private boolean stage1;  // auto staging
-
   // MOTOR VARIABLES
-  public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; //Falcon 500s
-  public static WPI_TalonFX climbExtension;
-  public static WPI_TalonFX shooterFly;
-  public static WPI_TalonFX wrist;
-  public static WPI_TalonFX climbRotation;
-  public static TalonSRX rollers;
+  public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; // Drivetrain Motors
+  public static WPI_TalonFX climbExtension; // Climb Extension motor
+  public static WPI_TalonFX shooterFly; // Flywheel motor
+  public static WPI_TalonFX wrist; // Wrist motor
+  public static WPI_TalonFX climbRotation; // Climb Rotation motor
+  public static TalonSRX rollers; // Roller motor
 
   //CONTROLLERS
-  public static Joystick leftJoy, rightJoy; //Used for tank drive
+  public static Joystick leftJoy, rightJoy; //Used for tank drive and for other things
   public static XboxController controller; // Used for button man mechanism controls
 
   // SENSORS
   // private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
 
   // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
-  // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position 
+  // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position
   // private DigitalInput intakeLimit; // Limit switch to know if intake is ready to kickup
 
   // MISCELLANEOUS
   public static DifferentialDrive drive; //Used for monitoring tank drive motion
+
+  @Override
+  public void robotPeriodic() {
+    // Display information relayed by Limelight and RPM information for testing
+    VisionSystems.Limelight.updateSmartDashboard();
+  }
 
   @Override
   public void robotInit() {
@@ -87,7 +87,7 @@ public class Robot extends TimedRobot {
     rollers = new TalonSRX(RobotInformation.RobotData.RobotPorts.INTAKE_ROLLERS);
 
     // Declare Shooter Motors
-    shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY); 
+    shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY);
 
     // Follow master motors
     rightSlave.follow(rightMaster);
@@ -99,50 +99,47 @@ public class Robot extends TimedRobot {
     // Used for tank and arcade drive respectively
     drive = new DifferentialDrive(leftMaster, rightMaster);
 
-    // AUTO AND TELEOP STAGING FLAGS
-    stage1 = false; // Auto starts in stage 1 and turns into stage 2
-    ready = false; // Not ready to shoot by default
-    ready2 = false;
-    counter = 0;
-    counter2 = 0;
-
     // CONTROLLER PORTS
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     controller = new XboxController(2);
 
-    // Used to select autonomous mode
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-
-    // SENSOR INITIALIZATIONS
-    // gyro = new AHRS(SerialPort.Port.kMXP); //SUBJECT TO CHANGE FROM ELECTRICAL COULD BE SOURCE OF ERROR
-    // ALL Ports subject to change from Electrical
-    //leftEncoder = new Encoder(0, 1);
-    // leftEncoder.setDistancePerPulse(drive_dpp);
-    // rightEncoder = new Encoder(2, 3);
-    // rightEncoder.setDistancePerPulse(drive_dpp);
-    // // Limit switches- CHANGE PORTS BASED ON ELECTRICAL
-    // lowerShooterLimit = new DigitalInput(4);
-    // upperShooterLimit = new DigitalInput(5);
-    // intakeLimit = new DigitalInput(6);
-
-    // Set integrated sensor position to 0 for encoder use
-    // leftMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-    // rightMaster.getSensorCollection().setIntegratedSensorPosition(0, 10);
-
-    Limelight.init();
-    BallTracking.maininit(); //TODO: create sendableChooser for alliance COLOR
+    VisionSystems.Limelight.init();
+    VisionSystems.BallTracking.initializeAllianceChooser();
   }
 
   @Override
   public void testInit() {
-
+    SmartDashboard.putNumber("Test RPM", 0);
   }
 
   @Override
   public void testPeriodic() {
+    double testRPM = SmartDashboard.getNumber("Test RPM", 0);
+    // MotorControl.setRPM(MotorPositions.Shooter, 10);
+    if(rightJoy.getRawButton(1)) {
+      Robot.shooterFly.set(ControlMode.PercentOutput, 1);
+    } else {
+      Robot.shooterFly.set(ControlMode.PercentOutput, 0);
+    }
+
+    double current_velocity = MotorControl.getCurrentVelocity(shooterFly);
+    double current_RPM = (60 * current_velocity) / (2 * Math.PI);
+
+    SmartDashboard.putNumber("Max Velocity",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxVelocity);
+    SmartDashboard.putNumber("Max RPM",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxRPM);
+    SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
+    SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
+
+
+    PIDController FlywheelPIDController = new PIDController(RobotInformation.PID_Values.flywheel.kP, RobotInformation.PID_Values.flywheel.kI, RobotInformation.PID_Values.flywheel.kD);
+    FlywheelPIDController.calculate(shooterFly.getSensorCollection().getIntegratedSensorVelocity());
+    FlywheelPIDController.close();
+    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition());
+  }
+
+  @Override
+  public void testExit() {
 
   }
 
@@ -150,88 +147,69 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // m_autoSelected = m_chooser.getSelected();
     // System.out.println("Auto selected: " + m_autoSelected);
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
   }
 
   @Override
   public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
-    BallTracking.autoinit();
-    // Display information relayed by Limelight and RPM information for testing
-    double[][] shooterCalculations = Limelight.getLimelightData();
-    Limelight.updateSmartDashboard();
+    VisionSystems.BallTracking.updateAllianceColor();
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     //Taxi Code (Front Bumper needs to fully cross the tarmac)
-    if(Limelight.hubPresent() && (shooterCalculations[0][0]<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+    if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
       drive.tankDrive(-0.1, -0.1);
-    } else if(Limelight.hubPresent() && (shooterCalculations[0][0]>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters+0.6))) { //If we overshoot the target
+    } else if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.6))) { //If we overshoot the target
       drive.tankDrive(0.1, 0.1);
-    } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters < shooterCalculations[0][0] && shooterCalculations[0][0] <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FeildData.tarmacLengthMeters + 0.2)) {
+    } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < VisionSystems.Limelight.getDistanceFromHubStack() && VisionSystems.Limelight.getDistanceFromHubStack() <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
       // shoot
     } else {
       drive.tankDrive(0,0);
     }
-    
+
   }
-  
+
   @Override
   public void autonomousExit() { // Run apon exiting auto
-
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
   }
 
   @Override
   public void teleopInit() {
-    Limelight.setLEDS("on");
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
   }
 
   @Override
   public void teleopPeriodic() {
-    double[][] shooterCalculations = Limelight.getLimelightData();
-    Limelight.updateSmartDashboard();
-
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     // Driver aims to top hub or to balls
-    if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
-      Limelight.setLEDS("on");
-      AimFire.centerAim("top_hub");
+    if(leftJoy.getRawButton(1)) {
+      VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
+      AimFire.centerAim(ValidTargets.upper_hub);
     }
-    
+
     Climbers.climb();
     Climbers.climbrotation();
     AimFire.shooter();
     Intake.wrist();
     Intake.rollers();
-    DriveCode.tankDrive();
+    MotorControl.DriveCode.tankDrive();
     MotorControl.flywheel();
-
   }
-  
+
   @Override
   public void teleopExit() { // Run apon exiting teleop
-    Limelight.setLEDS("off");
+    VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
   }
-  // Sim Code (eww)
-  /**
-  // @Override
-  // public void simulationInit() {
-
-  // }
-  */
-
-  /**
-  // @Override
-  // public void simulationPeriodic() {
-
-  // }
-  */
 
   @Override
   public void disabledPeriodic() { // Run when in Disabled mode
-    Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
+    VisionSystems.Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
   }
+
 }
 
 /**
