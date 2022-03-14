@@ -1,11 +1,16 @@
-package frc.robot.Modules;
+package frc.robot.Modules.Mechanisms;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Modules.RobotInformation;
+import frc.robot.Modules.RobotInformation.FieldData;
+import frc.robot.Modules.RobotInformation.RobotData;
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
+import frc.robot.Modules.RobotInformation.RobotData.RobotMeasurement;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Modules.GameControl;
 
 public class VisionSystems {
     /** Limelight Visions System. Used for Tracking Retro-Reflectors */
@@ -124,18 +129,7 @@ public class VisionSystems {
 
     /** Balltracking Vision Elements, used for tracking balls durring Auto */
     public static class BallTracking {
-        public static SendableChooser<String> alliance_chooser = new SendableChooser<>();
         public static double nonZeroBallAngle;
-
-    /**
-     * This function is called to initalise Alliance color and ball tracking
-     */
-        public static void initializeAllianceChooser() {
-            alliance_chooser.setDefaultOption("Select Alliance Color","N/A"); // Use FMS
-            alliance_chooser.addOption("Red", "red");
-            alliance_chooser.addOption("Blue", "blue");
-            SmartDashboard.putData("Alliance Color for Ball Tracking", alliance_chooser);
-        }
 
     /**
      * This function is called when auto first started.
@@ -143,27 +137,8 @@ public class VisionSystems {
      * It sets the alliance color to the value of the alliance color selected in the SmartDashboard or from the FMS if none are selected
      */
         public static void updateAllianceColor() {
-            NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(getAllianceColor());
+            NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(GameControl.getAllianceColor());
         }
-
-    /**
-     * This function returns the alliance color of the robot
-     *
-     * @return The alliance color.
-     */
-        public static String getAllianceColor() {
-            switch(DriverStation.getAlliance()) {
-                case Blue: // If the enum is blue then go blue
-                    return "blue";
-
-                case Red: // If the enum is red then go red
-                    return "red";
-
-                default: // If the enum is invalid due to FMS error or non entry then return the sendable chooser option (better hope it isnt N/A lmao)
-                    return alliance_chooser.getSelected();
-            }
-        }
-
 
     }
 

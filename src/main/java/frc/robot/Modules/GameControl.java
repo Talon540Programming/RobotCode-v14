@@ -1,0 +1,76 @@
+package frc.robot.Modules;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
+
+public class GameControl {
+    public static SendableChooser<String> alliance_chooser = new SendableChooser<>();
+    
+    /**
+     * This function is called to initalise Alliance color and ball tracking
+     */
+    public static void initializeAllianceChooser() {
+        alliance_chooser.setDefaultOption("Select Alliance Color","N/A"); // Use FMS
+        alliance_chooser.addOption("Red", "red");
+        alliance_chooser.addOption("Blue", "blue");
+        SmartDashboard.putData("Alliance Color for Ball Tracking", alliance_chooser);
+    }
+
+    /**
+     * This function returns the alliance color of the robot
+     *
+     * @return The alliance color.
+     */
+    public static String getAllianceColor() {
+        switch(DriverStation.getAlliance()) {
+            case Blue: // If the enum is blue then go blue
+                return "blue";
+
+            case Red: // If the enum is red then go red
+                return "red";
+
+            default: // If the enum is invalid due to FMS error or non entry then return the sendable chooser option (better hope it isnt N/A lmao)
+                return alliance_chooser.getSelected();
+        }
+    }
+
+    //FIXME:
+    public static class UserControl {
+        public static enum rumbleSides {
+            left,
+            right,
+            both
+        }
+
+        /**
+         * Set the rumble of the controller to a given value
+         * 
+         * @param side The side of the controller to rumble.
+         */
+        public static void setControllerRumble(rumbleSides side, double value) {
+            switch(side) {
+                case left:
+                    Robot.controller.setRumble(RumbleType.kLeftRumble, value);
+                    break;
+
+                case right:
+                    Robot.controller.setRumble(RumbleType.kRightRumble, value);
+                    break;
+                
+                case both:
+                    Robot.controller.setRumble(RumbleType.kRightRumble, value);
+                    Robot.controller.setRumble(RumbleType.kLeftRumble, value);
+                    break;
+            }
+        }
+        
+        public static class UserInterfaceControl {
+
+        }
+    
+    }
+}

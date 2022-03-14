@@ -1,7 +1,10 @@
-package frc.robot.Modules;
+package frc.robot.Modules.Mechanisms;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.robot.Robot;
+import frc.robot.Modules.MotorControl;
+import frc.robot.Modules.RobotInformation;
+import frc.robot.Modules.RobotInformation.DriveTeamInfo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {

@@ -10,8 +10,6 @@ public class RobotInformation {
 
     /** Minimum Angle that wont trigger the robot moving */
     public static final double deadbandAngle = 0.3; // Last Known Working = 0.5
-    /** Our Alliance Color */
-    public static String allianceColor = "red"; // not final because it is not final
 
     // CONSTANTS
     // private static final double WHEEL_DIAMETER = 6; // inches
@@ -52,6 +50,8 @@ public class RobotInformation {
         /** Roller Speed */
         public static final double rollerBTransferPercentage = 1;
         public static final double rollerLBTransferPercentage = 0.5;
+
+        public static final double safeBatteryLevel = 11; // Volts
     }
 
     /**
@@ -190,26 +190,26 @@ public class RobotInformation {
 
             public static class WheelData {
                 public static class Flywheel {
-                    public static double FlywheelDiameter = 0; //TODO: Find This
-                    public static double FlywheelWidth = 0; //TODO: Find This
+                    public static double FlywheelDiameter = 4;
+                    public static double FlywheelWidth = 4.469;
                     public static double FlywheelCircumference = (FlywheelDiameter*Math.PI);
                         /** Area of one side of the wheel */
                     public static double FlywheelArea = (Math.PI*(Math.pow(FlywheelDiameter, 2)))/4;
                 }
                 public static class DriveTrain {
                     public static class Omni {
-                        public static double OmniDiameter = 0; //TODO: Find This
+                        public static double OmniDiameter = 6;
                         public static double OmniWidth = 0; //TODO: Find This
                         public static double OmniCircumference = (OmniDiameter*Math.PI);
                         /** Area of one side of the wheel */
                         public static double OmnilArea = (Math.PI*(Math.pow(OmniDiameter, 2)))/4;
                     }
-                    public static class Plaction {
-                        public static double PlactionDiameter = 0; //TODO: Find This
-                        public static double PlactionWidth = 0; //TODO: Find This
-                        public static double PlactionCircumference = (PlactionDiameter*Math.PI);
+                    public static class Pneumatic {
+                        public static double PneumaticDiameter = 6;
+                        public static double PneumaticWidth = 0; //TODO: Find This
+                        public static double PneumaticCircumference = (PneumaticDiameter*Math.PI);
                         /** Area of one side of the wheel */
-                        public static double PlactionArea = (Math.PI*(Math.pow(PlactionDiameter, 2)))/4;
+                        public static double PneumaticArea = (Math.PI*(Math.pow(PneumaticDiameter, 2)))/4;
                     }
                 }
             }
@@ -358,3 +358,4 @@ public class RobotInformation {
     }
 
 }
+

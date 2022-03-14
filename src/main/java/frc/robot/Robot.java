@@ -12,16 +12,23 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
-import frc.robot.Modules.Climbers;
-import frc.robot.Modules.Intake;
+import frc.robot.Modules.GameControl;
 import frc.robot.Modules.RobotInformation;
-import frc.robot.Modules.VisionSystems;
-import frc.robot.Modules.VisionSystems.Limelight.Limelight_Light_States;
+import frc.robot.Modules.Mechanisms.Climbers;
+import frc.robot.Modules.Mechanisms.Intake;
+import frc.robot.Modules.Mechanisms.VisionSystems;
+import frc.robot.Modules.GameControl.UserControl.rumbleSides;
+import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import java.sql.DriverManager;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -67,6 +74,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     // Display information relayed by Limelight and RPM information for testing
     VisionSystems.Limelight.updateSmartDashboard();
+    if(RobotController.getBatteryVoltage() < RobotInformation.DriveTeamInfo.safeBatteryLevel) {
+      GameControl.UserControl.setControllerRumble(rumbleSides.both, 0.5);
+    }
   }
 
   @Override
@@ -105,7 +115,7 @@ public class Robot extends TimedRobot {
     controller = new XboxController(2);
 
     VisionSystems.Limelight.init();
-    VisionSystems.BallTracking.initializeAllianceChooser();
+    GameControl.initializeAllianceChooser();
   }
 
   @Override
