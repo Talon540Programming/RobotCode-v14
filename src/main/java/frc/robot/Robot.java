@@ -74,6 +74,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     // Display information relayed by Limelight and RPM information for testing
     VisionSystems.Limelight.updateSmartDashboard();
+
+    // Checking to see if the battery voltage is below a certain level. If it is, it will set the rumble to half on both sides.
     if(RobotController.getBatteryVoltage() < RobotInformation.DriveTeamInfo.safeBatteryLevel) {
       GameControl.UserControl.setControllerRumble(rumbleSides.both, 0.5);
     }

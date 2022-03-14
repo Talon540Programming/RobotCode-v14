@@ -38,8 +38,7 @@ public class GameControl {
         }
     }
 
-    //FIXME:
-    public static class UserControl {
+    public static class UserControl { // User interface
         public static enum rumbleSides {
             left,
             right,
@@ -50,6 +49,7 @@ public class GameControl {
          * Set the rumble of the controller to a given value
          * 
          * @param side The side of the controller to rumble.
+         * @param value Value to rumble controler at [0-1]
          */
         public static void setControllerRumble(rumbleSides side, double value) {
             switch(side) {
@@ -69,7 +69,18 @@ public class GameControl {
         }
         
         public static class UserInterfaceControl {
+            /**
+             * This class is used to configure the Shuffleboard
+             */
+            public static class ShuffleboardConfig {
+                
+            }
+            /**
+             * This class is used to configure the SmartDashboard
+             */
+            public static class SmartDashboardConfig {
 
+            }
         }
     
     }

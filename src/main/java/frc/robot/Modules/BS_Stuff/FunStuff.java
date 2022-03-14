@@ -1,4 +1,4 @@
-package frc.robot.Modules.BSStuff;
+package frc.robot.Modules.BS_Stuff;
 
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.Mechanisms.VisionSystems;
