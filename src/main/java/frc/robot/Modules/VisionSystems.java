@@ -53,7 +53,8 @@ public class VisionSystems {
             double verticalAngle = table.getEntry("ty").getDouble(0);
             return (RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters) / (Math.tan((RobotInformation.RobotData.RobotMeasurement.LimelightAngleRadians + Math.toRadians(verticalAngle))));
         }
-    /**
+    
+        /**
      * Is the top hub present in the FOV?
      *
      * @return A boolean value.
@@ -72,7 +73,7 @@ public class VisionSystems {
      * Initialises the Limelight for Top Hub tracking: Sets the LEDS to on, sets the pipeline to 0, and sets the Limelight as a Vision Processor
      */
         public static void init() {
-            setLEDS(Limelight_Light_States.on);
+            setLEDS(Limelight_Light_States.blink);
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
         }
