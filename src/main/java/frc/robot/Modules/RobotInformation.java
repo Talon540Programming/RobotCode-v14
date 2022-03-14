@@ -186,32 +186,6 @@ public class RobotInformation {
             public static final double shooterHoodAngle = 70; //TODO: Find this after mechanical changes it
             public static final double flywheelHeightInches = 0; //TODO: Find this (used for calculating the optimal release ball velocity)
             public static final double flywheelHeightMeters = (flywheelHeightInches/39.37);
-
-            public static class WheelData {
-                public static class Flywheel {
-                    public static double FlywheelDiameter = 0; //TODO: Find This
-                    public static double FlywheelWidth = 0; //TODO: Find This
-                    public static double FlywheelCircumference = (FlywheelDiameter*Math.PI);
-                        /** Area of one side of the wheel */
-                    public static double FlywheelArea = (Math.PI*(Math.pow(FlywheelDiameter, 2)))/4;
-                }
-                public static class DriveTrain {
-                    public static class Omni {
-                        public static double OmniDiameter = 0; //TODO: Find This
-                        public static double OmniWidth = 0; //TODO: Find This
-                        public static double OmniCircumference = (OmniDiameter*Math.PI);
-                        /** Area of one side of the wheel */
-                        public static double OmnilArea = (Math.PI*(Math.pow(OmniDiameter, 2)))/4;
-                    }
-                    public static class Plaction {
-                        public static double PlactionDiameter = 0; //TODO: Find This
-                        public static double PlactionWidth = 0; //TODO: Find This
-                        public static double PlactionCircumference = (PlactionDiameter*Math.PI);
-                        /** Area of one side of the wheel */
-                        public static double PlactionArea = (Math.PI*(Math.pow(PlactionDiameter, 2)))/4;
-                    }
-                }
-            }
         }
 
         /** Shooter and Flywheel specifc measurments */
