@@ -109,7 +109,7 @@ public class MotorControl {
                 WPI_TalonFX flywheel_motor = RobotInformation.RobotData.MotorData.Shooter.Flywheel.motor;
                 double current_velocity = getCurrentVelocity(flywheel_motor);
                 double current_RPM = (60 * current_velocity) / (2 * Math.PI);
-
+                Robot.shooterFly.set(ControlMode.Velocity, 0);
                 break;
             case Rollers:
                 TalonSRX roller_motor = RobotInformation.RobotData.MotorData.Intake.Rollers.motor;
