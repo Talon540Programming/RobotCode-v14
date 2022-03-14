@@ -1,4 +1,4 @@
-name: TODO Updated
+name: TODO Updater
 on:
   push:
     branches:
