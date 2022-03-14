@@ -131,11 +131,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
 
-
-    PIDController FlywheelPIDController = new PIDController(RobotInformation.PID_Values.flywheel.kP, RobotInformation.PID_Values.flywheel.kI, RobotInformation.PID_Values.flywheel.kD);
-    FlywheelPIDController.calculate(shooterFly.getSensorCollection().getIntegratedSensorVelocity());
-    FlywheelPIDController.close();
-    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition()); //TODO: We're using a mehanical stop so we can delete this.
+    // PIDController FlywheelPIDController = new PIDController(RobotInformation.PID_Values.flywheel.kP, RobotInformation.PID_Values.flywheel.kI, RobotInformation.PID_Values.flywheel.kD);
+    // FlywheelPIDController.calculate(shooterFly.getSensorCollection().getIntegratedSensorVelocity());
+    // FlywheelPIDController.close();
+    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition());
   }
 
   @Override
