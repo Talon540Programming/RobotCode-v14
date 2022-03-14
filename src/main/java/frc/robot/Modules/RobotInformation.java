@@ -108,6 +108,17 @@ public class RobotInformation {
             /** Differentiable Term */
             public static final double kD = 0;
         }
+
+        public static class wrist {
+            /** Feed Forward Term */
+            public static final double kF = 0;
+            /** Proportional Term */
+            public static final double kP = 0;
+            /** Integral term */
+            public static final double kI = 0;
+            /** Differentiable Term */
+            public static final double kD = 0;
+        }
     }
 
     /**

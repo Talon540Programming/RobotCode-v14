@@ -134,7 +134,7 @@ public class MotorControl {
         /** Main Drive Call */
         public static void tankDrive() {
             if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
-                Robot.drive.tankDrive((-Robot.rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));// TODO: adjust deadzones
+                Robot.drive.tankDrive((-Robot.rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));
             }
         }
 
@@ -153,5 +153,13 @@ public class MotorControl {
             Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
             Robot.rightMaster.set(ControlMode.PercentOutput, -motorSpeedRight);
         }
+    }
+
+    public static class PID_CONTROL {
+        /** Motors Used:
+             * Wrist
+             * Flywheel
+             * Drivetrain
+         */
     }
 }

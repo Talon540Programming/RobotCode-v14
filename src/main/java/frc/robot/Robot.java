@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
     controller = new XboxController(2);
 
     VisionSystems.Limelight.init();
-    VisionSystems.BallTracking.initializeAllianceChooser(); //TODO: create sendableChooser for alliance COLOR
+    VisionSystems.BallTracking.initializeAllianceChooser();
   }
 
   @Override
@@ -186,7 +186,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     // Driver aims to top hub or to balls
-    if(leftJoy.getRawButton(1)) { //center robot on top hub (retro reflector) // Changed to button, not trigger (left front button) //TODO: test PID loop
+    if(leftJoy.getRawButton(1)) {
       VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
       AimFire.centerAim(ValidTargets.upper_hub);
     }
