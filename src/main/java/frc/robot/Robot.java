@@ -152,6 +152,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
+    //TODO: Test the RPM we need at that specific distance
+    //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head.
     VisionSystems.BallTracking.updateAllianceColor();
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
