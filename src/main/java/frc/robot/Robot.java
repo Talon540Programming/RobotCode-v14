@@ -124,13 +124,12 @@ public class Robot extends TimedRobot {
     }
 
     double current_velocity = MotorControl.getCurrentVelocity(shooterFly);
-    double current_RPM = (60 * current_velocity) / (2 * Math.PI);
+    double current_RPM = current_velocity/4/2048*60*10;
 
     SmartDashboard.putNumber("Max Velocity",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxVelocity);
-    SmartDashboard.putNumber("Max RPM",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxRPM);
+    SmartDashboard.putNumber("Max RPM",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxRPM/4);
     SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
-
 
     // PIDController FlywheelPIDController = new PIDController(RobotInformation.PID_Values.flywheel.kP, RobotInformation.PID_Values.flywheel.kI, RobotInformation.PID_Values.flywheel.kD);
     // FlywheelPIDController.calculate(shooterFly.getSensorCollection().getIntegratedSensorVelocity());
@@ -152,18 +151,20 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
+    //TODO: Test the RPM we need at that specific distance
+    //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head.
     VisionSystems.BallTracking.updateAllianceColor();
 
-    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
+    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     //Taxi Code (Front Bumper needs to fully cross the tarmac)
     if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
-      drive.tankDrive(-0.1, -0.1);
+      drive.tankDrive(-0.1, -0.1); //TODO: need to create moveBackwards function that uses gyro and encoders to move back the appropriate distance. 
     } else if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.6))) { //If we overshoot the target
-      drive.tankDrive(0.1, 0.1);
+      drive.tankDrive(0.1, 0.1); //TODO: might not want to move forward otherwise we'll need PID- it can stop fast enough
     } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < VisionSystems.Limelight.getDistanceFromHubStack() && VisionSystems.Limelight.getDistanceFromHubStack() <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
-      // shoot
+      // TODO: Use the shooting code made from testing. Accidentally deleted it but I'll (Aryan) will put it in.
     } else {
       drive.tankDrive(0,0);
     }
@@ -182,7 +183,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4 * 2048);
+    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     // Driver aims to top hub or to balls
@@ -196,7 +197,7 @@ public class Robot extends TimedRobot {
     AimFire.shooter();
     Intake.wrist();
     Intake.rollers();
-    MotorControl.DriveCode.tankDrive();
+    MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
     MotorControl.flywheel();
   }
 

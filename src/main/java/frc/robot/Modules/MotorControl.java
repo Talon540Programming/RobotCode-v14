@@ -135,10 +135,11 @@ public class MotorControl {
         public static void tankDrive() {
             if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
                 Robot.drive.tankDrive((-Robot.rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));
-            }
+            } //TODO: Why is the first argument here negative? If we inverted it it would be bing chilling, no? No need to put negatives. I forgor what results of testing were so like we know what to change if we have to.
         }
 
         /** Move the Robot Backwards at -0.1 speed (should be a PID loop imo) */
+        //TODO: Make this use gyro correction- PID will be dank. 
         public static void moveBack() {
             Robot.drive.tankDrive(-0.1, -0.1);
         }
