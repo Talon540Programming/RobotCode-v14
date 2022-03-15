@@ -198,15 +198,15 @@ public class RobotInformation {
                 }
                 public static class DriveTrain {
                     public static class Omni {
-                        public static double OmniDiameter = 0; //TODO: Find This
-                        public static double OmniWidth = 0; //TODO: Find This
+                        public static double OmniDiameter = 6; //Inches
+                        public static double OmniWidth = 6; //Inches
                         public static double OmniCircumference = (OmniDiameter*Math.PI);
                         /** Area of one side of the wheel */
                         public static double OmnilArea = (Math.PI*(Math.pow(OmniDiameter, 2)))/4;
                     }
                     public static class Plaction {
-                        public static double PlactionDiameter = 0; //TODO: Find This
-                        public static double PlactionWidth = 0; //TODO: Find This
+                        public static double PlactionDiameter = 6; //Inches
+                        public static double PlactionWidth = 6; //Inches
                         public static double PlactionCircumference = (PlactionDiameter*Math.PI);
                         /** Area of one side of the wheel */
                         public static double PlactionArea = (Math.PI*(Math.pow(PlactionDiameter, 2)))/4;
@@ -284,12 +284,19 @@ public class RobotInformation {
                     public static final int maxRPM = 18700;
                 }
             }
+            
+            private static double nativeUnitsToDistanceMeters(double sensorCounts){
+                double motorRotations = (double)sensorCounts / 2048;
+                double wheelRotations = motorRotations / motorTypes.Drivetrain.gearRatio;
+                double positionMeters = wheelRotations * (Math.PI * Units.inchesToMeters(WheelData.Drivetrain.Plaction.PlactionDiameter);
+                return positionMeters;
+            }
 
             /** Drivetrain Motors */
             public static class Drivetrain {
                 // Drivetrain Motors
                 /** Gear Ratio of Motor */
-                public static final int gearRatio = 0; //TODO: Find This
+                public static final int gearRatio = 54/20; //TODO: Find This
                 /** Max Velocity of Motor*/
                 public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
                 public static final int maxRPM = motorTypes.Falcon500.maxRPM;
