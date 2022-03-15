@@ -75,6 +75,7 @@ public class GameControl {
             public static class ShuffleboardConfig {
                 
             }
+            
             /**
              * This class is used to configure the SmartDashboard
              */

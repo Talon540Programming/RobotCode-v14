@@ -78,6 +78,7 @@ public class Robot extends TimedRobot {
     // Checking to see if the battery voltage is below a certain level. If it is, it will set the rumble to half on both sides.
     if(RobotController.getBatteryVoltage() < RobotInformation.DriveTeamInfo.safeBatteryLevel) {
       GameControl.UserControl.setControllerRumble(rumbleSides.both, 0.5);
+      DriverStation.reportWarning("Batter Low Voltage Detected",false);
     }
   }
 
