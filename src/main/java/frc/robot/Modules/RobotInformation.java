@@ -288,7 +288,7 @@ public class RobotInformation {
             private static double nativeUnitsToDistanceMeters(double sensorCounts){
                 double motorRotations = (double)sensorCounts / 2048;
                 double wheelRotations = motorRotations / motorTypes.Drivetrain.gearRatio;
-                double positionMeters = wheelRotations * (Math.PI * Units.inchesToMeters(WheelData.Drivetrain.Plaction.PlactionDiameter));
+                double positionMeters = wheelRotations * (Math.PI * (WheelData.Drivetrain.Plaction.PlactionDiameter/39.37));
                 return positionMeters;
             }
 
