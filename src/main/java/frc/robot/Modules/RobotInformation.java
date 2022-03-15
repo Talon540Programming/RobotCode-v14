@@ -285,10 +285,10 @@ public class RobotInformation {
                 }
             }
             
-            private static double nativeUnitsToDistanceMeters(double sensorCounts){
+            private static double TalonDistance(double sensorCounts){
                 double motorRotations = (double)sensorCounts / 2048;
-                double wheelRotations = motorRotations / motorTypes.Drivetrain.gearRatio;
-                double positionMeters = wheelRotations * (Math.PI * (WheelData.Drivetrain.Plaction.PlactionDiameter/39.37));
+                double wheelRotations = motorRotations / 4;
+                double positionMeters = wheelRotations * (Math.PI * (6/39.37));
                 return positionMeters;
             }
 
