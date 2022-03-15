@@ -166,7 +166,8 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
     //TODO: Test the RPM we need at that specific distance
     //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head.
-    VisionSystems.BallTracking.updateAllianceColor();
+    VisionSystems.BallTracking.updateAllianceColor(); // Update the Alliance Color Periodically for the Pi
+    VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
