@@ -157,8 +157,10 @@ public class Robot extends TimedRobot {
         VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
         SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
 
+        //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
         if (counter < 54.0 * 4) {
           shooterFly.set(ControlMode.PercentOutput, 1); //TODO: adjust power based on arc needed
+          AimFire.centerAim(ValidTargets.lower_hub);
         }
         if (counter > (42.2*3) && counter < (54.0 * 4)) {
           rollers.set(ControlMode.PercentOutput, 1);//TODO: Adjust power based on speed of shooting
