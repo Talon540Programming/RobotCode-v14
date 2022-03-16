@@ -213,7 +213,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
 
     if(GameControl.currentControllerState == ControllerStates.drive_mode) {
-        // Driver aims to top hub or to balls
+        SmartDashboard.putString("Teleop Mode", "Drive Mode");
+
+        // Center bot on top hub
         if(leftJoy.getRawButton(1)) {
           VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
           AimFire.centerAim(ValidTargets.upper_hub);
@@ -231,6 +233,7 @@ public class Robot extends TimedRobot {
     }
 
     if(GameControl.currentControllerState == ControllerStates.climb_mode) {
+        SmartDashboard.putString("Teleop Mode", "Climb Mode");
         Climbers.climb();
         Climbers.climbrotation();
 
