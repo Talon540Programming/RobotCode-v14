@@ -157,7 +157,7 @@ public class MotorControl {
         }
     }
 
-    public static class PID_CONTROL {
+    public static class PID_CONTROL { //TODO: Test all of the PID loops (Wrist, Climb Rotarion, Extension, Flywheel)
         /** Motors Used:
              * Wrist
              * Flywheel

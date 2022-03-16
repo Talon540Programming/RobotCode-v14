@@ -204,6 +204,7 @@ public class RobotInformation {
                         /** Area of one side of the wheel */
                         public static double OmnilArea = (Math.PI*(Math.pow(OmniDiameter, 2)))/4;
                     }
+
                     public static class Pneumatic {
                         public static double PneumaticDiameter = 6;
                         public static double PneumaticWidth = 0; //TODO: Find This
@@ -284,12 +285,19 @@ public class RobotInformation {
                     public static final int maxRPM = 18700;
                 }
             }
+            
+            private static double TalonDistance(double sensorCounts){
+                double motorRotations = (double)sensorCounts / 2048;
+                double wheelRotations = motorRotations / 4;
+                double positionMeters = wheelRotations * (Math.PI * (6/39.37));
+                return positionMeters;
+            }
 
             /** Drivetrain Motors */
             public static class Drivetrain {
                 // Drivetrain Motors
                 /** Gear Ratio of Motor */
-                public static final int gearRatio = 0; //TODO: Find This
+                public static final int gearRatio = 54/20; //TODO: Find This
                 /** Max Velocity of Motor*/
                 public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
                 public static final int maxRPM = motorTypes.Falcon500.maxRPM;
@@ -356,6 +364,4 @@ public class RobotInformation {
             }
         }
     }
-
 }
-
