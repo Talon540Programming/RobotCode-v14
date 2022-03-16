@@ -176,6 +176,7 @@ public class Robot extends TimedRobot {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.auto;
     m_autoSelected = m_chooser.getSelected();
+    gyro.reset();
     counter = 0;
   }
 
