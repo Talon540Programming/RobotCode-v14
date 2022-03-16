@@ -12,16 +12,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
-import frc.robot.Modules.Climbers;
-import frc.robot.Modules.Intake;
+import frc.robot.Modules.GameControl;
 import frc.robot.Modules.RobotInformation;
-import frc.robot.Modules.VisionSystems;
-import frc.robot.Modules.VisionSystems.Limelight.Limelight_Light_States;
+import frc.robot.Modules.Mechanisms.Climbers;
+import frc.robot.Modules.Mechanisms.Intake;
+import frc.robot.Modules.Mechanisms.VisionSystems;
+import frc.robot.Modules.GameControl.ControllerStates;
+import frc.robot.Modules.GameControl.MatchTypes;
+import frc.robot.Modules.GameControl.UserControl.rumbleSides;
+import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import java.sql.DriverManager;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -67,6 +76,12 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     // Display information relayed by Limelight and RPM information for testing
     VisionSystems.Limelight.updateSmartDashboard();
+
+    // Checking to see if the battery voltage is below a certain level. If it is, it will set the rumble to half on both sides.
+    if(RobotController.getBatteryVoltage() < RobotInformation.DriveTeamInfo.safeBatteryLevel) {
+      GameControl.UserControl.setControllerRumble(rumbleSides.both, 0.5);
+      DriverStation.reportWarning("Batter Low Voltage Detected",false);
+    }
   }
 
   @Override
@@ -105,7 +120,7 @@ public class Robot extends TimedRobot {
     controller = new XboxController(2);
 
     VisionSystems.Limelight.init();
-    VisionSystems.BallTracking.initializeAllianceChooser();
+    GameControl.initializeAllianceChooser();
   }
 
   @Override
@@ -148,13 +163,16 @@ public class Robot extends TimedRobot {
     // m_autoSelected = m_chooser.getSelected();
     // System.out.println("Auto selected: " + m_autoSelected);
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
+    GameControl.currentMatchType = MatchTypes.auto;
+
   }
 
   @Override
   public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
     //TODO: Test the RPM we need at that specific distance
     //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head.
-    VisionSystems.BallTracking.updateAllianceColor();
+    VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
+    VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
     //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
@@ -181,6 +199,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
+    GameControl.currentMatchType = MatchTypes.teleop_drive;
+    GameControl.currentControllerState = ControllerStates.drive_mode;
+
   }
 
   @Override
@@ -188,19 +209,32 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
     // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
-    // Driver aims to top hub or to balls
-    if(leftJoy.getRawButton(1)) {
-      VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
-      AimFire.centerAim(ValidTargets.upper_hub);
+    if(GameControl.currentControllerState == ControllerStates.drive_mode) {
+        // Driver aims to top hub or to balls
+        if(leftJoy.getRawButton(1)) {
+          VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
+          AimFire.centerAim(ValidTargets.upper_hub);
+        }
+
+        AimFire.shooter();
+        Intake.wrist();
+        Intake.rollers();
+        MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
+        MotorControl.flywheel();
+
+      if(controller.getStartButton() && controller.getBackButton()) {
+        GameControl.currentControllerState = ControllerStates.climb_mode;
+      }
     }
 
-    Climbers.climb();
-    Climbers.climbrotation();
-    AimFire.shooter();
-    Intake.wrist();
-    Intake.rollers();
-    MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
-    MotorControl.flywheel();
+    if(GameControl.currentControllerState == ControllerStates.climb_mode) {
+        Climbers.climb();
+        Climbers.climbrotation();
+
+      if(controller.getStartButton() && controller.getBackButton()) {
+        GameControl.currentControllerState = ControllerStates.drive_mode;
+      }
+    }
   }
 
   @Override
@@ -211,6 +245,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() { // Run when in Disabled mode
     VisionSystems.Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
+    GameControl.currentMatchType = MatchTypes.disabled;
   }
 
 }

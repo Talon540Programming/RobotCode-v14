@@ -1,6 +1,9 @@
-package frc.robot.Modules;
+package frc.robot.Modules.BS_Stuff;
 
-import frc.robot.Modules.VisionSystems.Limelight.Limelight_Light_States;
+import frc.robot.Modules.MotorControl;
+import frc.robot.Modules.Mechanisms.VisionSystems;
+import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
+import frc.robot.Modules.MotorControl.DriveCode;
 
 public class FunStuff {
     public static enum Music {

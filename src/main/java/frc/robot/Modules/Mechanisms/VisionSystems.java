@@ -1,11 +1,18 @@
-package frc.robot.Modules;
+package frc.robot.Modules.Mechanisms;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Modules.RobotInformation;
+import frc.robot.Modules.RobotInformation.FieldData;
+import frc.robot.Modules.RobotInformation.RobotData;
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
+import frc.robot.Modules.RobotInformation.RobotData.RobotMeasurement;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Modules.Calculations;
+import frc.robot.Modules.GameControl;
 
 public class VisionSystems {
     /** Limelight Visions System. Used for Tracking Retro-Reflectors */
@@ -124,66 +131,25 @@ public class VisionSystems {
 
     /** Balltracking Vision Elements, used for tracking balls durring Auto */
     public static class BallTracking {
-        public static SendableChooser<String> alliance_chooser = new SendableChooser<>();
         public static double nonZeroBallAngle;
 
-    /**
-     * This function is called to initalise Alliance color and ball tracking
-     */
-        public static void initializeAllianceChooser() {
-            alliance_chooser.setDefaultOption("Select Alliance Color","N/A"); // Use FMS
-            alliance_chooser.addOption("Red", "red");
-            alliance_chooser.addOption("Blue", "blue");
-            SmartDashboard.putData("Alliance Color for Ball Tracking", alliance_chooser);
-        }
-
-    /**
-     * This function is called when auto first started.
-     *
-     * It sets the alliance color to the value of the alliance color selected in the SmartDashboard or from the FMS if none are selected
-     */
-        public static void updateAllianceColor() {
-            NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(getAllianceColor());
-        }
-
-    /**
-     * This function returns the alliance color of the robot
-     *
-     * @return The alliance color.
-     */
-        public static String getAllianceColor() {
-            switch(DriverStation.getAlliance()) {
-                case Blue: // If the enum is blue then go blue
-                    return "blue";
-
-                case Red: // If the enum is red then go red
-                    return "red";
-
-                default: // If the enum is invalid due to FMS error or non entry then return the sendable chooser option (better hope it isnt N/A lmao)
-                    return alliance_chooser.getSelected();
-            }
-        }
-
-
-    }
-
-    /** Calculations pertaining to vision systems */
-    public static class Calculations {
-
         /**
-         * This function calculates the desired velocity of the flywheel for a given target
+         * This function is called when auto first started.
          *
-         * @param target The target that the robot is shooting at.
-         * @return The desired velocity of the ball.
+         * It sets the alliance color to the value of the alliance color selected in the SmartDashboard or from the FMS if none are selected
          */
-        public static double getDesiredBallVelocity(ValidTargets target) {
-            switch(target) {
-                case upper_hub:
-                    return Math.sqrt(-1 * ((9.8 * VisionSystems.Limelight.getDistanceFromHubStack() * VisionSystems.Limelight.getDistanceFromHubStack() * (1 + (Math.pow(Math.tan(Math.toRadians(RobotInformation.RobotData.RobotMeasurement.shooterHoodAngle)), 2))) )/((2 * (RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.flywheelHeightMeters))-(2 * VisionSystems.Limelight.getDistanceFromHubStack() * Math.tan(Math.toRadians(RobotInformation.RobotData.RobotMeasurement.shooterHoodAngle))))));
-                case lower_hub:
-                    return Math.sqrt(-1 * ((9.8 * VisionSystems.Limelight.getDistanceFromHubStack() * VisionSystems.Limelight.getDistanceFromHubStack() * (1 + (Math.pow(Math.tan(Math.toRadians(RobotInformation.RobotData.RobotMeasurement.shooterHoodAngle)), 2))) )/((2 * (RobotInformation.FieldData.lowerHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.flywheelHeightMeters))-(2 * VisionSystems.Limelight.getDistanceFromHubStack() * Math.tan(Math.toRadians(RobotInformation.RobotData.RobotMeasurement.shooterHoodAngle))))));
-                default:
-                    return 0;
+        public static void updateCoprocessorValues() {
+            NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(GameControl.getAllianceColor());
+            NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Gamemode").setString(GameControl.getCurrentGamemode());
+
+
+        }
+        
+        public static void coprocessorErrorCheck() {
+            String output_alliance = NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").getString("Not Ready");
+            String input_alliance = NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Working Color").getString("Not Ready");
+            if((output_alliance != input_alliance) && (output_alliance != "Not Ready")) {
+                DriverStation.reportWarning("Raspberry Pi Alliance Mismatch. Currently Reporting: "+output_alliance+" Currently Reciving: "+input_alliance,false);
             }
         }
     }
