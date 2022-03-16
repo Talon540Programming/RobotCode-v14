@@ -26,7 +26,6 @@ public class GameControl {
 
     
     public static SendableChooser<String> alliance_chooser = new SendableChooser<>();
-    public static SendableChooser<String> auto_chooser = new SendableChooser<>();
     
     /**
      * This function is called to initalise Alliance color and ball tracking

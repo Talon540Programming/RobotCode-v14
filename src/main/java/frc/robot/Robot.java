@@ -150,13 +150,12 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() { 
     //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head (change the selected auto on the smartdashboard)
     //TODO: Check to make sure that we can see the upper hub with the limelight when we are on the tarmac. Else you have to remove the hubPresent clause :)
-
+    VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
+    VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
+    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
+    
     switch (m_autoSelected) {
       case (shootFirst) :
-        VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
-        VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
-        SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
-
         //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
         if (counter < 54.0 * 4) {
           shooterFly.set(ControlMode.PercentOutput, 1); //TODO: adjust power based on arc needed
@@ -173,10 +172,6 @@ public class Robot extends TimedRobot {
         break;
 
       case (taxiFirst) :
-        VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
-        VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
-        SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
-
         //Taxi Code (Front Bumper needs to fully cross the tarmac)
         //TODO: Can switch from driveStraight to move Backwards if needed :)
         if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
