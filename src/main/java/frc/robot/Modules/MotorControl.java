@@ -13,8 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DigitalInput;
 
-
-
 public class MotorControl {
 /**
  * Given the ideal velocity and the transfer percentage, return the RPM
@@ -135,12 +133,20 @@ public class MotorControl {
         /** Main Drive Call */
         public static void tankDrive() {
             if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
-                Robot.drive.tankDrive((-Robot.rightJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), (Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage));
-            } //TODO: Why is the first argument here negative? If we inverted it it would be bing chilling, no? No need to put negatives. I forgor what results of testing were so like we know what to change if we have to.
+                Robot.drive.tankDrive((Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), ( -Robot.rightJoy.getY()* RobotInformation.DriveTeamInfo.driverPercentage));
+            } //TODO: Adjust if sides are inverted
         }
 
-        /** Move the Robot Backwards at -0.1 speed (should be a PID loop imo) */
-        //TODO: Make this use gyro correction- PID will be dank. 
+        // Use negative number to move back and positive number to move forward
+        //TODO: adjust kP to drive nice and smooth- if it takes to long just use the traditional moveBack and pray.java drivetrain is even
+        public static void driveStraight(double power) {
+            double kP = 0.0027;
+            double correction = -Robot.gyro.getAngle();
+            double turnPower = kP*correction;
+            Robot.drive.arcadeDrive(power, turnPower, false);
+        }
+
+        //TODO: After testing, if the above function doesn't work, just switch to the one below this comment.
         public static void moveBack() {
             Robot.drive.tankDrive(-0.1, -0.1);
         }

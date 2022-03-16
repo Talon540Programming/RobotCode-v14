@@ -45,8 +45,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
-import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;;
-// import com.kauailabs.navx.frc.AHRS;
+import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
+import com.kauailabs.navx.frc.AHRS;
 
 
 public class Robot extends TimedRobot {
@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
   public static XboxController controller; // Used for button man mechanism controls
 
   // SENSORS
-  // private AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
+  public static AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
 
   // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
   // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position
@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     controller = new XboxController(2);
+    gyro = new AHRS(SerialPort.Port.kUSB); //TODO: Change port based on where electrical says it is, if it takes too long, screw it and just use the commented out moveBack function in MotorControl.java
 
     VisionSystems.Limelight.init();
     GameControl.initializeAllianceChooser();
@@ -168,21 +169,19 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() { //Two ball auto in theory //TODO: Write autocode
+  public void autonomousPeriodic() { 
     //TODO: Test the RPM we need at that specific distance
     //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head.
     VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
     VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
 
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
-    //SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     //Taxi Code (Front Bumper needs to fully cross the tarmac)
     if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
-      drive.tankDrive(-0.1, -0.1); //TODO: need to create moveBackwards function that uses gyro and encoders to move back the appropriate distance. 
-    } else if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()>(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.6))) { //If we overshoot the target
-      drive.tankDrive(0.1, 0.1); //TODO: might not want to move forward otherwise we'll need PID- it can stop fast enough
-    } else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < VisionSystems.Limelight.getDistanceFromHubStack() && VisionSystems.Limelight.getDistanceFromHubStack() <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
+      MotorControl.DriveCode.driveStraight(-0.1);; //TODO: Adjust the power based on how fast it moves or whether it works
+    } 
+    else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < VisionSystems.Limelight.getDistanceFromHubStack() && VisionSystems.Limelight.getDistanceFromHubStack() <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
       // TODO: Use the shooting code made from testing. Accidentally deleted it but I'll (Aryan) will put it in.
     } else {
       drive.tankDrive(0,0);
@@ -207,7 +206,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
-    // SmartDashboard.putNumber("Current Angle", gyro.getRoll());
 
     if(GameControl.currentControllerState == ControllerStates.drive_mode) {
         // Driver aims to top hub or to balls

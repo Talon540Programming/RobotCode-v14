@@ -286,7 +286,7 @@ public class RobotInformation {
                 }
             }
             
-            private static double TalonDistance(double sensorCounts){
+            public static double TalonDistance(double sensorCounts){
                 double motorRotations = (double)sensorCounts / 2048;
                 double wheelRotations = motorRotations / 4;
                 double positionMeters = wheelRotations * (Math.PI * (6/39.37));
