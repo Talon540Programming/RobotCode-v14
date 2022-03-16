@@ -1,7 +1,6 @@
 package frc.robot.Modules;
 
 import frc.robot.Robot;
-import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -9,9 +8,7 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.DigitalInput;
+
 
 public class MotorControl {
 /**
@@ -87,44 +84,8 @@ public class MotorControl {
         Robot.shooterFly.configPeakOutputReverse(-1, 1);
         Robot.shooterFly.setInverted(false);
         Robot.shooterFly.setSensorPhase(false);
-        // config P,I,D,F values- start by doubling F, then P, then D, then I (middle values) then increase/decrease over time
-        // Robot.shooterFly.config_kF(0, RobotInformation.PID_Values.flywheel.kF, 1); // (F) Feed Forward Term
-        // Robot.shooterFly.config_kP(0, RobotInformation.PID_Values.flywheel.kP, 1); // (P) Proportional Term
-        // Robot.shooterFly.config_kI(0, RobotInformation.PID_Values.flywheel.kI, 1); // (I) Integral term
-        // Robot.shooterFly.config_kD(0, RobotInformation.PID_Values.flywheel.kD, 1); // (D) Differentiable Term
-
     }
 
-/**
- * This function sets the RPM of a motor
- *
- * @param position The motor position to set the RPM for.
- * @param RPM The RPM of the motor.
- */
-    public static void setRPM(MotorPositions position, int RPM) {
-        switch(position) {
-            case Shooter:
-                WPI_TalonFX flywheel_motor = RobotInformation.RobotData.MotorData.Shooter.Flywheel.motor;
-                double current_velocity = getCurrentVelocity(flywheel_motor);
-                double current_RPM = (60 * current_velocity) / (2 * Math.PI);
-                Robot.shooterFly.set(ControlMode.Velocity, 0);
-                
-                break;
-            case Rollers:
-                TalonSRX roller_motor = RobotInformation.RobotData.MotorData.Intake.Rollers.motor;
-
-                break;
-            case Extension:
-
-                break;
-            case Rotation:
-
-                break;
-            default:
-
-                break;
-        }
-    }
 
 /**
  * This class is used to control the drivetrain of the robot
@@ -161,13 +122,5 @@ public class MotorControl {
             Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
             Robot.rightMaster.set(ControlMode.PercentOutput, -motorSpeedRight);
         }
-    }
-
-    public static class PID_CONTROL { //TODO: Test all of the PID loops (Wrist, Climb Rotarion, Extension, Flywheel)
-        /** Motors Used:
-             * Wrist
-             * Flywheel
-             * Drivetrain
-         */
     }
 }

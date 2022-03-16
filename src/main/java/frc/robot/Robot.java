@@ -25,26 +25,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import java.sql.DriverManager;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
-import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -64,10 +51,6 @@ public class Robot extends TimedRobot {
 
   // SENSORS
   public static AHRS gyro; //9-axis-> used mainly to orient shooter hood using roll
-
-  // private Encoder rightEncoder, leftEncoder; // Drivetrain encoders (might just use integrated Falcon stuff who knows)
-  // private DigitalInput lowerShooterLimit, upperShooterLimit; // Limit switch to reset hood to its default position
-  // private DigitalInput intakeLimit; // Limit switch to know if intake is ready to kickup
 
   // MISCELLANEOUS
   public static DifferentialDrive drive; //Used for monitoring tank drive motion
@@ -134,15 +117,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto Choices", m_chooser);
   }
 
-  @Override
-  public void testInit() {
-    SmartDashboard.putNumber("Test RPM", 0);
-  }
-
+  //TODO: Remove this when not needed
   @Override
   public void testPeriodic() {
-    double testRPM = SmartDashboard.getNumber("Test RPM", 0);
-    // MotorControl.setRPM(MotorPositions.Shooter, 10);
     if(rightJoy.getRawButton(1)) {
       Robot.shooterFly.set(ControlMode.PercentOutput, 1);
     } else {
@@ -157,22 +134,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
 
-
-    // PIDController FlywheelPIDController = new PIDController(RobotInformation.PID_Values.flywheel.kP, RobotInformation.PID_Values.flywheel.kI, RobotInformation.PID_Values.flywheel.kD);
-    // FlywheelPIDController.calculate(shooterFly.getSensorCollection().getIntegratedSensorVelocity());
-    // FlywheelPIDController.close();
-    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition()); //TODO: We're using a mehanical stop so we can delete this.
-  }
-
-  @Override
-  public void testExit() {
-
+    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition()); //TODO: Removed based on whether we need to sort out mechanical stop
   }
 
   @Override
   public void autonomousInit() {
-    // m_autoSelected = m_chooser.getSelected();
-    // System.out.println("Auto selected: " + m_autoSelected);
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.auto;
     m_autoSelected = m_chooser.getSelected();
@@ -262,7 +228,7 @@ public class Robot extends TimedRobot {
         MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
         MotorControl.flywheel();
 
-      if(controller.getStartButton() && controller.getBackButton()) {
+      if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
         GameControl.currentControllerState = ControllerStates.climb_mode;
       }
     }

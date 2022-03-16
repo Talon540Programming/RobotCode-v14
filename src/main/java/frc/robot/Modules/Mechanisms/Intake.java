@@ -4,8 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.robot.Robot;
 import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.RobotInformation;
-import frc.robot.Modules.RobotInformation.DriveTeamInfo;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake {
     /** The spinny part that is duct taped together by "The Contractor"

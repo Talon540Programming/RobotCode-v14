@@ -2,12 +2,9 @@ package frc.robot.Modules;
 
 import frc.robot.Robot;
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
-import frc.robot.Modules.RobotInformation;
 import frc.robot.Modules.Mechanisms.VisionSystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AimFire {
 /**

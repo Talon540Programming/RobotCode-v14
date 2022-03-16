@@ -1,13 +1,15 @@
 package frc.robot.Modules;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 public class GameControl {
+//TODO: Use the Display I (Aryan) made and the file I sent on Discord for Shuffleboard/SmartDashboard so that it looks pretty
+
+
     public static enum MatchTypes {
         auto,
         teleop_drive,
