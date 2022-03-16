@@ -138,8 +138,11 @@ public class VisionSystems {
          *
          * It sets the alliance color to the value of the alliance color selected in the SmartDashboard or from the FMS if none are selected
          */
-        public static void updateAllianceColor() {
+        public static void updateCoprocessorValues() {
             NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Alliance Color").setString(GameControl.getAllianceColor());
+            NetworkTableInstance.getDefault().getTable("TalonPi").getEntry("Gamemode").setString(GameControl.getCurrentGamemode());
+
+
         }
         
         public static void coprocessorErrorCheck() {

@@ -8,6 +8,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
 public class GameControl {
+    public static enum MatchTypes {
+        auto,
+        teleop_drive,
+        teleop_climb,
+        disabled
+    }
+    public static MatchTypes currentMatchType;
+
+    public static enum ControllerStates {
+        drive_mode,
+        climb_mode
+    }
+    public static ControllerStates currentControllerState;
+
+    
     public static SendableChooser<String> alliance_chooser = new SendableChooser<>();
     
     /**
@@ -35,6 +50,21 @@ public class GameControl {
 
             default: // If the enum is invalid due to FMS error or non entry then return the sendable chooser option (better hope it isnt N/A lmao)
                 return alliance_chooser.getSelected();
+        }
+    }
+
+    public static String getCurrentGamemode() {
+        switch(currentMatchType) {
+            case auto:
+                return "auto";
+            case teleop_drive:
+                return "teleop_drive";
+            case teleop_climb:
+                return "teleop_climb";
+            case disabled:
+                return "disabled";
+            default:
+                return null;
         }
     }
 
