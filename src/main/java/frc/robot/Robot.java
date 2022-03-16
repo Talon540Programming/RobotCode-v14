@@ -71,6 +71,11 @@ public class Robot extends TimedRobot {
 
   // MISCELLANEOUS
   public static DifferentialDrive drive; //Used for monitoring tank drive motion
+  private static final String shootFirst = "Shoot First";
+  private static final String taxiFirst = "Taxi First";
+  private static final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private String m_autoSelected;
+  private double counter;
 
   @Override
   public void robotPeriodic() {
@@ -120,8 +125,13 @@ public class Robot extends TimedRobot {
     controller = new XboxController(2);
     gyro = new AHRS(SerialPort.Port.kUSB); //TODO: Change port based on where electrical says it is, if it takes too long, screw it and just use the commented out moveBack function in MotorControl.java
 
+    // AUTO OPTIONS
     VisionSystems.Limelight.init();
     GameControl.initializeAllianceChooser();
+    m_chooser.setDefaultOption("Default Auto", "SELECT AUTO!");
+    m_chooser.addOption("Shoot First", shootFirst);
+    m_chooser.addOption("Taxi First", taxiFirst);
+    SmartDashboard.putData("Auto Choices", m_chooser);
   }
 
   @Override
@@ -165,29 +175,60 @@ public class Robot extends TimedRobot {
     // System.out.println("Auto selected: " + m_autoSelected);
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.auto;
-
+    m_autoSelected = m_chooser.getSelected();
+    counter = 0;
   }
 
   @Override
   public void autonomousPeriodic() { 
-    //TODO: Test the RPM we need at that specific distance
-    //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head.
-    VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
-    VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
+    //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head (change the selected auto on the smartdashboard)
+    //TODO: Check to make sure that we can see the upper hub with the limelight when we are on the tarmac. Else you have to remove the hubPresent clause :)
 
-    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
+    switch (m_autoSelected) {
+      case (shootFirst) :
+        VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
+        VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
+        SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
 
-    //Taxi Code (Front Bumper needs to fully cross the tarmac)
-    if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
-      MotorControl.DriveCode.driveStraight(-0.1);; //TODO: Adjust the power based on how fast it moves or whether it works
-    } 
-    else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters < VisionSystems.Limelight.getDistanceFromHubStack() && VisionSystems.Limelight.getDistanceFromHubStack() <  (RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters + 0.2)) {
-      // TODO: Use the shooting code made from testing. Accidentally deleted it but I'll (Aryan) will put it in.
-    } else {
-      drive.tankDrive(0,0);
-      //test
+        if (counter < 54.0 * 4) {
+          shooterFly.set(ControlMode.PercentOutput, 1); //TODO: adjust power based on arc needed
+        }
+        if (counter > (42.2*3) && counter < (54.0 * 4)) {
+          rollers.set(ControlMode.PercentOutput, 1);//TODO: Adjust power based on speed of shooting
+        }
+        else { // stop the motors after auto routine
+          shooterFly.set(ControlMode.PercentOutput, 0);
+          rollers.set(ControlMode.PercentOutput, 0);
+          MotorControl.DriveCode.driveStraight(-0.1); //TODO: CHange power or switch to moveBackwards function if needed
+        }
+        break;
+
+      case (taxiFirst) :
+        VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
+        VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
+        SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
+
+        //Taxi Code (Front Bumper needs to fully cross the tarmac)
+        //TODO: Can switch from driveStraight to move Backwards if needed :)
+        if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+          MotorControl.DriveCode.driveStraight(-0.1); //TODO: Adjust the power based on how fast it moves or whether it works
+        } 
+        else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters <= VisionSystems.Limelight.getDistanceFromHubStack()) {
+          drive.tankDrive(0,0); //stop moving
+          //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
+          if (counter < 54.0 * 4) {
+            shooterFly.set(ControlMode.PercentOutput, 1); //TODO: adjust power based on arc needed
+          }
+          if (counter > (42.2*3) && counter < (54.0 * 4)) {
+            rollers.set(ControlMode.PercentOutput, 1);//TODO: Adjust power based on speed of shooting
+          }
+          else { // stop the motors after auto routine
+            shooterFly.set(ControlMode.PercentOutput, 0);
+            rollers.set(ControlMode.PercentOutput, 0);
+          }
+        } 
+        break;
     }
-
   }
 
   @Override
