@@ -1,4 +1,4 @@
-name: TODO
+name: Issue Finder
 on:
   push:
     branches:
