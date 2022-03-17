@@ -270,7 +270,7 @@ public class RobotInformation {
              * </ul>
              */
             public static class motorTypes {
-                public static enum MotorPositions {
+                public static enum Motors {
                     Drivetrain,
                     Shooter,
                     Wrist,

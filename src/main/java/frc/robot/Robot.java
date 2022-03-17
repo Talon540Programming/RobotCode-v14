@@ -33,7 +33,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
-import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.Motors;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -218,7 +218,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(MotorPositions.Shooter)); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
+    SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(Motors.Shooter)); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
 
     // Drive Mode
     if(GameControl.currentControllerState == ControllerStates.drive_mode) {

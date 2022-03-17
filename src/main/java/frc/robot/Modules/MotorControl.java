@@ -1,7 +1,7 @@
 package frc.robot.Modules;
 
 import frc.robot.Robot;
-import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.Motors;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -19,7 +19,7 @@ public class MotorControl {
  * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
  * @return The RPM of the motor.
  */
-    public static double getRPM(MotorPositions wantedMotor) {
+    public static double getRPM(Motors wantedMotor) {
         switch(wantedMotor) {
             case Shooter:
                 double shooterVelocity = getCurrentVelocity(Robot.shooterFly);
