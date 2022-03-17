@@ -283,7 +283,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopExit() { // Run apon exiting teleop
-    VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
+
   }
 
   @Override
