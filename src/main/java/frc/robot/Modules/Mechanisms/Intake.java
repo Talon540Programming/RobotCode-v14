@@ -13,9 +13,11 @@ public class Intake {
      */
     public static void rollers() { // Had absolute value of getRightY, would never be below zero!
         if (Robot.controller.getLeftBumper()) { //Right trigger spins intake from field to robot
-            Robot.rollers.set(ControlMode.PercentOutput, -RobotInformation.DriveTeamInfo.rollerLBTransferPercentage);
+            Robot.rollers.set(ControlMode.PercentOutput, -RobotInformation.DriveTeamInfo.rollerLowPercentage);
         } else if(Robot.controller.getAButton()) { //Left trigger spins intake from entrance of robot to flywheel
-            Robot.rollers.set(ControlMode.PercentOutput, -RobotInformation.DriveTeamInfo.rollerBTransferPercentage);
+            Robot.rollers.set(ControlMode.PercentOutput, -RobotInformation.DriveTeamInfo.rollerHighPercentage);
+        } else if(Robot.controller.getBButton()) { //Left trigger spins intake from flywheel to entrance of robot
+            Robot.rollers.set(ControlMode.PercentOutput, RobotInformation.DriveTeamInfo.rollerLowPercentage);
         } else {
             Robot.rollers.set(ControlMode.PercentOutput, 0);
         }
@@ -27,7 +29,7 @@ public class Intake {
      * transfer percentage.
      * If the joystick is moved down, the wrist is set to 0
      */
-    public static void wrist() {
+    public static void runWrist() {
         if(Math.abs(Robot.controller.getLeftY()) > 0.2) {
             Robot.wrist.set(ControlMode.PercentOutput, (Robot.controller.getLeftY() * -RobotInformation.DriveTeamInfo.wristTransferPercentage));
         } else {

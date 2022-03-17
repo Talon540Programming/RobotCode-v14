@@ -3,6 +3,7 @@ package frc.robot.Modules;
 import frc.robot.Robot;
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
 import frc.robot.Modules.Mechanisms.VisionSystems;
+import frc.robot.Modules.Mechanisms.VisionSystems.Limelight;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
@@ -57,15 +58,26 @@ public class AimFire {
   }
 
 /**
- * One click fire function
+ * Set Flywheel velocity to optimal velocity based on target. The longer run the more accurate
  */
-  public static void fire(ValidTargets target) { //TODO: One click fire
-    // if(Math.abs(Limelight.nonZeroLimelightHorAng)>RobotInformation.deadbandAngle) {
-    //   centerAim(target);
-    // } else if(Math.abs(Limelight.nonZeroLimelightHorAng)<RobotInformation.deadbandAngle) {
-    // }
+  public static void setVelocity(ValidTargets target) {
+    // Make sure we are looking at target
+    if(Math.abs(Limelight.nonZeroLimelightAngle)>RobotInformation.deadbandAngle) {
+      // if not center aim
+      centerAim(target);
+    } else if(Math.abs(Limelight.nonZeroLimelightAngle)<RobotInformation.deadbandAngle) {
+      // specify target
+      switch(target) {
+        case upper_hub:
+          double highVelocity = Calculations.getDesiredBallVelocity(target);
+        
+          break;
+        case lower_hub:
+          double lowVelocity = Calculations.getDesiredBallVelocity(target);
 
-
+          break;
+        default:
+      }
+    }
   }
-
 }

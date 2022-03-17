@@ -48,10 +48,12 @@ public class RobotInformation {
         public static final double wristTransferPercentage = 0.15;
 
         /** Roller Speed */
-        public static final double rollerBTransferPercentage = 1;
-        public static final double rollerLBTransferPercentage = 0.5;
+        public static final double rollerHighPercentage = 1;
+        public static final double rollerLowPercentage = 0.5;
 
         public static final double safeBatteryLevel = 11; // Volts
+
+        public static final double teleopModeSwitchTimeout = 1; //one second
     }
 
     /**
@@ -177,14 +179,14 @@ public class RobotInformation {
             public static final double botwidthBumpersMeters = (botwidthBumpersInches/39.37);
 
             // Limelight Measurements
-            public static final double LimelightAngleDegrees = 40; //Degrees: https://www.desmos.com/calculator/zmzfln2j6v
+            public static final double LimelightAngleDegrees = 40; //Degrees: https://www.desmos.com/calculator/zmzfln2j6v //TODO:
             public static final double LimelightAngleRadians = Math.toRadians(40);
-            public static final double LimelightHeightInches = 22.76;
+            public static final double LimelightHeightInches = 22.76; //TODO:
             public static final double LimelightHeightMeters = (LimelightHeightInches/39.37);
 
             // Flywheel Measurements
-            public static final double shooterHoodAngle = 70; //TODO: Find this after mechanical changes it
-            public static final double flywheelHeightInches = 0; //TODO: Find this (used for calculating the optimal release ball velocity)
+            public static final double shooterHoodAngle = 70; //TODO: Find this after mechanical changes it //TODO:
+            public static final double flywheelHeightInches = 23.312;
             public static final double flywheelHeightMeters = (flywheelHeightInches/39.37);
 
 

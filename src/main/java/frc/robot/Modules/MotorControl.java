@@ -1,6 +1,7 @@
 package frc.robot.Modules;
 
 import frc.robot.Robot;
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -18,8 +19,23 @@ public class MotorControl {
  * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
  * @return The RPM of the motor.
  */
-    public static double getRPM(double idealVelocity, double transferPercent) {
-        return (((idealVelocity*(1/transferPercent))/(Math.PI*0.1016))*60); // rudimentary calculation that's 90% wrong
+    public static double getRPM(MotorPositions wantedMotor) {
+        switch(wantedMotor) {
+            case Shooter:
+                double shooterVelocity = getCurrentVelocity(Robot.shooterFly);
+                return shooterVelocity/RobotInformation.RobotData.MotorData.Shooter.Flywheel.gearRatio/2048*600;   
+            case Wrist:
+                double wristVelocity = getCurrentVelocity(Robot.wrist);
+                return wristVelocity/RobotInformation.RobotData.MotorData.Intake.Wrist.gearRatio/2048*600;
+            case Extension:
+                double extensionVelocity = getCurrentVelocity(Robot.climbExtension);
+                return extensionVelocity/RobotInformation.RobotData.MotorData.Climbers.ClimbExtension.gearRatio/2048*600;
+            case Rotation:
+                double rotationVelocity = getCurrentVelocity(Robot.climbRotation);
+                return rotationVelocity/RobotInformation.RobotData.MotorData.Climbers.ClimbRotation.gearRatio/2048*600;
+            default:
+                return 0;
+        }
     }
 
 /**
@@ -43,17 +59,6 @@ public class MotorControl {
     }
 
 /**
- * If the right bumper is pressed, run the flywheel at full power.
- */
-    public static void flywheel() {
-        if(Robot.controller.getRightBumper()) {
-            Robot.shooterFly.set(ControlMode.PercentOutput, 1);
-        } else {
-            Robot.shooterFly.set(ControlMode.PercentOutput, 0);
-        }
-    }
-
-/**
  * Initializes the motors for the robot
  */
     public static void motor_init() {
@@ -65,8 +70,6 @@ public class MotorControl {
         Robot.leftMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.leftSlave.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.leftSlave.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
-
-        Robot.rightMaster.setInverted(true);
 
         // Initialize Climber's and their Motor Brakes
         Robot.climbRotation.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 80, .5));
@@ -86,7 +89,20 @@ public class MotorControl {
         Robot.shooterFly.setSensorPhase(false);
     }
 
+    public static class FlywheelCode {
+        /**
+         * If the right bumper is pressed, run the flywheel at full power.
+         */
+        public static void flywheel() {
+            if(Robot.controller.getRightBumper()) {
+                Robot.shooterFly.set(ControlMode.PercentOutput, 1);
+            } else {
+                Robot.shooterFly.set(ControlMode.PercentOutput, 0);
+            }
+        }
 
+    }
+    
 /**
  * This class is used to control the drivetrain of the robot
  */
@@ -94,7 +110,7 @@ public class MotorControl {
         /** Main Drive Call */
         public static void tankDrive() {
             if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
-                Robot.drive.tankDrive((Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), ( -Robot.rightJoy.getY()* RobotInformation.DriveTeamInfo.driverPercentage));
+                Robot.drive.tankDrive((-Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), ( Robot.rightJoy.getY()* RobotInformation.DriveTeamInfo.driverPercentage));
             } //TODO: Adjust if sides are inverted
         }
 
@@ -107,10 +123,10 @@ public class MotorControl {
             Robot.drive.arcadeDrive(power, turnPower, false);
         }
 
-        //TODO: After testing, if the above function doesn't work, just switch to the one below this comment.
-        public static void moveBack() {
-            Robot.drive.tankDrive(-0.1, -0.1);
-        }
+        // //TODO: After testing, if the above function doesn't work, just switch to the one below this comment.
+        // public static void moveBack() {
+        //     Robot.drive.tankDrive(-0.1, -0.1);
+        // }
 
         /**
          * Drive the robot using the left and right master motors at the given motor speeds.*

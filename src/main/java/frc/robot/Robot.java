@@ -33,6 +33,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
+import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.MotorPositions;
+
 import com.kauailabs.navx.frc.AHRS;
 
 
@@ -59,6 +61,7 @@ public class Robot extends TimedRobot {
   private static final SendableChooser<String> m_chooser = new SendableChooser<>();
   private String m_autoSelected;
   private double counter;
+  private static int teleopCounter;
 
   @Override
   public void robotPeriodic() {
@@ -69,6 +72,10 @@ public class Robot extends TimedRobot {
     if(RobotController.getBatteryVoltage() < RobotInformation.DriveTeamInfo.safeBatteryLevel) {
       GameControl.UserControl.setControllerRumble(rumbleSides.both, 0.5);
       DriverStation.reportWarning("Batter Low Voltage Detected",false);
+    }
+
+    if(RobotController.getUserButton()) {
+      
     }
   }
 
@@ -205,13 +212,15 @@ public class Robot extends TimedRobot {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.teleop_drive;
     GameControl.currentControllerState = ControllerStates.drive_mode;
+    teleopCounter=0;
 
   }
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
+    SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(MotorPositions.Shooter)); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
 
+    // Drive Mode
     if(GameControl.currentControllerState == ControllerStates.drive_mode) {
         SmartDashboard.putString("Teleop Mode", "Drive Mode");
 
@@ -222,25 +231,54 @@ public class Robot extends TimedRobot {
         }
 
         AimFire.shooter();
-        Intake.wrist();
+        Intake.runWrist();
         Intake.rollers();
         MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
-        MotorControl.flywheel();
+        MotorControl.FlywheelCode.flywheel();
 
-      if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
-        GameControl.currentControllerState = ControllerStates.climb_mode;
+      // 50 ticks * 20 ms = 1 second
+      if(teleopCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
+        if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
+          GameControl.currentControllerState = ControllerStates.climb_mode;
+          teleopCounter=0;
+        }
+      } else {
+        teleopCounter++;
       }
     }
-
+    // Climb Mode
     if(GameControl.currentControllerState == ControllerStates.climb_mode) {
         SmartDashboard.putString("Teleop Mode", "Climb Mode");
+        
+        // Climb Code
         Climbers.climb();
         Climbers.climbrotation();
 
-      if(controller.getStartButton() && controller.getBackButton()) {
-        GameControl.currentControllerState = ControllerStates.drive_mode;
+      // 50 ticks * 20 ms = 1 second
+      if(teleopCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
+        if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
+          GameControl.currentControllerState = ControllerStates.drive_mode;
+          teleopCounter=0;
+        }
+      } else {
+        teleopCounter++;
       }
+      
     }
+  
+    // // Center bot on top hub
+    // if(leftJoy.getRawButton(1)) {
+    //   VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
+    //   AimFire.centerAim(ValidTargets.upper_hub);
+    // }
+
+    // AimFire.shooter();
+    // Intake.wrist();
+    // Intake.rollers();
+    // MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
+    // MotorControl.flywheel();
+    // Climbers.climb();
+    // Climbers.climbrotation();
   }
 
   @Override
