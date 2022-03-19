@@ -14,11 +14,13 @@ import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.AimFire;
 import frc.robot.Modules.GameControl;
 import frc.robot.Modules.RobotInformation;
+import frc.robot.Modules.Safety;
 import frc.robot.Modules.Mechanisms.Climbers;
 import frc.robot.Modules.Mechanisms.Intake;
 import frc.robot.Modules.Mechanisms.VisionSystems;
 import frc.robot.Modules.GameControl.ControllerStates;
 import frc.robot.Modules.GameControl.MatchTypes;
+import frc.robot.Modules.GameControl.UserControl.RobotLEDState;
 import frc.robot.Modules.GameControl.UserControl.rumbleSides;
 import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
 import edu.wpi.first.wpilibj.Joystick;
@@ -61,23 +63,8 @@ public class Robot extends TimedRobot {
   private static final SendableChooser<String> m_chooser = new SendableChooser<>();
   private String m_autoSelected;
   private double counter;
-  private static int teleopCounter;
-
-  @Override
-  public void robotPeriodic() {
-    // Display information relayed by Limelight and RPM information for testing
-    VisionSystems.Limelight.updateSmartDashboard();
-
-    // Checking to see if the battery voltage is below a certain level. If it is, it will set the rumble to half on both sides.
-    if(RobotController.getBatteryVoltage() < RobotInformation.DriveTeamInfo.safeBatteryLevel) {
-      GameControl.UserControl.setControllerRumble(rumbleSides.both, 0.5);
-      DriverStation.reportWarning("Batter Low Voltage Detected",false);
-    }
-
-    if(RobotController.getUserButton()) {
-      
-    }
-  }
+  private static int ControllerStatesCounter;
+  private static int RobotLEDStateCounter;
 
   @Override
   public void robotInit() {
@@ -115,6 +102,11 @@ public class Robot extends TimedRobot {
     controller = new XboxController(2);
     gyro = new AHRS(SerialPort.Port.kUSB); //TODO: Change port based on where electrical says it is, if it takes too long, screw it and just use the commented out moveBack function in MotorControl.java
 
+    // Robot Visual Control
+    RobotLEDStateCounter = 0;
+    GameControl.UserControl.currentRobotLEDState = RobotLEDState.off;
+    
+    
     // AUTO OPTIONS
     VisionSystems.Limelight.init();
     GameControl.initializeAllianceChooser();
@@ -123,8 +115,46 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Taxi First", taxiFirst);
     SmartDashboard.putData("Auto Choices", m_chooser);
   }
+  
+  @Override
+  public void robotPeriodic() {
+    // Display information relayed by Limelight and RPM information for testing
+    VisionSystems.Limelight.updateSmartDashboard();
 
-  //TODO: Remove this when not needed
+
+    if(RobotController.getUserButton()) { // Sequence is off -> on -> blink
+      if(RobotLEDStateCounter > 1000/20) { // If the led is off and the button was not clicked in the last second
+        switch(GameControl.UserControl.currentRobotLEDState) {
+          case off:
+            GameControl.UserControl.setRobotLEDS(RobotLEDState.on);
+            break;
+          case on:
+            GameControl.UserControl.setRobotLEDS(RobotLEDState.blink);
+            // Set blink
+            break;
+          case blink:
+            GameControl.UserControl.setRobotLEDS(RobotLEDState.off);
+            // Set off
+            break;
+        }
+        RobotLEDStateCounter=0;
+      }
+    }
+    
+    RobotLEDStateCounter++; // Increase the counter
+    SmartDashboard.putNumber("Current LED Counter", RobotLEDStateCounter); // REMOVEME
+    GameControl.UserControl.setRobotLEDS(GameControl.UserControl.currentRobotLEDState); //Update the LED state to the current LED state
+  
+    /** SAFETY FIRST!!! ... */
+    Safety.batterySafety();
+  }
+
+  @Override
+  public void disabledPeriodic() {
+    VisionSystems.Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
+    GameControl.currentMatchType = MatchTypes.disabled;
+  }
+
   @Override
   public void testPeriodic() {
     if(rightJoy.getRawButton(1)) {
@@ -203,7 +233,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousExit() { // Run apon exiting auto
+  public void autonomousExit() {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
   }
 
@@ -212,7 +242,7 @@ public class Robot extends TimedRobot {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.teleop_drive;
     GameControl.currentControllerState = ControllerStates.drive_mode;
-    teleopCounter=0;
+    ControllerStatesCounter=0;
 
   }
 
@@ -237,13 +267,13 @@ public class Robot extends TimedRobot {
         MotorControl.FlywheelCode.flywheel();
 
       // 50 ticks * 20 ms = 1 second
-      if(teleopCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
+      if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
         if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
           GameControl.currentControllerState = ControllerStates.climb_mode;
-          teleopCounter=0;
+          ControllerStatesCounter=0;
         }
       } else {
-        teleopCounter++;
+        ControllerStatesCounter++;
       }
     }
     // Climb Mode
@@ -255,13 +285,13 @@ public class Robot extends TimedRobot {
         Climbers.climbrotation();
 
       // 50 ticks * 20 ms = 1 second
-      if(teleopCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
+      if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
         if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
           GameControl.currentControllerState = ControllerStates.drive_mode;
-          teleopCounter=0;
+          ControllerStatesCounter=0;
         }
       } else {
-        teleopCounter++;
+        ControllerStatesCounter++;
       }
       
     }
@@ -282,57 +312,8 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopExit() { // Run apon exiting teleop
+  public void teleopExit() {
 
-  }
-
-  @Override
-  public void disabledPeriodic() { // Run when in Disabled mode
-    VisionSystems.Limelight.disabled(); // Turns off the limelight when robot is disabled among other things
-    GameControl.currentMatchType = MatchTypes.disabled;
   }
 
 }
-
-/**
- * IterativeRobotBase implements a specific type of robot program framework, extending the RobotBase
- * class.
- *
- * <p>The IterativeRobotBase class does not implement startCompetition(), so it should not be used
- * by teams directly.
- *
- * <p>This class provides the following functions which are called by the main loop,
- * startCompetition(), at the appropriate times:
- *
- * <p>robotInit() -- provide for initialization at robot power-on
- *
- * <p>init() functions -- each of the following functions is called once when the appropriate mode
- * is entered:
- *
- * <ul>
- *   <li>disabledInit() -- called each and every time disabled is entered from another mode
- *   <li>autonomousInit() -- called each and every time autonomous is entered from another mode
- *   <li>teleopInit() -- called each and every time teleop is entered from another mode
- *   <li>testInit() -- called each and every time test is entered from another mode
- * </ul>
- *
- * <p>periodic() functions -- each of these functions is called on an interval:
- *
- * <ul>
- *   <li>robotPeriodic()
- *   <li>disabledPeriodic()
- *   <li>autonomousPeriodic()
- *   <li>teleopPeriodic()
- *   <li>testPeriodic()
- * </ul>
- *
- * <p>final() functions -- each of the following functions is called once when the appropriate mode
- * is exited:
- *
- * <ul>
- *   <li>disabledExit() -- called each and every time disabled is exited
- *   <li>autonomousExit() -- called each and every time autonomous is exited
- *   <li>teleopExit() -- called each and every time teleop is exited
- *   <li>testExit() -- called each and every time test is exited
- * </ul>
- */

@@ -71,10 +71,18 @@ public class GameControl {
     }
 
     public static class UserControl { // User interface
+        public static RobotLEDState currentRobotLEDState;
+
         public static enum rumbleSides {
             left,
             right,
             both
+        }
+
+        public static enum RobotLEDState {
+            on,
+            off,
+            blink
         }
 
         /**
@@ -100,6 +108,28 @@ public class GameControl {
             }
         }
         
+
+        public static void setRobotLEDS(RobotLEDState ledState) {
+            switch(ledState) {
+                case on:
+                    // Turn LEDS on
+                    SmartDashboard.putString("CURRENT LED STATE", "on");
+                    currentRobotLEDState = RobotLEDState.on;
+                    break;
+
+                case off:
+                    // Turn LEDS off
+                    SmartDashboard.putString("CURRENT LED STATE", "off");
+                    currentRobotLEDState = RobotLEDState.off;
+                    break;
+
+                case blink:
+                    // Blink LEDS
+                    SmartDashboard.putString("CURRENT LED STATE", "off");
+                    currentRobotLEDState = RobotLEDState.blink;
+                    break;
+            }
+        }
         public static class UserInterfaceControl {
             /**
              * This class is used to configure the Shuffleboard
