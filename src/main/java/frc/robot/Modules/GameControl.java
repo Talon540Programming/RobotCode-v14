@@ -116,7 +116,7 @@ public class GameControl {
                 case on:
                     // Turn LEDS on
                     SmartDashboard.putString("CURRENT LED STATE", "on");
-                    // ledController.setVoltage(0);m
+                    // ledController.setVoltage(0);
                     currentRobotLEDState = RobotLEDState.on;
                     break;
 

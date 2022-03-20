@@ -15,7 +15,7 @@ public class VisionSystems {
         /** The last angle seen by the limelight that wasn't zero */
         public static double nonZeroLimelightAngle; // Used to orient bot
         public static double tx;
-        public static double tv;
+        public static double ty;
 
 
         // This is a enum that is used to set the LEDS of the limelight.
@@ -34,7 +34,7 @@ public class VisionSystems {
             double horizontalAngle = table.getEntry("tx").getDouble(0);
             tx = horizontalAngle;
             double verticalAngle = table.getEntry("ty").getDouble(0);
-            tv = verticalAngle;
+            ty = verticalAngle;
 
             if(horizontalAngle != 0) {
                 nonZeroLimelightAngle = horizontalAngle;
@@ -44,7 +44,8 @@ public class VisionSystems {
             SmartDashboard.putNumber("Limelight H-Angle",horizontalAngle);
             SmartDashboard.putNumber("Limelight V-Angle",verticalAngle);
             SmartDashboard.putNumber("Non Zero Angle", nonZeroLimelightAngle);
-
+            SmartDashboard.putBoolean("Limelight Target Presence", hubPresent());
+            
             SmartDashboard.putNumber("Lower Hub Ball Velocity", Calculations.getDesiredBallVelocity(ValidTargets.lower_hub));
             SmartDashboard.putNumber("Upper hub Ball Velocity", Calculations.getDesiredBallVelocity(ValidTargets.upper_hub));
 
@@ -58,7 +59,7 @@ public class VisionSystems {
         public static double getDistanceFromHubStack() {
             NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
             double verticalAngle = table.getEntry("ty").getDouble(0);
-            return (RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters) / (Math.tan((RobotInformation.RobotData.RobotMeasurement.LimelightAngleRadians + Math.toRadians(verticalAngle))));
+            return ((RobotInformation.FieldData.upperHubHeightMeters-RobotInformation.RobotData.RobotMeasurement.LimelightHeightMeters) / (Math.tan((RobotInformation.RobotData.RobotMeasurement.LimelightAngleRadians + Math.toRadians(verticalAngle)))));
         }
     
         /**

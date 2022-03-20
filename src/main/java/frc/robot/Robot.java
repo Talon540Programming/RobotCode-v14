@@ -63,6 +63,9 @@ public class Robot extends TimedRobot {
 
   double rollerCounter;
   double flywheelCounter;
+  public static boolean ballFired;
+  public static boolean aimCentered;
+
 
   private static int ControllerStatesCounter;
   private static int RobotLEDStateCounter;
@@ -101,7 +104,7 @@ public class Robot extends TimedRobot {
     leftJoy = new Joystick(0);
     rightJoy = new Joystick(1);
     controller = new XboxController(2);
-    gyro = new AHRS(SerialPort.Port.kUSB); //TODO: Change port based on where electrical says it is, if it takes too long, screw it and just use the commented out moveBack function in MotorControl.java
+    gyro = new AHRS(SerialPort.Port.kUSB);
 
     // Robot Visual Control
     RobotLEDStateCounter = 0;
@@ -119,7 +122,7 @@ public class Robot extends TimedRobot {
     // Display information relayed by Limelight and RPM information for testing
     VisionSystems.Limelight.updateSmartDashboard();
 
-    double value = (104-RobotInformation.RobotData.RobotMeasurement.LimelightHeightInches)/(Math.tan(Math.toRadians(VisionSystems.Limelight.tx)+40));
+    double value = (104-RobotInformation.RobotData.RobotMeasurement.LimelightHeightInches)/(Math.tan(Math.toRadians(VisionSystems.Limelight.tx)+Math.toRadians(RobotInformation.RobotData.RobotMeasurement.LimelightAngleDegrees)));
     SmartDashboard.putNumber("TESTING VALUE", value);
 
     if(RobotController.getUserButton()) { // Sequence is off -> on -> blink
@@ -146,8 +149,7 @@ public class Robot extends TimedRobot {
     GameControl.UserControl.setRobotLEDS(GameControl.UserControl.currentRobotLEDState); //Update the LED state to the current LED state
   
     /** SAFETY FIRST!!! ... */ 
-    // TODO ISSUE: Rumbling during AUTO
-    // Safety.batterySafety();
+    Safety.batterySafety();
   }
 
   @Override
@@ -172,7 +174,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
 
-    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition()); //TODO: Removed based on whether we need to sort out mechanical stop
+    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition());
   }
 
   @Override
@@ -182,76 +184,41 @@ public class Robot extends TimedRobot {
     gyro.reset();
     rollerCounter = 0;
     flywheelCounter = 0;
-
+    ballFired = false;
+    aimCentered = false;
   }
 
   @Override
   public void autonomousPeriodic() { 
-    //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head (change the selected auto on the smartdashboard)
-    //TODO: Check to make sure that we can see the upper hub with the limelight when we are on the tarmac. Else you have to remove the hubPresent clause :)
-
     // VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
     // VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
     
     SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(Motors.Shooter));
-    SmartDashboard.putNumber("Flywheel Velocity", MotorControl.getCurrentVelocity(shooterFly));
-    if(Math.abs(VisionSystems.Limelight.tx)>RobotInformation.deadbandAngle) {
-      AimFire.centerAim(ValidTargets.lower_hub);
-    } else { // Check if we shot yet
-      shooterFly.set(ControlMode.PercentOutput, 1); // Set flywheel to 100%
-      flywheelCounter++; // Increase the time flywheel has been charged 1.5 seconds rn
-      if(flywheelCounter>((2*1000)/(20/**current tick rate */))) { // if held for that long run the rollers
-        rollers.set(ControlMode.PercentOutput, -1); // Run the rollers //TODO:FIND IF IT IS POSITIVE OR NEGEITVE
+
+    if(!ballFired) {
+      shooterFly.set(ControlMode.PercentOutput, 1);
+      flywheelCounter++;
+
+      if(flywheelCounter > ((1.5*1000)/(20))) {
+        rollers.set(ControlMode.PercentOutput, -1);
         rollerCounter++;
+        AimFire.centerAim(ValidTargets.upper_hub);
+
         if(rollerCounter > ((3*1000)/(20/**current tick rate */))) {
           shooterFly.set(ControlMode.PercentOutput, 0);
-          if(VisionSystems.Limelight.getDistanceFromHubStack() < (RobotInformation.RobotData.RobotMeasurement.botlengthBumpersMeters+RobotInformation.FieldData.tarmacLengthMeters+1)) {
-            MotorControl.DriveCode.oldDriveTrain(-0.3, -0.3);
-          }
+          rollers.set(ControlMode.PercentOutput, 0);
+          ballFired = true;
         }
       }
-    }
-    /** Dream Auto Code
-    switch (m_autoSelected) {
-      case (shootFirst) :
-        //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
-        if (counter < 54.0 * 4) {
-          shooterFly.set(ControlMode.PercentOutput, 1); //TODO: adjust power based on arc needed
-          AimFire.centerAim(ValidTargets.lower_hub);
-        }
-        if (counter > (42.2*3) && counter < (54.0 * 4)) {
-          rollers.set(ControlMode.PercentOutput, 1);//TODO: Adjust power based on speed of shooting
-        }
-        else { // stop the motors after auto routine
-          shooterFly.set(ControlMode.PercentOutput, 0);
-          rollers.set(ControlMode.PercentOutput, 0);
-          MotorControl.DriveCode.driveStraight(-0.1); //TODO: CHange power or switch to moveBackwards function if needed
-        }
-        break;
 
-      case (taxiFirst) :
-        //Taxi Code (Front Bumper needs to fully cross the tarmac)
-        //TODO: Can switch from driveStraight to move Backwards if needed :)
-        if(VisionSystems.Limelight.hubPresent() && (VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
-          MotorControl.DriveCode.driveStraight(-0.1); //TODO: Adjust the power based on how fast it moves or whether it works
-        } 
-        else if(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters <= VisionSystems.Limelight.getDistanceFromHubStack()) {
-          drive.tankDrive(0,0); //stop moving
-          //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
-          if (counter < 54.0 * 4) {
-            shooterFly.set(ControlMode.PercentOutput, 1); //TODO: adjust power based on arc needed
-          }
-          if (counter > (42.2*3) && counter < (54.0 * 4)) {
-            rollers.set(ControlMode.PercentOutput, 1);//TODO: Adjust power based on speed of shooting
-          }
-          else { // stop the motors after auto routine
-            shooterFly.set(ControlMode.PercentOutput, 0);
-            rollers.set(ControlMode.PercentOutput, 0);
-          }
-        } 
-        break;
+    } else if(ballFired) {
+      if(VisionSystems.Limelight.getDistanceFromHubStack() < (RobotInformation.RobotData.RobotMeasurement.botlengthBumpersMeters+RobotInformation.FieldData.tarmacLengthMeters)) {
+        drive.tankDrive(-0.5, 0.5);
+      } else {
+        drive.tankDrive(0, 0);
+      }
     }
-     */
+
   }
 
   @Override
@@ -287,12 +254,12 @@ public class Robot extends TimedRobot {
         Intake.runWrist();
         Climbers.climb();
         Intake.rollers();
-        MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
+        MotorControl.DriveCode.tankDrive();
         MotorControl.FlywheelCode.flywheel();
 
       // 50 ticks * 20 ms = 1 second
       if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
-        if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
+        if(controller.getStartButton() && controller.getBackButton()) {
           GameControl.currentControllerState = ControllerStates.climb_mode;
           ControllerStatesCounter=0;
         }
@@ -300,6 +267,7 @@ public class Robot extends TimedRobot {
         ControllerStatesCounter++;
       }
     }
+    
     // Climb Mode
     if(GameControl.currentControllerState == ControllerStates.climb_mode) {
         SmartDashboard.putString("Teleop Mode", "Climb Mode");
@@ -310,7 +278,7 @@ public class Robot extends TimedRobot {
 
       // 50 ticks * 20 ms = 1 second
       if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
-        if(controller.getStartButton() && controller.getBackButton()) { // TODO: Teach Ojas and Chirayu how controller modes work
+        if(controller.getStartButton() && controller.getBackButton()) {
           GameControl.currentControllerState = ControllerStates.drive_mode;
           ControllerStatesCounter=0;
         }
@@ -319,20 +287,6 @@ public class Robot extends TimedRobot {
       }
       
     }
-  
-    // // Center bot on top hub
-    // if(leftJoy.getRawButton(1)) {
-    //   VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
-    //   AimFire.centerAim(ValidTargets.upper_hub);
-    // }
-
-    // AimFire.shooter();
-    // Intake.wrist();
-    // Intake.rollers();
-    // MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
-    // MotorControl.flywheel();
-    // Climbers.climb();
-    // Climbers.climbrotation();
   }
 
   @Override

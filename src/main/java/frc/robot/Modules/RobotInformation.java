@@ -9,7 +9,7 @@ public class RobotInformation {
     // General Information
 
     /** Minimum Angle that wont trigger the robot moving */
-    public static final double deadbandAngle = 0.3; // Last Known Working = 0.5
+    public static final double deadbandAngle = 0.5; // Last Known Working = 0.5
 
     // CONSTANTS
     // private static final double WHEEL_DIAMETER = 6; // inches
@@ -179,9 +179,9 @@ public class RobotInformation {
             public static final double botwidthBumpersMeters = (botwidthBumpersInches/39.37);
 
             // Limelight Measurements
-            public static final double LimelightAngleDegrees = 40; //Degrees: https://www.desmos.com/calculator/zmzfln2j6v //TODO:
+            public static final double LimelightAngleDegrees = 40;
             public static final double LimelightAngleRadians = Math.toRadians(LimelightAngleDegrees);
-            public static final double LimelightHeightInches = 24.5; //TODO:
+            public static final double LimelightHeightInches = 24.5;
             public static final double LimelightHeightMeters = (LimelightHeightInches/39.37);
 
             // Flywheel Measurements
@@ -299,7 +299,7 @@ public class RobotInformation {
             public static class Drivetrain {
                 // Drivetrain Motors
                 /** Gear Ratio of Motor */
-                public static final int gearRatio = 54/20; //TODO: Find This
+                public static final int gearRatio = 54/20;
                 /** Max Velocity of Motor*/
                 public static final double maxVelocity = (motorTypes.Falcon500.maxRPM/600) * (2048/gearRatio);
                 public static final int maxRPM = motorTypes.Falcon500.maxRPM;

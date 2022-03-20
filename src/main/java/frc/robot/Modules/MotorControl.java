@@ -111,7 +111,7 @@ public class MotorControl {
         public static void tankDrive() {
             if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
                 Robot.drive.tankDrive((-Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), ( Robot.rightJoy.getY()* RobotInformation.DriveTeamInfo.driverPercentage));
-            } //TODO: Adjust if sides are inverted
+            }
         }
 
         // Use negative number to move back and positive number to move forward
@@ -122,11 +122,6 @@ public class MotorControl {
             double turnPower = kP*correction;
             Robot.drive.arcadeDrive(power, turnPower, false);
         }
-
-        // //TODO: After testing, if the above function doesn't work, just switch to the one below this comment.
-        // public static void moveBack() {
-        //     Robot.drive.tankDrive(-0.1, -0.1);
-        // }
 
         /**
          * Drive the robot using the left and right master motors at the given motor speeds.*
