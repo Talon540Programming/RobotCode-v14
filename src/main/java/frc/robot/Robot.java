@@ -197,12 +197,12 @@ public class Robot extends TimedRobot {
 
     if(!ballFired) {
       shooterFly.set(ControlMode.PercentOutput, 1);
+      AimFire.centerAim(ValidTargets.upper_hub);
       flywheelCounter++;
 
       if(flywheelCounter > ((1.5*1000)/(20))) {
         rollers.set(ControlMode.PercentOutput, -1);
         rollerCounter++;
-        AimFire.centerAim(ValidTargets.upper_hub);
 
         if(rollerCounter > ((3*1000)/(20/**current tick rate */))) {
           shooterFly.set(ControlMode.PercentOutput, 0);
