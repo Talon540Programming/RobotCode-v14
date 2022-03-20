@@ -42,7 +42,7 @@ public class RobotInformation {
     public static class DriveTeamInfo {
         // Driver Information - Ojas!!
         /** What percent of input speed is translated to actual speed */
-        public static final double driverPercentage = 0.8;
+        public static final double driverPercentage = 0.75;
 
         /** Intake Transfer Percentage */
         public static final double wristTransferPercentage = 0.15;
@@ -180,12 +180,12 @@ public class RobotInformation {
 
             // Limelight Measurements
             public static final double LimelightAngleDegrees = 40; //Degrees: https://www.desmos.com/calculator/zmzfln2j6v //TODO:
-            public static final double LimelightAngleRadians = Math.toRadians(40);
-            public static final double LimelightHeightInches = 22.76; //TODO:
+            public static final double LimelightAngleRadians = Math.toRadians(LimelightAngleDegrees);
+            public static final double LimelightHeightInches = 24.5; //TODO:
             public static final double LimelightHeightMeters = (LimelightHeightInches/39.37);
 
             // Flywheel Measurements
-            public static final double shooterHoodAngle = 70; //TODO: Find this after mechanical changes it //TODO:
+            public static final double shooterHoodAngle = 70;
             public static final double flywheelHeightInches = 23.312;
             public static final double flywheelHeightMeters = (flywheelHeightInches/39.37);
 

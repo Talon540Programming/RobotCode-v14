@@ -14,6 +14,9 @@ public class VisionSystems {
     public static class Limelight {
         /** The last angle seen by the limelight that wasn't zero */
         public static double nonZeroLimelightAngle; // Used to orient bot
+        public static double tx;
+        public static double tv;
+
 
         // This is a enum that is used to set the LEDS of the limelight.
         public static enum Limelight_Light_States {
@@ -29,7 +32,9 @@ public class VisionSystems {
             NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
             double horizontalAngle = table.getEntry("tx").getDouble(0);
+            tx = horizontalAngle;
             double verticalAngle = table.getEntry("ty").getDouble(0);
+            tv = verticalAngle;
 
             if(horizontalAngle != 0) {
                 nonZeroLimelightAngle = horizontalAngle;

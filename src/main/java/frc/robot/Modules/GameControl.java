@@ -2,6 +2,7 @@ package frc.robot.Modules;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
@@ -72,6 +73,7 @@ public class GameControl {
 
     public static class UserControl { // User interface
         public static RobotLEDState currentRobotLEDState;
+        // public static Spark ledController = new Spark(0);
 
         public static enum rumbleSides {
             left,
@@ -114,6 +116,7 @@ public class GameControl {
                 case on:
                     // Turn LEDS on
                     SmartDashboard.putString("CURRENT LED STATE", "on");
+                    // ledController.setVoltage(0);m
                     currentRobotLEDState = RobotLEDState.on;
                     break;
 

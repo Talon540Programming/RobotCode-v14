@@ -4,6 +4,43 @@ import frc.robot.Robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class Climbers {
+    public static enum climbers {
+        extension,
+        rotation
+    }
+    public static enum rotationPositions {
+        // Climb Rotation
+        idle,
+        extensionReady,
+
+        // Climb Extension
+        // TBD
+    }
+
+    public static void setPosition(climbers climber, rotationPositions position) {
+        switch(climber) {
+            case extension:
+
+                break;
+            case rotation:
+                // double currentRotationPosition = gyro
+                switch(position) {
+                    case idle:
+                        
+                        break;
+                    case extensionReady:
+
+                        break;
+
+                    default:
+                }
+                break;
+        }
+    }
+
+
+
+
 
     //Vertical Climb, no encoder
 /**
@@ -12,9 +49,9 @@ public class Climbers {
  */
     public static void climb() {
         if (Robot.controller.getPOV() == 0) { //Up on D pad
-            Robot.climbExtension.set(ControlMode.PercentOutput, 1);
+            Robot.climbExtension.set(ControlMode.PercentOutput, 0.6);
         } else if (Robot.controller.getPOV() == 180) { //Down on D pad
-            Robot.climbExtension.set(ControlMode.PercentOutput, -1);
+            Robot.climbExtension.set(ControlMode.PercentOutput, -0.6);
         } else {
             Robot.climbExtension.set(ControlMode.PercentOutput, 0);
         }

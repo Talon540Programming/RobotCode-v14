@@ -22,6 +22,8 @@ import frc.robot.Modules.GameControl.ControllerStates;
 import frc.robot.Modules.GameControl.MatchTypes;
 import frc.robot.Modules.GameControl.UserControl.RobotLEDState;
 import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -58,9 +60,10 @@ public class Robot extends TimedRobot {
   public static DifferentialDrive drive; //Used for monitoring tank drive motion
   private static final String shootFirst = "Shoot First";
   private static final String taxiFirst = "Taxi First";
-  private static final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private String m_autoSelected;
-  private double counter;
+
+  double rollerCounter;
+  double flywheelCounter;
+
   private static int ControllerStatesCounter;
   private static int RobotLEDStateCounter;
 
@@ -104,14 +107,11 @@ public class Robot extends TimedRobot {
     RobotLEDStateCounter = 0;
     GameControl.UserControl.currentRobotLEDState = RobotLEDState.off;
     
+    CameraServer.startAutomaticCapture("Ball Camera", 0);
     
     // AUTO OPTIONS
     VisionSystems.Limelight.init();
     GameControl.initializeAllianceChooser();
-    m_chooser.setDefaultOption("Default Auto", "SELECT AUTO!");
-    m_chooser.addOption("Shoot First", shootFirst);
-    m_chooser.addOption("Taxi First", taxiFirst);
-    SmartDashboard.putData("Auto Choices", m_chooser);
   }
   
   @Override
@@ -119,6 +119,8 @@ public class Robot extends TimedRobot {
     // Display information relayed by Limelight and RPM information for testing
     VisionSystems.Limelight.updateSmartDashboard();
 
+    double value = (104-RobotInformation.RobotData.RobotMeasurement.LimelightHeightInches)/(Math.tan(Math.toRadians(VisionSystems.Limelight.tx)+40));
+    SmartDashboard.putNumber("TESTING VALUE", value);
 
     if(RobotController.getUserButton()) { // Sequence is off -> on -> blink
       if(RobotLEDStateCounter > 1000/20) { // If the led is off and the button was not clicked in the last second
@@ -143,8 +145,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Current LED Counter", RobotLEDStateCounter); // REMOVEME
     GameControl.UserControl.setRobotLEDS(GameControl.UserControl.currentRobotLEDState); //Update the LED state to the current LED state
   
-    /** SAFETY FIRST!!! ... */
-    Safety.batterySafety();
+    /** SAFETY FIRST!!! ... */ 
+    // TODO ISSUE: Rumbling during AUTO
+    // Safety.batterySafety();
   }
 
   @Override
@@ -176,23 +179,39 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.auto;
-    m_autoSelected = m_chooser.getSelected();
     gyro.reset();
-    counter = 0;
+    rollerCounter = 0;
+    flywheelCounter = 0;
+
   }
 
   @Override
   public void autonomousPeriodic() { 
     //TODO: If it can't make the shoot, as our angle is too high, we can shoot and THEN back up 5head (change the selected auto on the smartdashboard)
     //TODO: Check to make sure that we can see the upper hub with the limelight when we are on the tarmac. Else you have to remove the hubPresent clause :)
-    VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
-    VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
-    SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
+
+    // VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
+    // VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
     
-    if((VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
-      MotorControl.DriveCode.oldDriveTrain(-0.2, -0.2); //TODO: Adjust the power based on how fast it moves or whether it works
-    } 
-    /**
+    SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(Motors.Shooter));
+    SmartDashboard.putNumber("Flywheel Velocity", MotorControl.getCurrentVelocity(shooterFly));
+    if(Math.abs(VisionSystems.Limelight.tx)>RobotInformation.deadbandAngle) {
+      AimFire.centerAim(ValidTargets.lower_hub);
+    } else { // Check if we shot yet
+      shooterFly.set(ControlMode.PercentOutput, 1); // Set flywheel to 100%
+      flywheelCounter++; // Increase the time flywheel has been charged 1.5 seconds rn
+      if(flywheelCounter>((2*1000)/(20/**current tick rate */))) { // if held for that long run the rollers
+        rollers.set(ControlMode.PercentOutput, -1); // Run the rollers //TODO:FIND IF IT IS POSITIVE OR NEGEITVE
+        rollerCounter++;
+        if(rollerCounter > ((3*1000)/(20/**current tick rate */))) {
+          shooterFly.set(ControlMode.PercentOutput, 0);
+          if(VisionSystems.Limelight.getDistanceFromHubStack() < (RobotInformation.RobotData.RobotMeasurement.botlengthBumpersMeters+RobotInformation.FieldData.tarmacLengthMeters+1)) {
+            MotorControl.DriveCode.oldDriveTrain(-0.3, -0.3);
+          }
+        }
+      }
+    }
+    /** Dream Auto Code
     switch (m_autoSelected) {
       case (shootFirst) :
         //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
@@ -237,7 +256,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
-    VisionSystems.Limelight.setLEDS(Limelight_Light_States.off);
+    rollers.set(ControlMode.PercentOutput, 0);
+    shooterFly.set(ControlMode.PercentOutput,0);
   }
 
   @Override
