@@ -189,6 +189,10 @@ public class Robot extends TimedRobot {
     VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
     SmartDashboard.putNumber("Flywheel RPM: ", shooterFly.getSelectedSensorVelocity()/4/2048*60*10);
     
+    if((VisionSystems.Limelight.getDistanceFromHubStack()<(RobotInformation.RobotData.RobotMeasurement.botlengthMeters+RobotInformation.FieldData.tarmacLengthMeters+0.1))) { //If the top hub is present and we are less than 2.3 meters away drive backwards
+      MotorControl.DriveCode.oldDriveTrain(-0.2, -0.2); //TODO: Adjust the power based on how fast it moves or whether it works
+    } 
+    /**
     switch (m_autoSelected) {
       case (shootFirst) :
         //TODO: counter being 50 = 1 second. Adjust the timings as necessary :)
@@ -228,6 +232,7 @@ public class Robot extends TimedRobot {
         } 
         break;
     }
+     */
   }
 
   @Override
@@ -260,6 +265,7 @@ public class Robot extends TimedRobot {
 
         AimFire.shooter();
         Intake.runWrist();
+        Climbers.climb();
         Intake.rollers();
         MotorControl.DriveCode.tankDrive(); //TODO: fix the inversion problems with tank drive. I don't want to do it on fricking GitHub editor so we can do it with testing :)
         MotorControl.FlywheelCode.flywheel();
