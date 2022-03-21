@@ -8,9 +8,9 @@ import frc.robot.Modules.Mechanisms.VisionSystems.Limelight;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class AimFire {
-/**
- * If the right bumper is pressed, run the shooter flywheel at full speed. Otherwise, stop it
- */
+  /**
+   * If the right bumper is pressed, run the shooter flywheel at full speed. Otherwise, stop it
+   */
   public static void shooter() {
         if(Robot.controller.getRightBumper()) {
           Robot.shooterFly.set(ControlMode.PercentOutput, 1);
@@ -19,11 +19,11 @@ public class AimFire {
         }
       }
 
-/**
- * The function that will center the robot's aim on the target.
- *
- * @param target The name of the target to aim at. ("top_hub","ball")
- */
+  /**
+   * The function that will center the robot's aim on the target.
+   *
+   * @param target The name of the target to aim at. ("top_hub","ball")
+   */
   public static void centerAim(ValidTargets target) {
   //https://i.kym-cdn.com/entries/icons/original/000/039/393/cover2.jpg
 
@@ -57,16 +57,10 @@ public class AimFire {
     }
   }
 
-/**
- * Set Flywheel velocity to optimal velocity based on target. The longer run the more accurate
- */
-  public static void setVelocity(ValidTargets target) {
-    // Make sure we are looking at target
-    if(Math.abs(Limelight.nonZeroLimelightAngle)>RobotInformation.deadbandAngle) {
-      // if not center aim
-      centerAim(target);
-    } else if(Math.abs(Limelight.nonZeroLimelightAngle)<RobotInformation.deadbandAngle) {
-      // specify target
+  /**
+   * Set Flywheel velocity to optimal velocity based on target. The longer run the more accurate
+   */
+  public static void setFlywheelVelocity(ValidTargets target) {
       switch(target) {
         case upper_hub:
           double highVelocity = Calculations.getDesiredBallVelocity(target);
@@ -78,6 +72,5 @@ public class AimFire {
           break;
         default:
       }
-    }
   }
 }

@@ -8,9 +8,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.MotorControl;
+import frc.robot.Modules.PIDControl;
 import frc.robot.Modules.AimFire;
 import frc.robot.Modules.GameControl;
 import frc.robot.Modules.RobotInformation;
@@ -23,7 +23,6 @@ import frc.robot.Modules.GameControl.MatchTypes;
 import frc.robot.Modules.GameControl.UserControl.RobotLEDState;
 import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -58,8 +57,6 @@ public class Robot extends TimedRobot {
 
   // MISCELLANEOUS
   public static DifferentialDrive drive; //Used for monitoring tank drive motion
-  private static final String shootFirst = "Shoot First";
-  private static final String taxiFirst = "Taxi First";
 
   double rollerCounter;
   double flywheelCounter;
@@ -111,6 +108,8 @@ public class Robot extends TimedRobot {
     GameControl.UserControl.currentRobotLEDState = RobotLEDState.off;
     
     CameraServer.startAutomaticCapture("Ball Camera", 0);
+    GameControl.UserControl.ledCounter = 0;
+    GameControl.UserControl.oldLedValue = 0;
     
     // AUTO OPTIONS
     VisionSystems.Limelight.init();
@@ -175,6 +174,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
 
     SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition());
+
   }
 
   @Override
@@ -200,11 +200,11 @@ public class Robot extends TimedRobot {
       AimFire.centerAim(ValidTargets.upper_hub);
       flywheelCounter++;
 
-      if(flywheelCounter > ((1.5*1000)/(20))) {
+      if(flywheelCounter > ((RobotInformation.RobotData.AutonomousData.flywheelPeriod*1000)/(20))) {
         rollers.set(ControlMode.PercentOutput, -1);
         rollerCounter++;
 
-        if(rollerCounter > ((3*1000)/(20/**current tick rate */))) {
+        if(rollerCounter > ((RobotInformation.RobotData.AutonomousData.rollersPeriod*1000)/(20))) {
           shooterFly.set(ControlMode.PercentOutput, 0);
           rollers.set(ControlMode.PercentOutput, 0);
           ballFired = true;
@@ -212,11 +212,7 @@ public class Robot extends TimedRobot {
       }
 
     } else if(ballFired) {
-      if(VisionSystems.Limelight.getDistanceFromHubStack() < (RobotInformation.RobotData.RobotMeasurement.botlengthBumpersMeters+RobotInformation.FieldData.tarmacLengthMeters)) {
-        drive.tankDrive(-0.5, 0.5);
-      } else {
-        drive.tankDrive(0, 0);
-      }
+      MotorControl.DriveCode.driveToDistance(RobotInformation.RobotData.AutonomousData.taxiDriveDistance);
     }
 
   }
@@ -287,6 +283,9 @@ public class Robot extends TimedRobot {
       }
       
     }
+
+    // PID TESTING
+    PIDControl.driveDistanceTesting((4.5)); //TODO: TEST THIS
   }
 
   @Override

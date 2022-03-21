@@ -1,7 +1,10 @@
 package frc.robot.Modules;
 
 import frc.robot.Robot;
+import frc.robot.Modules.Mechanisms.VisionSystems;
 import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.Motors;
+
+import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -10,15 +13,18 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class MotorControl {
-/**
- * Given the ideal velocity and the transfer percentage, return the RPM
- *
- * @param idealVelocity the velocity you want to achieve in meters per second
- * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
- * @return The RPM of the motor.
- */
+    /**
+     * Given the ideal velocity and the transfer percentage, return the RPM
+     *
+     * @param idealVelocity the velocity you want to achieve in meters per second
+     * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
+     * @return The RPM of the motor.
+     */
     public static double getRPM(Motors wantedMotor) {
         switch(wantedMotor) {
             case Shooter:
@@ -38,29 +44,29 @@ public class MotorControl {
         }
     }
 
-/**
- * This function returns the current velocity of the motor. The motor must be a Falcon500
- *
- * @param motor The motor you want to get the velocity of.
- * @return The integrated sensor velocity of the motor.
- */
+    /**
+     * This function returns the current velocity of the motor. The motor must be a Falcon500
+     *
+     * @param motor The motor you want to get the velocity of.
+     * @return The integrated sensor velocity of the motor.
+     */
     public static double getCurrentVelocity(WPI_TalonFX motor) { // If using a TalonFX motor only
         return (motor.getSensorCollection().getIntegratedSensorVelocity());
     }
 
-/**
- * This function returns the current position of the motor. The motor must be a Falcon500
- *
- * @param motor The motor you want to get the current position of.
- * @return The current position of the motor.
- */
+    /**
+     * This function returns the current position of the motor. The motor must be a Falcon500
+     *
+     * @param motor The motor you want to get the current position of.
+     * @return The current position of the motor.
+     */
     public static double getCurrentPosition(WPI_TalonFX motor) { // If using a TalonFX motor only
         return (motor.getSensorCollection().getIntegratedSensorAbsolutePosition());
     }
 
-/**
- * Initializes the motors for the robot
- */
+    /**
+     * Initializes the motors for the robot
+     */
     public static void motor_init() {
         Robot.rightMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.rightMaster.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
@@ -76,6 +82,8 @@ public class MotorControl {
         Robot.climbExtension.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 80, .5));
         Robot.climbRotation.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 80, 80, .5));
         Robot.climbExtension.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 80, 80, .5));
+
+        // Sets Climbers and Extention in brake mode
         Robot.climbRotation.setNeutralMode(NeutralMode.Brake);
         Robot.climbExtension.setNeutralMode(NeutralMode.Brake);
 
@@ -87,6 +95,10 @@ public class MotorControl {
         Robot.shooterFly.configPeakOutputReverse(-1, 1);
         Robot.shooterFly.setInverted(false);
         Robot.shooterFly.setSensorPhase(false);
+
+        // Inverts right motor
+        // Robot.rightMaster.setInverted(true);
+        // Robot.rightSlave.setInverted(true);
     }
 
     public static class FlywheelCode {
@@ -103,9 +115,9 @@ public class MotorControl {
 
     }
     
-/**
- * This class is used to control the drivetrain of the robot
- */
+    /**
+     * This class is used to control the drivetrain of the robot
+     */
     public static class DriveCode {
         /** Main Drive Call */
         public static void tankDrive() {
@@ -132,6 +144,25 @@ public class MotorControl {
         public static void oldDriveTrain(double motorSpeedLeft, double motorSpeedRight) {
             Robot.leftMaster.set(ControlMode.PercentOutput, motorSpeedLeft);
             Robot.rightMaster.set(ControlMode.PercentOutput, -motorSpeedRight);
+        }
+
+        /**
+         * Drive the robot until the distance from the hub stack is the desired distance
+         * 
+         * @param desiredDistance The distance you want the robot to drive to in meters.
+         */
+        public static void driveToDistance(double desiredDistance) {
+            double distance = VisionSystems.Limelight.getDistanceFromHubStack();
+            if(distance < desiredDistance) {
+                Robot.drive.tankDrive(-0.5, 0.5);
+
+              } else if(distance > desiredDistance) {
+                Robot.drive.tankDrive(0.25, -0.25);
+
+              } else {
+                Robot.drive.tankDrive(0, 0);
+
+              }
         }
     }
 }

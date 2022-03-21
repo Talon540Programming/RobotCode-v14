@@ -111,7 +111,18 @@ public class RobotInformation {
             public static final double kD = 0;
         }
 
-        public static class wrist {
+        public static class climbRotation {
+            /** Feed Forward Term */
+            public static final double kF = 0;
+            /** Proportional Term */
+            public static final double kP = 0;
+            /** Integral term */
+            public static final double kI = 0;
+            /** Differentiable Term */
+            public static final double kD = 0;
+        }
+
+        public static class drivetrain {
             /** Feed Forward Term */
             public static final double kF = 0;
             /** Proportional Term */
@@ -364,6 +375,14 @@ public class RobotInformation {
 
                 }
             }
+        }
+
+        public static class AutonomousData {
+            public static final double flywheelPeriod = 2; // How long to run the flywheel and centerAim before shooting
+            public static final double rollersPeriod = 3; // How long till we start driving after engaging rollers
+
+            public static final double taxiDriveSpeed = 0.5;
+            public static final double taxiDriveDistance = (RobotInformation.RobotData.RobotMeasurement.botlengthBumpersMeters+RobotInformation.FieldData.tarmacLengthMeters);
         }
     }
 }

@@ -73,7 +73,9 @@ public class GameControl {
 
     public static class UserControl { // User interface
         public static RobotLEDState currentRobotLEDState;
-        // public static Spark ledController = new Spark(0);
+        public static double ledCounter;
+        public static double oldLedValue;
+        public static Spark ledController = new Spark(0);
 
         public static enum rumbleSides {
             left,
@@ -116,19 +118,30 @@ public class GameControl {
                 case on:
                     // Turn LEDS on
                     SmartDashboard.putString("CURRENT LED STATE", "on");
-                    // ledController.setVoltage(0);
+
+                    ledController.setVoltage(12);
                     currentRobotLEDState = RobotLEDState.on;
                     break;
 
                 case off:
                     // Turn LEDS off
                     SmartDashboard.putString("CURRENT LED STATE", "off");
+
+                    ledController.setVoltage(0);
                     currentRobotLEDState = RobotLEDState.off;
                     break;
 
                 case blink:
                     // Blink LEDS
-                    SmartDashboard.putString("CURRENT LED STATE", "off");
+                    SmartDashboard.putString("CURRENT LED STATE", "blink");
+
+                    if(ledCounter == oldLedValue + ((0.5 * 1000) / 20)) { // 25 * 20ms = 500ms
+                        ledController.setVoltage(12);
+                        oldLedValue = ledCounter;
+                    } else {
+                        ledController.setVoltage(0);
+                    }
+                    ledCounter++;
                     currentRobotLEDState = RobotLEDState.blink;
                     break;
             }
