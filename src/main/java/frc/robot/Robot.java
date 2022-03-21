@@ -22,7 +22,6 @@ import frc.robot.Modules.GameControl.ControllerStates;
 import frc.robot.Modules.GameControl.MatchTypes;
 import frc.robot.Modules.GameControl.UserControl.RobotLEDState;
 import frc.robot.Modules.Mechanisms.VisionSystems.Limelight.Limelight_Light_States;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -106,8 +105,8 @@ public class Robot extends TimedRobot {
     // Robot Visual Control
     RobotLEDStateCounter = 0;
     GameControl.UserControl.currentRobotLEDState = RobotLEDState.off;
-    
-    CameraServer.startAutomaticCapture("Ball Camera", 0);
+    VisionSystems.intakeVision.init();
+
     GameControl.UserControl.ledCounter = 0;
     GameControl.UserControl.oldLedValue = 0;
     

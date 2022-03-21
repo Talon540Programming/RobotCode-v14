@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.Calculations;
 import frc.robot.Modules.GameControl;
+import edu.wpi.first.cameraserver.CameraServer;
 
 public class VisionSystems {
     /** Limelight Visions System. Used for Tracking Retro-Reflectors */
@@ -25,9 +26,9 @@ public class VisionSystems {
             blink
         }
 
-    /**
-     * This function is used to update the SmartDashboard with the current values of the Limelight
-     */
+        /**
+        * This function is used to update the SmartDashboard with the current values of the Limelight
+        */
         public static void updateSmartDashboard() {
             NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
@@ -51,11 +52,11 @@ public class VisionSystems {
 
         }
 
-    /**
-     * This function returns the distance from the center of the limelight to the center of the hub stack
-     *
-     * @return The distance from the center of the limelight to the center of the hub stack.
-     */
+        /**
+        * This function returns the distance from the center of the limelight to the center of the hub stack
+        *
+        * @return The distance from the center of the limelight to the center of the hub stack.
+        */
         public static double getDistanceFromHubStack() {
             NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
             double verticalAngle = table.getEntry("ty").getDouble(0);
@@ -63,10 +64,10 @@ public class VisionSystems {
         }
     
         /**
-     * Is the top hub present in the FOV?
-     *
-     * @return A boolean value.
-     */
+        * Is the top hub present in the FOV?
+        *
+        * @return A boolean value.
+        */
         public static boolean hubPresent() {
             NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
             double targetPresence = table.getEntry("tv").getDouble(0);
@@ -77,37 +78,37 @@ public class VisionSystems {
             }
         }
 
-    /**
-     * Initialises the Limelight for Top Hub tracking: Sets the LEDS to on, sets the pipeline to 0, and sets the Limelight as a Vision Processor
-     */
+        /**
+        * Initialises the Limelight for Top Hub tracking: Sets the LEDS to on, sets the pipeline to 0, and sets the Limelight as a Vision Processor
+        */
         public static void init() {
             setLEDS(Limelight_Light_States.blink);
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0); //Sets the pipeline to 0
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(0); //Sets the Limelight as a Vision Proccesor
         }
 
-    /**
-     * Sets the pipeline to the value of pipeline
-     *
-     * @param pipeline 0-10
-     */
+        /**
+        * Sets the pipeline to the value of pipeline
+        *
+        * @param pipeline 0-10
+        */
         public static void setPipeline(double pipeline) {
             NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline); //Sets the pipeline to pipeline
         }
 
-    /**
-     * Code run for limelight when robot is in a disabled state
-     */
+        /**
+        * Code run for limelight when robot is in a disabled state
+        */
         public static void disabled() {
             setLEDS(Limelight_Light_States.off); // Turns off the god damm limelight cause im going to go blind and gouge my eyes out because wtf does it need to be so bright like holy hell
         }
 
 
-    /**
-     * This function sets the LED mode of the limelight
-     *
-     * @param mode Limelight_Light_States on, off, blink
-     */
+        /**
+        * This function sets the LED mode of the limelight
+        *
+        * @param mode Limelight_Light_States on, off, blink
+        */
         public static void setLEDS(Limelight_Light_States mode) {
             switch (mode) {
                 case on:
@@ -152,6 +153,12 @@ public class VisionSystems {
             if((output_alliance != input_alliance) && (output_alliance != "Not Ready")) {
                 DriverStation.reportWarning("Raspberry Pi Alliance Mismatch. Currently Reporting: "+output_alliance+" Currently Reciving: "+input_alliance,false);
             }
+        }
+    }
+
+    public static class intakeVision {
+        public static void init() {
+            CameraServer.startAutomaticCapture("Ball Camera", 0);
         }
     }
 }
