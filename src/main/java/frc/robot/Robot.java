@@ -286,6 +286,7 @@ public class Robot extends TimedRobot {
 
     // PID TESTING
     PIDControl.driveDistanceTesting((4.5)); //TODO: TEST THIS
+    PIDControl.limelightCenterTest(); //TODO: Test This
   }
 
   @Override

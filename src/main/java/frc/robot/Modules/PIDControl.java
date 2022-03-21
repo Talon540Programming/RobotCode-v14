@@ -9,6 +9,7 @@ public class PIDControl {
     public static PIDController drivePID;
     public static PIDController flywheelPID;
     public static PIDController climbRotationPID;
+    public static PIDController centeringPID;
 
     public static void init() {
         /** Drivetrain PID Controller */
@@ -20,6 +21,8 @@ public class PIDControl {
         /** Climb Rotation PID Controller */
         climbRotationPID = new PIDController(RobotInformation.PID_Values.climbRotation.kP, RobotInformation.PID_Values.climbRotation.kI, RobotInformation.PID_Values.climbRotation.kD);
 
+        /** Centering Aim PID Controller */
+        centeringPID = new PIDController(RobotInformation.PID_Values.centering.kP, RobotInformation.PID_Values.centering.kI, RobotInformation.PID_Values.centering.kD);
 
     }
 
@@ -36,6 +39,11 @@ public class PIDControl {
     public static void flywheelVelocity(double desiredVelocity) {
         double currentVelocity = MotorControl.getCurrentVelocity(Robot.shooterFly);
         
+    }
+
+    public static void limelightCenterTest() {
+        double output = centeringPID.calculate(VisionSystems.Limelight.nonZeroLimelightAngle,0);
+        SmartDashboard.putNumber("Limelight Testing Value", output);
     }
 
 }
