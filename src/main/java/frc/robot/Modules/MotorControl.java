@@ -77,11 +77,19 @@ public class MotorControl {
         Robot.leftSlave.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
         Robot.leftSlave.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
 
+        // // Inverts right motor
+        // Robot.rightMaster.setInverted(true);
+        // Robot.rightSlave.setInverted(true);
+
+        // Follow master motors
+        Robot.rightSlave.follow(Robot.rightMaster);
+        Robot.leftSlave.follow(Robot.leftMaster);
+
         // Initialize Climber's and their Motor Brakes
-        Robot.climbRotation.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 80, .5));
-        Robot.climbExtension.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 80, 80, .5));
-        Robot.climbRotation.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 80, 80, .5));
-        Robot.climbExtension.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 80, 80, .5));
+        Robot.climbRotation.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
+        Robot.climbExtension.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 40, .5));
+        Robot.climbRotation.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
+        Robot.climbExtension.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 40, .5));
 
         // Sets Climbers and Extention in brake mode
         Robot.climbRotation.setNeutralMode(NeutralMode.Brake);
@@ -95,10 +103,6 @@ public class MotorControl {
         Robot.shooterFly.configPeakOutputReverse(-1, 1);
         Robot.shooterFly.setInverted(false);
         Robot.shooterFly.setSensorPhase(false);
-
-        // Inverts right motor
-        // Robot.rightMaster.setInverted(true);
-        // Robot.rightSlave.setInverted(true);
     }
 
     public static class FlywheelCode {

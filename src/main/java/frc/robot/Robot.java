@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    // MOTORS
+    // DECLARE MOTORS
     //Declare Drivetrain motors
     rightMaster = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.DRIVETRAIN_FRONTRIGHT);
     rightSlave = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.DRIVETRAIN_BACKRIGHT);
@@ -85,10 +85,6 @@ public class Robot extends TimedRobot {
 
     // Declare Shooter Motors
     shooterFly = new WPI_TalonFX(RobotInformation.RobotData.RobotPorts.SHOOTER_FLY);
-
-    // Follow master motors
-    rightSlave.follow(rightMaster);
-    leftSlave.follow(leftMaster);
 
     // Initalise motor values (Climbers, Flywheel)
     MotorControl.motor_init();
