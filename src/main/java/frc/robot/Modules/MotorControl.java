@@ -127,7 +127,7 @@ public class MotorControl {
     public static class DriveCode {
         /** Main Drive Call */
         public static void tankDrive() {
-            if ((Math.abs(controller.getRightY() > 0.1) || Math.abs(controller.getLeftY() > 0.1)))) {
+            if ((Math.abs(controller.getRightY() > 0.1) || Math.abs(controller.getLeftY() > 0.1))) {
                 Robot.drive.tankDrive((-controller.getLeftY() * RobotInformation.DriveTeamInfo.driverPercentage), (controller.getRightY()* RobotInformation.DriveTeamInfo.driverPercentage));
             }
         }
