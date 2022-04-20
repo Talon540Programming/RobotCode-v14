@@ -26,6 +26,7 @@ public class MotorControl {
      * @param transferPercent the percentage of the ideal velocity that is transferred to the wheel.
      * @return The RPM of the motor.
      */
+    public static XboxController controller =  new XboxController(2);
     public static double getRPM(Motors wantedMotor) {
         switch(wantedMotor) {
             case Shooter:
@@ -126,8 +127,8 @@ public class MotorControl {
     public static class DriveCode {
         /** Main Drive Call */
         public static void tankDrive() {
-            if ((Math.abs(Robot.rightJoy.getY()) > 0.2) || Math.abs(Robot.leftJoy.getY()) > 0.2) {
-                Robot.drive.tankDrive((-Robot.leftJoy.getY() * RobotInformation.DriveTeamInfo.driverPercentage), ( Robot.rightJoy.getY()* RobotInformation.DriveTeamInfo.driverPercentage));
+            if ((Math.abs(controller.getRightY() > 0.2) || Math.abs(controller.getLeftY() > 0.2) {
+                Robot.drive.tankDrive((-controller.getLeftY() * RobotInformation.DriveTeamInfo.driverPercentage), (controller.getRightY()* RobotInformation.DriveTeamInfo.driverPercentage));
             }
         }
 
