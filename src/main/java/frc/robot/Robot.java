@@ -41,10 +41,10 @@ import com.kauailabs.navx.frc.AHRS;
 public class Robot extends TimedRobot {
   // MOTOR VARIABLES
   public static WPI_TalonFX leftSlave, rightSlave, leftMaster, rightMaster; // Drivetrain Motors
-  //public static WPI_TalonFX climbExtension; // Climb Extension motor
+  public static WPI_TalonFX climbExtension; // Climb Extension motor
   public static WPI_TalonFX shooterFly; // Flywheel motor
   public static WPI_TalonFX wrist; // Wrist motor
-  //public static WPI_TalonFX climbRotation; // Climb Rotation motor
+  public static WPI_TalonFX climbRotation; // Climb Rotation motor
   public static TalonSRX rollers; // Roller motor
 
   //CONTROLLERS
