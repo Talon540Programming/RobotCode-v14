@@ -30,8 +30,8 @@ public class Intake {
      * If the joystick is moved down, the wrist is set to 0
      */
     public static void runWrist() {
-        if(Math.abs(Robot.controller.getLeftY()) > 0.2) {
-            Robot.wrist.set(ControlMode.PercentOutput, (Robot.controller.getLeftY() * -RobotInformation.DriveTeamInfo.wristTransferPercentage));
+        if(Math.abs(Robot.controller.getRightTriggerAxis()) > 0.2) {
+            Robot.wrist.set(ControlMode.PercentOutput, (Robot.controller.getRightTriggerAxis() * -RobotInformation.DriveTeamInfo.wristTransferPercentage));
         } else {
             Robot.wrist.set(ControlMode.PercentOutput, 0);
         }
