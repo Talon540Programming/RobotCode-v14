@@ -243,7 +243,7 @@ public class Robot extends TimedRobot {
 
         AimFire.shooter();
         Intake.runWrist();
-        Climbers.climb();
+       // Climbers.climb();
         Intake.rollers();
         MotorControl.DriveCode.tankDrive();
         MotorControl.FlywheelCode.flywheel();
@@ -260,12 +260,12 @@ public class Robot extends TimedRobot {
     }
     
     // Climb Mode
-    if(GameControl.currentControllerState == ControllerStates.climb_mode) {
+    /*if(GameControl.currentControllerState == ControllerStates.climb_mode) {
         SmartDashboard.putString("Teleop Mode", "Climb Mode");
         
         // Climb Code
-        Climbers.climb();
-        Climbers.climbrotation();
+      //  Climbers.climb();
+       // Climbers.climbrotation();
 
       // 50 ticks * 20 ms = 1 second
       if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
@@ -277,7 +277,7 @@ public class Robot extends TimedRobot {
         ControllerStatesCounter++;
       }
       
-    }
+    }*/
 
     // PID TESTING
     PIDControl.driveDistanceTesting((4.5)); //TODO: TEST THIS
