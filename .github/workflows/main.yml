@@ -10,11 +10,13 @@ on:
     - main
     - Needs-Testing
     - FRC-Ready
+    - Just-Xbox-Controller
   pull_request:
     branches:
     - main
     - Needs-Testing
     - FRC-Ready
+    - Just-Xbox-Controller
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
