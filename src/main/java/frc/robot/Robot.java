@@ -246,7 +246,7 @@ public class Robot extends TimedRobot {
        // Climbers.climb();
         Intake.rollers();
         MotorControl.DriveCode.tankDrive();
-        MotorControl.FlywheelCode.flywheel();
+        // MotorControl.FlywheelCode.flywheel();
 
       // 50 ticks * 20 ms = 1 second
       if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
