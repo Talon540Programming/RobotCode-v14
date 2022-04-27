@@ -1,6 +1,0 @@
-Ghreighsson Jaysée Requests:
-
- - Use limelight to track him and follow him
- - Spin bot
- - Raise and Lower climbers in accordance with driver controls
- - Change drive and follow speed to 30%
