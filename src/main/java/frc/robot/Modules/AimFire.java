@@ -17,7 +17,7 @@ public class AimFire {
         } else {
           Robot.shooterFly.set(ControlMode.PercentOutput, 0);
         }
-      }
+  }
 
   /**
    * The function that will center the robot's aim on the target.

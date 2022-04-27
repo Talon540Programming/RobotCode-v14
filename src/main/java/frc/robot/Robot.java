@@ -10,13 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Modules.MotorControl;
-import frc.robot.Modules.PIDControl;
-import frc.robot.Modules.AimFire;
 import frc.robot.Modules.GameControl;
 import frc.robot.Modules.RobotInformation;
 import frc.robot.Modules.Safety;
-import frc.robot.Modules.Mechanisms.Climbers;
-import frc.robot.Modules.Mechanisms.Intake;
+import frc.robot.Modules.BS_Stuff.MGBOT_20;
 import frc.robot.Modules.Mechanisms.VisionSystems;
 import frc.robot.Modules.GameControl.ControllerStates;
 import frc.robot.Modules.GameControl.MatchTypes;
@@ -27,12 +24,10 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import frc.robot.Modules.RobotInformation.FieldData.ValidTargets;
 import frc.robot.Modules.RobotInformation.RobotData.MotorData.motorTypes.Motors;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -65,6 +60,8 @@ public class Robot extends TimedRobot {
 
   private static int ControllerStatesCounter;
   private static int RobotLEDStateCounter;
+
+  private static MGBOT_20 outreachBot;
 
   @Override
   public void robotInit() {
@@ -109,6 +106,9 @@ public class Robot extends TimedRobot {
     // AUTO OPTIONS
     VisionSystems.Limelight.init();
     GameControl.initializeAllianceChooser();
+
+    outreachBot = new MGBOT_20(1, 1, 1, 1);
+
   }
   
   @Override
@@ -154,68 +154,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    if(rightJoy.getRawButton(1)) {
-      Robot.shooterFly.set(ControlMode.PercentOutput, 1);
-    } else {
-      Robot.shooterFly.set(ControlMode.PercentOutput, 0);
-    }
-
-    double current_velocity = MotorControl.getCurrentVelocity(shooterFly);
-    double current_RPM = current_velocity/4/2048*60*10;
-
-    SmartDashboard.putNumber("Max Velocity",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxVelocity);
-    SmartDashboard.putNumber("Max RPM",RobotInformation.RobotData.MotorData.Shooter.Flywheel.maxRPM/4);
-    SmartDashboard.putNumber("Flywheel Velocity", current_velocity);
-    SmartDashboard.putNumber("Testing Flywheel RPM", current_RPM);
-
-    SmartDashboard.putNumber("Wrist Value", wrist.getSensorCollection().getIntegratedSensorAbsolutePosition());
 
   }
 
   @Override
   public void autonomousInit() {
-    VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
-    GameControl.currentMatchType = MatchTypes.auto;
-    gyro.reset();
-    rollerCounter = 0;
-    flywheelCounter = 0;
-    ballFired = false;
-    aimCentered = false;
   }
 
   @Override
   public void autonomousPeriodic() { 
-    // VisionSystems.BallTracking.updateCoprocessorValues(); // Update the Alliance Color Periodically for the Pi
-    // VisionSystems.BallTracking.coprocessorErrorCheck(); // Check if the reporting Alliance and the Sent alliance are the same, if not run an error
-    
-    SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(Motors.Shooter));
-
-    if(!ballFired) {
-      shooterFly.set(ControlMode.PercentOutput, 1);
-      AimFire.centerAim(ValidTargets.upper_hub);
-      flywheelCounter++;
-
-      if(flywheelCounter > ((RobotInformation.RobotData.AutonomousData.flywheelPeriod*1000)/(20))) {
-        rollers.set(ControlMode.PercentOutput, -1);
-        rollerCounter++;
-
-        if(rollerCounter > ((RobotInformation.RobotData.AutonomousData.rollersPeriod*1000)/(20))) {
-          shooterFly.set(ControlMode.PercentOutput, 0);
-          rollers.set(ControlMode.PercentOutput, 0);
-          ballFired = true;
-        }
-      }
-
-    } else if(ballFired) {
-      MotorControl.DriveCode.driveToDistance(RobotInformation.RobotData.AutonomousData.taxiDriveDistance);
-    }
-
   }
 
   @Override
   public void autonomousExit() {
-    rollers.set(ControlMode.PercentOutput, 0);
-    shooterFly.set(ControlMode.PercentOutput,0);
   }
 
   @Override
@@ -223,65 +174,17 @@ public class Robot extends TimedRobot {
     VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
     GameControl.currentMatchType = MatchTypes.teleop_drive;
     GameControl.currentControllerState = ControllerStates.drive_mode;
-    ControllerStatesCounter=0;
-
+    ControllerStatesCounter = 0;
   }
 
   @Override
   public void teleopPeriodic() {
     SmartDashboard.putNumber("Flywheel RPM: ", MotorControl.getRPM(Motors.Shooter)); // Velocity is measured by Falcon Encoder in units/100ms. Convert to RPM by dividing by gear ratio (4) and encoder resolution of 2048. Then multiply by 600 to convert to per minute.
-
-    // Drive Mode
-    if(GameControl.currentControllerState == ControllerStates.drive_mode) {
-        SmartDashboard.putString("Teleop Mode", "Drive Mode");
-
-        // Center bot on top hub
-        if(leftJoy.getRawButton(1)) {
-          VisionSystems.Limelight.setLEDS(Limelight_Light_States.on);
-          AimFire.centerAim(ValidTargets.upper_hub);
-        }
-
-        AimFire.shooter();
-        Intake.runWrist();
-        Climbers.climb();
-        Intake.rollers();
-        MotorControl.DriveCode.tankDrive();
-        MotorControl.FlywheelCode.flywheel();
-
-      // 50 ticks * 20 ms = 1 second
-      if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
-        if(controller.getStartButton() && controller.getBackButton()) {
-          GameControl.currentControllerState = ControllerStates.climb_mode;
-          ControllerStatesCounter=0;
-        }
-      } else {
-        ControllerStatesCounter++;
-      }
-    }
     
-    // Climb Mode
-    if(GameControl.currentControllerState == ControllerStates.climb_mode) {
-        SmartDashboard.putString("Teleop Mode", "Climb Mode");
-        
-        // Climb Code
-        Climbers.climb();
-        Climbers.climbrotation();
-
-      // 50 ticks * 20 ms = 1 second
-      if(ControllerStatesCounter>((RobotInformation.DriveTeamInfo.teleopModeSwitchTimeout*100)/20)) { // Timeout in ms / tickrate
-        if(controller.getStartButton() && controller.getBackButton()) {
-          GameControl.currentControllerState = ControllerStates.drive_mode;
-          ControllerStatesCounter=0;
-        }
-      } else {
-        ControllerStatesCounter++;
-      }
-      
-    }
-
-    // PID TESTING
-    PIDControl.driveDistanceTesting((4.5)); //TODO: TEST THIS
-    PIDControl.limelightCenterTest(); //TODO: Test This
+    outreachBot.MGBOTClimbSystem();
+    outreachBot.MGBOTDriveSystem();
+    outreachBot.MGBOTShooterSystem();
+    
   }
 
   @Override
