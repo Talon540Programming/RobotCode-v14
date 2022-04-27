@@ -13,7 +13,7 @@ import frc.robot.Modules.MotorControl;
 import frc.robot.Modules.GameControl;
 import frc.robot.Modules.RobotInformation;
 import frc.robot.Modules.Safety;
-import frc.robot.Modules.BS_Stuff.MGBOT_20;
+import frc.robot.Modules.Outreach.MGBOT_20;
 import frc.robot.Modules.Mechanisms.VisionSystems;
 import frc.robot.Modules.GameControl.ControllerStates;
 import frc.robot.Modules.GameControl.MatchTypes;
