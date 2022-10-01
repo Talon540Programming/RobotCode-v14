@@ -27,7 +27,7 @@ public class ShooterBase extends SubsystemBase {
      * @return Angular velocity of the flywheel in meters per second
      */
     public double getFlywheelVelocity() {
-        return this.getFlywheelRPM() / 60 * Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2);
+        return this.getFlywheelRPM() / 60 * Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2) * (2 * Math.PI);
     }
 
     /**
@@ -45,7 +45,7 @@ public class ShooterBase extends SubsystemBase {
      * @param targetVelocity angular velocity to set {@code FLYWHEEL} to
      */
     public void setFlywheelVelocity(double targetVelocity) {
-        double targetRPM = targetVelocity / Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2) * 60;
+        double targetRPM = targetVelocity / Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2) * 60 / (2 * Math.PI);
         this.setFlywheelRPM(targetRPM);
     }
 
