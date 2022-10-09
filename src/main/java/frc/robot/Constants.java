@@ -3,6 +3,11 @@ package frc.robot;
 public class Constants {
     // General Information
 
+    public static final double kMaxDrivetrainTranslationVelocity = 0.0; // TODO
+    public static final double kMaxDrivetrainTranslationAcceleration = 0.0; // TODO
+    public static final double kMaxDrivetrainRotationalVelocity = 0.0; // TODO
+    public static final double kMaxDrivetrainRotationalAcceleration = 0.0; // TODO
+
     /** Minimum Angle that wont trigger the robot moving */
     public static final double deadbandAngle = 0.5; // Last Known Working = 0.5
 
@@ -43,7 +48,6 @@ public class Constants {
         public static final double safeBatteryLevel = 11; // Volts
 
         public static final double teleopModeSwitchTimeout = 1; // one second
-
 
         public static final double AttackJoystickDeadband = 0.2;
         public static final double XboxControllerDeadband = 0.05;
@@ -120,14 +124,17 @@ public class Constants {
         }
 
         public static class drivetrain {
-            /** Feed Forward Term */
-            public static final double kF = 0;
-            /** Proportional Term */
-            public static final double kP = 0;
-            /** Integral term */
-            public static final double kI = 0;
-            /** Differentiable Term */
-            public static final double kD = 0;
+            public static class translation {
+                public static final double kP = 0;
+                public static final double kI = 0;
+                public static final double kD = 0;
+            }
+
+            public static class rotation {
+                public static final double kP = 0;
+                public static final double kI = 0;
+                public static final double kD = 0;
+            }
         }
 
         public static class centering {
@@ -191,7 +198,7 @@ public class Constants {
             public static final double botlengthInches = 30;
             public static final double botlengthMeters = (botlengthInches / 39.37);
 
-            public static final double botwidthInches = 28;
+            public static final double botwidthInches = 28.0;
             public static final double botwidthMeters = (botwidthInches / 39.37);
 
             public static final double botlengthBumpersInches = 38.478;
@@ -221,6 +228,8 @@ public class Constants {
                 }
 
                 public static class DriveTrain {
+                    public static final double wheelRadiusMeters = 0.0762;
+
                     public static class Omni {
                         public static double OmniDiameter = 6;
                         public static double OmniWidth = 0; // TODO: Find This
