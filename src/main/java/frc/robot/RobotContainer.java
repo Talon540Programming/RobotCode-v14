@@ -4,9 +4,11 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.climberz.ClimberBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
-import frc.robot.drivetrain.commands.AttackJoystickDrive;
-import frc.robot.drivetrain.commands.XboxControllerDrive;
+import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
+import frc.robot.drivetrain.commands.drive.AttackJoystickDrive;
+import frc.robot.drivetrain.commands.drive.XboxControllerDrive;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.wrist.WristBase;
 
@@ -35,14 +37,52 @@ public class RobotContainer {
         gyro.calibrate();
         gyro.reset();
 
-        this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
-        // this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDrive(drivetrainSubsystem, xboxController));
-
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        
+        // TODO: Add logic to get choice from smart dashboard
+        configureButtonBindings(OperatorModes.XBOX_AND_ATTACK);
+    }
+
+    private void configureButtonBindings(OperatorModes operatorMode) {
+        switch(operatorMode) {
+            case XBOX_ONLY:
+                // Configure Default Commands
+                this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDrive(drivetrainSubsystem, xboxController));
+
+                // Configure specific buttons
+
+                // Center on hubs, preference on press once vs held
+                xboxController.buttons.RIGHT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // xboxController.buttons.RIGHT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+
+                break;
+            case ATTACK_ONLY:
+                // Configure Default Commands
+                this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
+
+                // Configure specific buttons
+
+                rightJoystick.buttons.TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // rightJoystick.buttons.TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+
+                break;
+            case XBOX_AND_ATTACK:
+                // Configure Default Commands
+                this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
+
+                // Configure specific buttons
+
+                // Center on hubs, preference on press once vs held
+                xboxController.buttons.RIGHT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // xboxController.buttons.RIGHT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // rightJoystick.buttons.TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // rightJoystick.buttons.TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+
+
+                break;
+        }
     }
 
     public Command getAutonomousCommand() {

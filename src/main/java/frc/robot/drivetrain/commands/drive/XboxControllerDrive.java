@@ -1,4 +1,4 @@
-package frc.robot.drivetrain.commands;
+package frc.robot.drivetrain.commands.drive;
 
 import org.talon540.control.TalonXboxController;
 
