@@ -73,7 +73,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.github.Talon540Programming:TalonLib:155cda4029'
+    implementation 'com.github.Talon540Programming:TalonLib:main-SNAPSHOT'
 }
 
 // Simulation configuration (e.g. environment variables).

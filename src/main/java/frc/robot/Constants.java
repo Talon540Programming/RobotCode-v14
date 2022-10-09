@@ -43,6 +43,10 @@ public class Constants {
         public static final double safeBatteryLevel = 11; // Volts
 
         public static final double teleopModeSwitchTimeout = 1; // one second
+
+
+        public static final double AttackJoystickDeadband = 0.2;
+        public static final double XboxControllerDeadband = 0.05;
     }
 
     /**

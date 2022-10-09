@@ -13,7 +13,8 @@ public class DrivetrainBase extends SubsystemBase {
     private WPI_TalonFX leftLeader, leftFollower;
 
     public DifferentialDrive driveDifferential;
-    // private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(Constants.RobotData.RobotMeasurement.botwidthMeters);
+    // private DifferentialDriveKinematics driveKinematics = new
+    // DifferentialDriveKinematics(Constants.RobotData.RobotMeasurement.botwidthMeters);
 
     public DrivetrainBase() {
         this.rightLeader = new WPI_TalonFX(Constants.RobotData.RobotPorts.DRIVETRAIN_FRONTRIGHT);
