@@ -1,7 +1,6 @@
 package frc.robot.shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
@@ -10,24 +9,39 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
+import org.talon540.math.TalonFXIntegratedSensorManager;
+import org.talon540.math.conversions;
+
 public class ShooterBase extends SubsystemBase {
     private WPI_TalonFX flywheelMotor;
-    private TalonFXSensorCollection flywheelIntegratedEncoder;
+    private TalonFXIntegratedSensorManager sensorCollection;
 
     public ShooterBase() {
         this.flywheelMotor = new WPI_TalonFX(Constants.RobotData.RobotPorts.SHOOTER_FLY);
-        this.flywheelIntegratedEncoder = this.flywheelMotor.getSensorCollection();
+        this.sensorCollection = new TalonFXIntegratedSensorManager(
+            this.flywheelMotor.getSensorCollection(), 
+            Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2), 
+            Constants.RobotData.MotorData.Shooter.Flywheel.gearRatio
+        );
     }
 
+    /** Return the RPM of the flywheel */
     public double getFlywheelRPM() {
-        return this.flywheelIntegratedEncoder.getIntegratedSensorVelocity() * (2048/600) / Constants.RobotData.MotorData.Shooter.Flywheel.gearRatio;
+        return this.sensorCollection.getObjectRPM();
     }
 
     /**
      * @return Angular velocity of the flywheel in meters per second
      */
-    public double getFlywheelVelocity() {
-        return this.getFlywheelRPM() / 60 * Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2) * (2 * Math.PI);
+    public double getFlywheelLinearVelocity() {
+        return this.sensorCollection.getLinearVelocity();
+    }
+
+    /**
+     * @return Linear velocity of the flywheel in meters per second
+     */
+    public double getFlywheelAngularVelocity() {
+        return this.sensorCollection.getAngularVelocity();
     }
 
     /**
@@ -35,18 +49,21 @@ public class ShooterBase extends SubsystemBase {
      * @param targetRPM RPM to set {@code FLYWHEEL} to
      */
     public void setFlywheelRPM(double targetRPM) {
-        MathUtil.clamp(targetRPM, -6380, 6380);
-        targetRPM *= (600/2048);
-        this.flywheelMotor.set(ControlMode.Velocity, targetRPM);
+        targetRPM = MathUtil.clamp(targetRPM, -6380, 6380);
+
+        this.flywheelMotor.set(ControlMode.Velocity, conversions.RPMtoFalcon500Velocity(targetRPM) * Constants.RobotData.MotorData.Shooter.Flywheel.gearRatio);
+    }
+
+    public void setFlywheelLinearVelocity(double targetVelocity) {
+        this.setFlywheelRPM(conversions.LinearVelocityToRPM(targetVelocity, Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2)));
     }
 
     /**
      * Set {@code FLYWHEEL} RPM to certain angular velocity
      * @param targetVelocity angular velocity to set {@code FLYWHEEL} to
      */
-    public void setFlywheelVelocity(double targetVelocity) {
-        double targetRPM = targetVelocity / Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2) * 60 / (2 * Math.PI);
-        this.setFlywheelRPM(targetRPM);
+    public void setFlywheelAngularVelocity(double targetVelocity) {
+        this.setFlywheelRPM(conversions.AngularVelocityToRPM(targetVelocity));
     }
 
     /**
@@ -63,7 +80,8 @@ public class ShooterBase extends SubsystemBase {
         builder.setSmartDashboardType("shooter");
 
         builder.addDoubleProperty("Flywheel RPM", this::getFlywheelRPM, this::setFlywheelRPM);
-        builder.addDoubleProperty("Flywheel Velocity", this::getFlywheelVelocity, this::setFlywheelVelocity);
+        builder.addDoubleProperty("Flywheel Linear Velocity", this::getFlywheelLinearVelocity, this::setFlywheelLinearVelocity);
+        builder.addDoubleProperty("Flywheel Angular Velocity", this::getFlywheelAngularVelocity, this::setFlywheelAngularVelocity);
 
     }
 }
