@@ -1,5 +1,6 @@
 package frc.robot.drivetrain.commands;
 
+import org.talon540.vision.Limelight.LimelightLEDStates;
 import org.talon540.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,13 +15,19 @@ public class DriveToDistance extends CommandBase {
 
     private boolean finished = false;
 
-    DriveToDistance(DrivetrainBase drivetrainBase, LimelightVision limelightVisionBase, double desiredDistance) {
+    DriveToDistance(DrivetrainBase drivetrainBase, LimelightVision limelightVisionBase, double desiredDistanceMeters) {
         this.limelightSubsystem = limelightVisionBase;
         this.driveSubsystem = drivetrainBase;
 
-        this.distanceGoal = Math.abs(desiredDistance);
+        this.distanceGoal = Math.abs(desiredDistanceMeters);
 
         addRequirements(drivetrainBase, limelightVisionBase);
+    }
+
+    @Override
+    public void initialize() {
+        limelightSubsystem.setPipeline(0);
+        limelightSubsystem.enableLEDS();
     }
 
     @Override

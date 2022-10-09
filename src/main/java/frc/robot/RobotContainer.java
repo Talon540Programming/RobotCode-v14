@@ -24,7 +24,7 @@ public class RobotContainer {
     private final AHRS gyro = new AHRS(Port.kUSB);
 
     // Subsystems
-    private final LimelightVision limelightSubsystem = new LimelightVision(Constants.RobotData.RobotMeasurement.LimelightAngleDegrees, Constants.RobotData.RobotMeasurement.LimelightHeightMeters);
+    public final LimelightVision limelightSubsystem = new LimelightVision(Constants.RobotData.RobotMeasurement.LimelightAngleDegrees, Constants.RobotData.RobotMeasurement.LimelightHeightMeters);
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final WristBase wristSubsystem = new WristBase();
     private final ShooterBase shooterSubsystem = new ShooterBase();
