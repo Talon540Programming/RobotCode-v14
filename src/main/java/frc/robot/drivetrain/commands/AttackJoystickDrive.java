@@ -2,7 +2,7 @@ package frc.robot.drivetrain.commands;
 
 import org.talon540.control.TalonJoystick;
 
-import frc.robot.Constants.DriveTeamInfo;
+import frc.robot.constants.Constants.DriveTeamInfo;
 import frc.robot.drivetrain.DrivetrainBase;
 
 public class AttackJoystickDrive extends TankDriveCommand {

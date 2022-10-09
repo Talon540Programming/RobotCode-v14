@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.climberz.ClimberBase;
+import frc.robot.constants.Constants;
 import frc.robot.drivetrain.DrivetrainBase;
 import frc.robot.drivetrain.commands.AttackJoystickDrive;
 import frc.robot.drivetrain.commands.XboxControllerDrive;
@@ -40,7 +41,9 @@ public class RobotContainer {
         configureButtonBindings();
     }
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        
+    }
 
     public Command getAutonomousCommand() {
         return null;

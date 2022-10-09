@@ -4,7 +4,7 @@ import org.talon540.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.constants.Constants;
 import frc.robot.drivetrain.DrivetrainBase;
 
 public class CenterRobotOnHubStack extends CommandBase {
