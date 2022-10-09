@@ -8,13 +8,18 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import org.talon540.mapping.BoundRobotPositionTreeMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -23,8 +28,10 @@ public class DrivetrainBase extends SubsystemBase {
 
     private DifferentialDrive driveDifferential;
 
-    private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(
-            Constants.RobotData.RobotMeasurement.botwidthMeters);
+    private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(Constants.RobotData.RobotMeasurement.botwidthMeters);
+    private DifferentialDriveOdometry driveOdometry;
+    private BoundRobotPositionTreeMap positionMap = new BoundRobotPositionTreeMap(500);
+
 
     private PIDController leftDriveController = new PIDController(
             Constants.PID_Values.drivetrain.translation.kP,
@@ -63,10 +70,21 @@ public class DrivetrainBase extends SubsystemBase {
 
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
+        driveOdometry = new DifferentialDriveOdometry(gyro.getRotation2d());
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        updateOdometry();
+    } 
+
+    /**
+     * Update the position of the robot from current meausrements and log the latest position in the position map for future reference
+     */
+    private void updateOdometry() {
+        driveOdometry.update(gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+        positionMap.addPositionToMap(driveOdometry.getPoseMeters(), Timer.getFPGATimestamp());
+    }
 
     /**
      * Rotate the front of the drivetrain to a specific angle [-π, π]
@@ -124,7 +142,7 @@ public class DrivetrainBase extends SubsystemBase {
     }
 
     /**
-     * Get velocity of the left side of the drivetrain
+     * Get velocity of the left side of the drivetrain from the leader motor
      * @return velocity in meters per second
      */
     public double getLeftVelocity() {
@@ -136,7 +154,7 @@ public class DrivetrainBase extends SubsystemBase {
     }
 
     /**
-     * Get velocity of the right side of the drivetrain
+     * Get velocity of the right side of the drivetrain from the leader motor
      * @return velocity in meters per second
      */
     public double getRightVelocity() {
@@ -145,6 +163,22 @@ public class DrivetrainBase extends SubsystemBase {
             Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters,
             Constants.RobotData.MotorData.Drivetrain.gearRatio
         );
+    }
+
+    /**
+     * Return the position of the left side of the drivetrain from the leader motor
+     * @return position in meters
+     */
+    public double getLeftPosition() {
+        return (leftSide.getPosition() / Constants.RobotData.MotorData.Drivetrain.gearRatio) * ((2 * Math.PI * Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters) / 2048.0);
+    }
+
+    /**
+     * Return the position of the right side of the drivetrain from the leader motor
+     * @return position in meters
+     */
+    public double getRightPosition() {
+        return (rightSide.getPosition() / Constants.RobotData.MotorData.Drivetrain.gearRatio) * ((2 * Math.PI * Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters) / 2048.0);
     }
 
     /**
@@ -164,6 +198,22 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public void brake() {
         driveDifferential.stopMotor();
+    }
+
+    /**
+     * @return Get the current position of the robot on the field
+     */
+    public Pose2d getPosition() {
+        return this.driveOdometry.getPoseMeters();
+    }
+
+    /**
+     * Get robot's position from the position map using a timestamp
+     * @param timestamp
+     * @return Robot's position from map
+     */
+    public Pose2d getPosition(double timestamp) {
+        return this.positionMap.getPositionFromTimestamp(timestamp);
     }
 
 }
