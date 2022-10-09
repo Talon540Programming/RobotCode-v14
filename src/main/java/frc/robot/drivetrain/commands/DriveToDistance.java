@@ -30,9 +30,9 @@ public class DriveToDistance extends CommandBase {
                     .getDistanceFromTargetBase(Constants.FieldData.upperHubHeightMeters);
 
             if (distanceGoal < currentDistance) {
-                this.driveSubsystem.driveDifferential.tankDrive(0.5, 0.5);
+                this.driveSubsystem.tankDrive(0.5, 0.5);
             } else if (distanceGoal > currentDistance) {
-                this.driveSubsystem.driveDifferential.tankDrive(-0.25, -0.25);
+                this.driveSubsystem.tankDrive(-0.25, -0.25);
             } else if (distanceGoal - Constants.driveToDistanceOffset <= currentDistance
                     && currentDistance <= distanceGoal + Constants.driveToDistanceOffset) {
                 this.finished = true;
@@ -42,7 +42,7 @@ public class DriveToDistance extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        this.driveSubsystem.driveDifferential.stopMotor();
+        this.driveSubsystem.brake();
     }
 
     @Override

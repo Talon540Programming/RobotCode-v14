@@ -12,7 +12,7 @@ public class DrivetrainBase extends SubsystemBase {
     private WPI_TalonFX rightLeader, rightFollower;
     private WPI_TalonFX leftLeader, leftFollower;
 
-    public DifferentialDrive driveDifferential;
+    private DifferentialDrive driveDifferential;
     // private DifferentialDriveKinematics driveKinematics = new
     // DifferentialDriveKinematics(Constants.RobotData.RobotMeasurement.botwidthMeters);
 
@@ -31,4 +31,26 @@ public class DrivetrainBase extends SubsystemBase {
         /* It was CAD's fault */
         leftDrive.setInverted(true);
     }
+
+    @Override
+    public void periodic() {
+
+    }
+
+    /**
+     * Independently control each side of the drivetrain with a specific speed
+     * @param leftSpeed speed of drivetrain within [-1, 1]
+     * @param rightSpeed speed of drivetrain within [-1, 1]
+     */
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        driveDifferential.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    /**
+     * Stop the drivetrain motors in place
+     */
+    public void brake() {
+        driveDifferential.stopMotor();
+    }
+
 }

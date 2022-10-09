@@ -21,7 +21,7 @@ public abstract class TankDriveCommand extends CommandBase {
     @Override
     public void execute() {
         periodic();
-        drivetrainBase.driveDifferential.tankDrive(kleftDrive, krightDrive);
+        drivetrainBase.tankDrive(kleftDrive, krightDrive);
     }
 
     /**
