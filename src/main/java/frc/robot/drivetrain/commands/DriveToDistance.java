@@ -1,6 +1,5 @@
 package frc.robot.drivetrain.commands;
 
-import org.talon540.vision.Limelight.LimelightLEDStates;
 import org.talon540.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,9 +10,7 @@ public class DriveToDistance extends CommandBase {
     private LimelightVision limelightSubsystem;
     private DrivetrainBase driveSubsystem;
 
-    private double distanceGoal;
-
-    private boolean finished = false;
+    private double distanceGoal, currentDistance;
 
     DriveToDistance(DrivetrainBase drivetrainBase, LimelightVision limelightVisionBase, double desiredDistanceMeters) {
         this.limelightSubsystem = limelightVisionBase;
@@ -33,16 +30,12 @@ public class DriveToDistance extends CommandBase {
     @Override
     public void execute() {
         if (this.limelightSubsystem.targetViewed) {
-            double currentDistance = this.limelightSubsystem
-                    .getDistanceFromTargetBase(Constants.FieldData.upperHubHeightMeters);
+            currentDistance = this.limelightSubsystem.getDistanceFromTargetBase(Constants.FieldData.upperHubHeightMeters);
 
             if (distanceGoal < currentDistance) {
                 this.driveSubsystem.tankDrive(0.5, 0.5);
             } else if (distanceGoal > currentDistance) {
                 this.driveSubsystem.tankDrive(-0.25, -0.25);
-            } else if (distanceGoal - Constants.driveToDistanceOffset <= currentDistance
-                    && currentDistance <= distanceGoal + Constants.driveToDistanceOffset) {
-                this.finished = true;
             }
         }
     }
@@ -54,7 +47,7 @@ public class DriveToDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return (distanceGoal - Constants.driveToDistanceOffset) <= currentDistance && currentDistance <= (distanceGoal + Constants.driveToDistanceOffset);
     }
 
 }

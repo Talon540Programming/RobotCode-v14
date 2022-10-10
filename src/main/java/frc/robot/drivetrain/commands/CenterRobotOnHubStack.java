@@ -42,6 +42,7 @@ public class CenterRobotOnHubStack extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         driveBase.brake();
+        // driveBase.rotationController.reset();
     }
 
     @Override

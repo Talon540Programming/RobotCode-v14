@@ -2,7 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.climberz.ClimberBase;
+import frc.robot.climberz.commands.AttackJoystickClimberz;
+import frc.robot.climberz.commands.XboxControllerClimberz;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
@@ -27,7 +30,10 @@ public class RobotContainer {
     private final AHRS gyro = new AHRS(Port.kUSB);
 
     // Subsystems
-    public final LimelightVision limelightSubsystem = new LimelightVision(Constants.RobotData.RobotMeasurement.LimelightAngleDegrees, Constants.RobotData.RobotMeasurement.LimelightHeightMeters);
+    public final LimelightVision limelightSubsystem = new LimelightVision(
+        Constants.RobotData.RobotMeasurement.LimelightAngleDegrees,
+        Constants.RobotData.RobotMeasurement.LimelightHeightMeters
+    );
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final WristBase wristSubsystem = new WristBase();
     private final ShooterBase shooterSubsystem = new ShooterBase();
@@ -48,10 +54,19 @@ public class RobotContainer {
     private void configureButtonBindings(OperatorModes operatorMode) {
         switch(operatorMode) {
             case XBOX_ONLY:
-                // Configure Default Commands
+                /*
+                 * ==========================
+                 * Configure Default Commands
+                 * ==========================
+                 */
                 this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDrive(drivetrainSubsystem, xboxController));
+                this.climberSubsystem.setDefaultCommand(new XboxControllerClimberz(climberSubsystem, xboxController));
 
-                // Configure specific buttons
+                /*
+                 * ==========================
+                 * Configure specific buttons
+                 * ==========================
+                 */
 
                 // Center on hubs, preference on press once vs held
                 // xboxController.buttons.LEFT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
@@ -59,20 +74,38 @@ public class RobotContainer {
 
                 break;
             case ATTACK_ONLY:
-                // Configure Default Commands
+                /*
+                 * ==========================
+                 * Configure Default Commands
+                 * ==========================
+                 */
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
+                this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberz(climberSubsystem, leftJoystick, rightJoystick));
 
-                // Configure specific buttons
+                /*
+                 * ==========================
+                 * Configure specific buttons
+                 * ==========================
+                 */
 
                 // leftJoystick.buttons.TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
                 leftJoystick.buttons.TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
 
                 break;
             case XBOX_AND_ATTACK:
-                // Configure Default Commands
+                /*
+                 * ==========================
+                 * Configure Default Commands
+                 * ==========================
+                 */
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
+                this.climberSubsystem.setDefaultCommand(new XboxControllerClimberz(climberSubsystem, xboxController));
 
-                // Configure specific buttons
+                /*
+                 * ==========================
+                 * Configure specific buttons
+                 * ==========================
+                 */
 
                 // Center on hubs, preference on press once vs held
                 // xboxController.buttons.LEFT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
