@@ -13,6 +13,8 @@ import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
 import frc.robot.drivetrain.commands.drive.AttackJoystickDrive;
 import frc.robot.drivetrain.commands.drive.XboxControllerDrive;
 import frc.robot.shooter.ShooterBase;
+import frc.robot.shooter.commands.control.AttackJoystickShooterControl;
+import frc.robot.shooter.commands.control.XboxControllerShooterContol;
 import frc.robot.wrist.WristBase;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
@@ -61,6 +63,7 @@ public class RobotContainer {
                  */
                 this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDrive(drivetrainSubsystem, xboxController));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberz(climberSubsystem, xboxController));
+                this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
 
                 /*
                  * ==========================
@@ -81,6 +84,7 @@ public class RobotContainer {
                  */
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberz(climberSubsystem, leftJoystick, rightJoystick));
+                this.shooterSubsystem.setDefaultCommand(new AttackJoystickShooterControl(shooterSubsystem, leftJoystick, rightJoystick));
 
                 /*
                  * ==========================
@@ -100,6 +104,7 @@ public class RobotContainer {
                  */
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberz(climberSubsystem, xboxController));
+                this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
 
                 /*
                  * ==========================

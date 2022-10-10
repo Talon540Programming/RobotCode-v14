@@ -14,7 +14,7 @@ import org.talon540.math.conversions;
 
 public class ShooterBase extends SubsystemBase {
     private WPI_TalonFX flywheelMotor;
-    private TalonFXIntegratedSensorManager sensorCollection;
+    public TalonFXIntegratedSensorManager sensorCollection;
 
     public ShooterBase() {
         this.flywheelMotor = new WPI_TalonFX(Constants.RobotData.RobotPorts.SHOOTER_FLY);
