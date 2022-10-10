@@ -1,14 +1,14 @@
-package frc.robot.drivetrain.commands.drive;
+package frc.robot.drivetrain.commands.control;
 
 import org.talon540.control.XboxController.TalonXboxController;
 
 import frc.robot.constants.Constants.DriveTeamInfo;
 import frc.robot.drivetrain.DrivetrainBase;
 
-public class XboxControllerDrive extends TankDriveCommand {
+public class XboxControllerDriveControl extends DriveControl {
     private TalonXboxController controller;
 
-    public XboxControllerDrive(DrivetrainBase dBase, TalonXboxController cTalonXboxController) {
+    public XboxControllerDriveControl(DrivetrainBase dBase, TalonXboxController cTalonXboxController) {
         super(dBase);
         this.controller = cTalonXboxController;
         // Override inherited value in case it was changed since it's initalization

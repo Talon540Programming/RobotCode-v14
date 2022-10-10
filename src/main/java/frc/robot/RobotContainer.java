@@ -10,12 +10,14 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
 import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
-import frc.robot.drivetrain.commands.drive.AttackJoystickDrive;
-import frc.robot.drivetrain.commands.drive.XboxControllerDrive;
+import frc.robot.drivetrain.commands.control.AttackJoystickDriveControl;
+import frc.robot.drivetrain.commands.control.XboxControllerDriveControl;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.control.AttackJoystickShooterControl;
 import frc.robot.shooter.commands.control.XboxControllerShooterContol;
 import frc.robot.wrist.WristBase;
+import frc.robot.wrist.commands.control.AttackJoystickWristControl;
+import frc.robot.wrist.commands.control.XboxControllerWristControl;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 import org.talon540.control.XboxController.TalonXboxController;
@@ -61,9 +63,10 @@ public class RobotContainer {
                  * Configure Default Commands
                  * ==========================
                  */
-                this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDrive(drivetrainSubsystem, xboxController));
+                this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDriveControl(drivetrainSubsystem, xboxController));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberz(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
+                this.wristSubsystem.setDefaultCommand(new XboxControllerWristControl(wristSubsystem, xboxController));
 
                 /*
                  * ==========================
@@ -82,9 +85,10 @@ public class RobotContainer {
                  * Configure Default Commands
                  * ==========================
                  */
-                this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
+                this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberz(climberSubsystem, leftJoystick, rightJoystick));
                 this.shooterSubsystem.setDefaultCommand(new AttackJoystickShooterControl(shooterSubsystem, leftJoystick, rightJoystick));
+                this.wristSubsystem.setDefaultCommand(new AttackJoystickWristControl(wristSubsystem, leftJoystick, rightJoystick));
 
                 /*
                  * ==========================
@@ -102,9 +106,10 @@ public class RobotContainer {
                  * Configure Default Commands
                  * ==========================
                  */
-                this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDrive(drivetrainSubsystem, leftJoystick, rightJoystick));
+                this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberz(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
+                this.wristSubsystem.setDefaultCommand(new XboxControllerWristControl(wristSubsystem, xboxController));
 
                 /*
                  * ==========================

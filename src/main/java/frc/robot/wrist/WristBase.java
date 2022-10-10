@@ -31,4 +31,12 @@ public class WristBase extends SubsystemBase {
 
         this.wristRollers.set(ControlMode.PercentOutput, percentOutput);
     }
+
+    public void stopRollers() {
+        wristRollers.stopMotor();
+    }
+
+    public void stopWrist() {
+        wristRotation.stopMotor();
+    }
 }

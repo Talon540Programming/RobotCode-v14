@@ -5,8 +5,11 @@ public class Constants {
 
     public static final double kMaxDrivetrainTranslationVelocity = 0.0; // TODO
     public static final double kMaxDrivetrainTranslationAcceleration = 0.0; // TODO
-    public static final double kMaxDrivetrainRotationalVelocity = 0.0; // TODO
-    public static final double kMaxDrivetrainRotationalAcceleration = 0.0; // TODO
+    // public static final double kMaxDrivetrainRotationalVelocity = 0.0; // TODO
+    public static final double kMaxDrivetrainRotationalVelocity = 2 * Math.PI;
+    // public static final double kMaxDrivetrainRotationalAcceleration = 0.0; //
+    // TODO
+    public static final double kMaxDrivetrainRotationalAcceleration = 2 * kMaxDrivetrainRotationalVelocity;
 
     /** Minimum Angle that wont trigger the robot moving */
     public static final double deadbandAngle = 0.5; // Last Known Working = 0.5
@@ -192,7 +195,8 @@ public class Constants {
         /** Physical Measurements */
         public static class RobotMeasurement { // One time Chirayu told me we should do all one unit for Robot Code, I
                                                // laughed and added all data in kilometers
-            // Robot information
+            // Robot information, ie: PAAAARRRRRKI1II1INNNNSO0OOOOOOO000O0O0O0NS GI1I1IVE
+            // MEEEEE TMSSS!!!!
             public static final double robotWeight = 86.484; // lbs
 
             public static final double botlengthInches = 30;
@@ -382,6 +386,8 @@ public class Constants {
                     public static final int maxRPM = motorTypes.M_775.maxRPM;
                 }
 
+                // Suppose we are mnentally stable and made all this into the right units to get
+                // velocity
                 /** Wrist Motor */
                 public static class Wrist {
                     /** Gear Ratio of Motor */

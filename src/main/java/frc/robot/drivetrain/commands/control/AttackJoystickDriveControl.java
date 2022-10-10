@@ -1,14 +1,14 @@
-package frc.robot.drivetrain.commands.drive;
+package frc.robot.drivetrain.commands.control;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 
 import frc.robot.constants.Constants.DriveTeamInfo;
 import frc.robot.drivetrain.DrivetrainBase;
 
-public class AttackJoystickDrive extends TankDriveCommand {
+public class AttackJoystickDriveControl extends DriveControl {
     private TalonJoystick leftJoystick, rightJoystick;
 
-    public AttackJoystickDrive(DrivetrainBase dBase, TalonJoystick left, TalonJoystick right) {
+    public AttackJoystickDriveControl(DrivetrainBase dBase, TalonJoystick left, TalonJoystick right) {
         super(dBase);
         this.leftJoystick = left;
         this.rightJoystick = right;

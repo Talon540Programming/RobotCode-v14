@@ -1,9 +1,9 @@
-package frc.robot.drivetrain.commands.drive;
+package frc.robot.drivetrain.commands.control;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.drivetrain.DrivetrainBase;
 
-public abstract class TankDriveCommand extends CommandBase {
+public abstract class DriveControl extends CommandBase {
     DrivetrainBase drivetrainBase;
 
     /**
@@ -13,7 +13,7 @@ public abstract class TankDriveCommand extends CommandBase {
      */
     protected double kleftDrive, krightDrive;
 
-    TankDriveCommand(DrivetrainBase dBase) {
+    DriveControl(DrivetrainBase dBase) {
         this.drivetrainBase = dBase;
         addRequirements(dBase);
     }

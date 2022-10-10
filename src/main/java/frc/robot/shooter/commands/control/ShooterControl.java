@@ -1,4 +1,4 @@
-package frc.robot.shooter.commands;
+package frc.robot.shooter.commands.control;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.shooter.ShooterBase;
