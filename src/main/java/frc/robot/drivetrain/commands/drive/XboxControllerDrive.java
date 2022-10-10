@@ -1,6 +1,6 @@
 package frc.robot.drivetrain.commands.drive;
 
-import org.talon540.control.TalonXboxController;
+import org.talon540.control.XboxController.TalonXboxController;
 
 import frc.robot.constants.Constants.DriveTeamInfo;
 import frc.robot.drivetrain.DrivetrainBase;

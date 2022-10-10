@@ -15,8 +15,8 @@ import frc.robot.drivetrain.commands.drive.XboxControllerDrive;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.wrist.WristBase;
 
-import org.talon540.control.TalonJoystick;
-import org.talon540.control.TalonXboxController;
+import org.talon540.control.AttackJoystick.TalonJoystick;
+import org.talon540.control.XboxController.TalonXboxController;
 import org.talon540.vision.Limelight.LimelightVision;
 
 import com.kauailabs.navx.frc.AHRS;

@@ -1,6 +1,6 @@
 package frc.robot.climberz.commands;
 
-import org.talon540.control.TalonJoystick;
+import org.talon540.control.AttackJoystick.TalonJoystick;
 
 import frc.robot.climberz.ClimberBase;
 

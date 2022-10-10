@@ -54,6 +54,10 @@ public class ShooterBase extends SubsystemBase {
         this.flywheelMotor.set(ControlMode.Velocity, conversions.RPMtoFalcon500Velocity(targetRPM) * Constants.RobotData.MotorData.Shooter.Flywheel.gearRatio);
     }
 
+    /**
+     * Set the linear velocity of the flywheel
+     * @param targetVelocity in meters per second
+     */
     public void setFlywheelLinearVelocity(double targetVelocity) {
         this.setFlywheelRPM(conversions.LinearVelocityToRPM(targetVelocity, Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2)));
     }

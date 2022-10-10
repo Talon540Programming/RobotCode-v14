@@ -1,6 +1,6 @@
 package frc.robot.climberz.commands;
 
-import org.talon540.control.TalonXboxController;
+import org.talon540.control.XboxController.TalonXboxController;
 
 import frc.robot.climberz.ClimberBase;
 
