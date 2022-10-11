@@ -1,4 +1,4 @@
-package frc.robot.climberz.commands;
+package frc.robot.climberz.commands.control;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.climberz.ClimberBase;

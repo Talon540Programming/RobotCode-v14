@@ -1,13 +1,13 @@
-package frc.robot.climberz.commands;
+package frc.robot.climberz.commands.control;
 
 import org.talon540.control.XboxController.TalonXboxController;
 
 import frc.robot.climberz.ClimberBase;
 
-public class XboxControllerClimberz extends ClimberzControl {
+public class XboxControllerClimberzControl extends ClimberzControl {
     private TalonXboxController controller;
 
-    public XboxControllerClimberz(ClimberBase sub, TalonXboxController controller) {
+    public XboxControllerClimberzControl(ClimberBase sub, TalonXboxController controller) {
         super(sub);
         this.controller = controller;
     }

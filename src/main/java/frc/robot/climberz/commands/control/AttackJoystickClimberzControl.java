@@ -1,13 +1,13 @@
-package frc.robot.climberz.commands;
+package frc.robot.climberz.commands.control;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 
 import frc.robot.climberz.ClimberBase;
 
-public class AttackJoystickClimberz extends ClimberzControl {
+public class AttackJoystickClimberzControl extends ClimberzControl {
     private TalonJoystick leftJoystick, rightJoystick;
 
-    public AttackJoystickClimberz(ClimberBase sub, TalonJoystick leftJoystick, TalonJoystick rightJoystick) {
+    public AttackJoystickClimberzControl(ClimberBase sub, TalonJoystick leftJoystick, TalonJoystick rightJoystick) {
         super(sub);
         this.leftJoystick = leftJoystick;
         this.rightJoystick = rightJoystick;

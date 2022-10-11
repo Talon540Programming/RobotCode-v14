@@ -14,6 +14,6 @@ public class XboxControllerShooterContol extends ShooterControl {
 
     @Override
     public void periodic() {
-        super.outputPercent = controller.buttons.RIGHT_BUMPER.get() ? 1 : 0;
+        super.outputPercent = controller.buttons.RIGHT_TRIGGER.get() ? 1 : 0;
     }
 }
