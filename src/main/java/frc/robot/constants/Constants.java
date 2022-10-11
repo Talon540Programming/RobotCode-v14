@@ -7,8 +7,7 @@ public class Constants {
     public static final double kMaxDrivetrainTranslationAcceleration = 0.0; // TODO
     // public static final double kMaxDrivetrainRotationalVelocity = 0.0; // TODO
     public static final double kMaxDrivetrainRotationalVelocity = 2 * Math.PI;
-    // public static final double kMaxDrivetrainRotationalAcceleration = 0.0; //
-    // TODO
+    // public static final double kMaxDrivetrainRotationalAcceleration = 0.0; // TODO
     public static final double kMaxDrivetrainRotationalAcceleration = 2 * kMaxDrivetrainRotationalVelocity;
 
     /** Minimum Angle that wont trigger the robot moving */
@@ -103,26 +102,15 @@ public class Constants {
      * </ul>
      */
     public static class PID_Values {
-        /** Flywheel PID values */
         public static class flywheel {
-            /** Feed Forward Term */
-            public static final double kF = 0;
-            /** Proportional Term */
             public static final double kP = 0;
-            /** Integral term */
             public static final double kI = 0;
-            /** Differentiable Term */
             public static final double kD = 0;
         }
 
         public static class climbRotation {
-            /** Feed Forward Term */
-            public static final double kF = 0;
-            /** Proportional Term */
             public static final double kP = 0;
-            /** Integral term */
             public static final double kI = 0;
-            /** Differentiable Term */
             public static final double kD = 0;
         }
 
@@ -141,13 +129,8 @@ public class Constants {
         }
 
         public static class centering {
-            /** Feed Forward Term */
-            public static final double kF = 0;
-            /** Proportional Term */
             public static final double kP = 0;
-            /** Integral term */
             public static final double kI = 0;
-            /** Differentiable Term */
             public static final double kD = 0;
         }
     }
