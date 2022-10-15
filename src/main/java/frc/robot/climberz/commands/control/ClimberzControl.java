@@ -6,7 +6,7 @@ import frc.robot.climberz.ClimberBase;
 public abstract class ClimberzControl extends CommandBase {
     protected ClimberBase climberzSub;
 
-    protected double extensionInput, rotationInput;
+    protected double extensionInput;
 
     ClimberzControl(ClimberBase climberzSubsystem) {
         climberzSub = climberzSubsystem;
@@ -18,7 +18,6 @@ public abstract class ClimberzControl extends CommandBase {
         periodic();
 
         climberzSub.setExtensionPercentOut(extensionInput);
-        // climberzSub.setRotationPercentOut(rotationInput);
     }
 
     public abstract void periodic();

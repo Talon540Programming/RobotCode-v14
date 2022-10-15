@@ -15,6 +15,5 @@ public class XboxControllerClimberzControl extends ClimberzControl {
     @Override
     public void periodic() {
         super.extensionInput = controller.buttons.DPAD_NORTH.get() ? 0.3 : controller.buttons.DPAD_SOUTH.get() ? -0.3 : 0.0;
-        super.rotationInput = controller.buttons.DPAD_EAST.get() ? 0.3 : controller.buttons.DPAD_WEST.get() ? -0.3 : 0.0;
     }
 }
