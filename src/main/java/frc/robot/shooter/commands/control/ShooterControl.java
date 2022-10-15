@@ -10,6 +10,7 @@ public abstract class ShooterControl extends CommandBase {
 
     public ShooterControl(ShooterBase shooter) {
         this.shooterSubsystem = shooter;
+        addRequirements(shooter);
     }
 
     @Override

@@ -10,6 +10,7 @@ public abstract class WristControl extends CommandBase {
 
     public WristControl(WristBase wristSubsystem) {
         this.wristSubsystem = wristSubsystem;
+        addRequirements(wristSubsystem);
     }
 
     @Override
