@@ -79,6 +79,10 @@ public class ShooterBase extends SubsystemBase {
         this.flywheelMotor.set(ControlMode.PercentOutput, percent);
     }
 
+    public void stopFlywheel() {
+        this.flywheelMotor.stopMotor();
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("shooter");

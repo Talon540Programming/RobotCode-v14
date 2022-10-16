@@ -12,7 +12,7 @@ public class DriveToDistance extends CommandBase {
 
     private double distanceGoal, currentDistance;
 
-    DriveToDistance(DrivetrainBase drivetrainBase, LimelightVision limelightVisionBase, double desiredDistanceMeters) {
+    public DriveToDistance(DrivetrainBase drivetrainBase, LimelightVision limelightVisionBase, double desiredDistanceMeters) {
         this.limelightSubsystem = limelightVisionBase;
         this.driveSubsystem = drivetrainBase;
 
