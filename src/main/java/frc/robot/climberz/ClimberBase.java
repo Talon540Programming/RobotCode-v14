@@ -5,13 +5,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.CANDeviceIDS;
 
 public class ClimberBase extends SubsystemBase {
     private WPI_TalonFX climbExtension;
 
     public ClimberBase() {
-        this.climbExtension = new WPI_TalonFX(Constants.RobotData.RobotPorts.CLIMBEXTENSION);
+        this.climbExtension = new WPI_TalonFX(CANDeviceIDS.CLIMBEXTENSION);
 
         this.climbExtension.setNeutralMode(NeutralMode.Brake);
     }

@@ -6,6 +6,7 @@ import frc.robot.climberz.ClimberBase;
 import frc.robot.climberz.commands.control.AttackJoystickClimberzControl;
 import frc.robot.climberz.commands.control.XboxControllerClimberzControl;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Measurements;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
 import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
@@ -34,8 +35,8 @@ public class RobotContainer {
 
     // Subsystems
     public final LimelightVision limelightSubsystem = new LimelightVision(
-        Constants.RobotData.RobotMeasurement.LimelightAngleDegrees,
-        Constants.RobotData.RobotMeasurement.LimelightHeightMeters
+        Measurements.Robot.LimelightAngleDegrees,
+        Measurements.Robot.LimelightHeightMeters
     );
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final WristBase wristSubsystem = new WristBase();

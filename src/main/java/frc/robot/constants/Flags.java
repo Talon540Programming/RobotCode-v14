@@ -6,7 +6,10 @@ public class Flags {
         XBOX_ONLY,
         /** The robot is being controlled using only the attack joysticks */
         ATTACK_ONLY,
-        /** The robot is being controlled using both the xbox controller and the attack joysticks */
+        /**
+         * The robot is being controlled using both the xbox controller and the attack
+         * joysticks
+         */
         XBOX_AND_ATTACK
     }
 }

@@ -2,7 +2,7 @@ package frc.robot.drivetrain.commands.control;
 
 import org.talon540.control.XboxController.TalonXboxController;
 
-import frc.robot.constants.Constants.DriveTeamInfo;
+import frc.robot.constants.Constants;
 import frc.robot.drivetrain.DrivetrainBase;
 
 public class XboxControllerDriveControl extends DriveControl {
@@ -12,7 +12,7 @@ public class XboxControllerDriveControl extends DriveControl {
         super(dBase);
         this.controller = cTalonXboxController;
         // Override inherited value in case it was changed since it's initalization
-        this.controller.deadband = DriveTeamInfo.XboxControllerDeadband;
+        this.controller.deadband = Constants.XboxControllerDeadband;
     }
 
     @Override

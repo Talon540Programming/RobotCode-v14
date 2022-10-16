@@ -4,10 +4,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.CANDeviceIDS;
+import frc.robot.constants.Measurements;
 
 import org.talon540.math.TalonFXIntegratedSensorManager;
 import org.talon540.math.conversions;
@@ -17,11 +17,11 @@ public class ShooterBase extends SubsystemBase {
     public TalonFXIntegratedSensorManager sensorCollection;
 
     public ShooterBase() {
-        this.flywheelMotor = new WPI_TalonFX(Constants.RobotData.RobotPorts.SHOOTER_FLY);
+        this.flywheelMotor = new WPI_TalonFX(CANDeviceIDS.SHOOTER_FLY);
         this.sensorCollection = new TalonFXIntegratedSensorManager(
-            this.flywheelMotor.getSensorCollection(), 
-            Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2), 
-            Constants.RobotData.MotorData.Shooter.Flywheel.gearRatio
+            this.flywheelMotor.getSensorCollection(),
+            Measurements.Robot.flywheelRadiusMeters,
+            Measurements.Robot.GearRatios.shooter
         );
     }
 
@@ -51,7 +51,7 @@ public class ShooterBase extends SubsystemBase {
     public void setFlywheelRPM(double targetRPM) {
         targetRPM = MathUtil.clamp(targetRPM, -6380, 6380);
 
-        this.flywheelMotor.set(ControlMode.Velocity, conversions.RPMtoFalcon500Velocity(targetRPM) * Constants.RobotData.MotorData.Shooter.Flywheel.gearRatio);
+        this.flywheelMotor.set(ControlMode.Velocity, conversions.RPMtoFalcon500Velocity(targetRPM) * Measurements.Robot.GearRatios.shooter);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ShooterBase extends SubsystemBase {
      * @param targetVelocity in meters per second
      */
     public void setFlywheelLinearVelocity(double targetVelocity) {
-        this.setFlywheelRPM(conversions.LinearVelocityToRPM(targetVelocity, Units.inchesToMeters(Constants.RobotData.RobotMeasurement.WheelData.Flywheel.FlywheelDiameter / 2)));
+        this.setFlywheelRPM(conversions.LinearVelocityToRPM(targetVelocity, Measurements.Robot.flywheelRadiusMeters));
     }
 
     /**

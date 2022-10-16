@@ -3,7 +3,7 @@ package frc.robot.drivetrain.commands;
 import org.talon540.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.Measurements;
 import frc.robot.drivetrain.DrivetrainBase;
 
 public class DriveToDistance extends CommandBase {
@@ -30,7 +30,7 @@ public class DriveToDistance extends CommandBase {
     @Override
     public void execute() {
         if (this.limelightSubsystem.targetViewed) {
-            currentDistance = this.limelightSubsystem.getDistanceFromTargetBase(Constants.FieldData.upperHubHeightMeters);
+            currentDistance = this.limelightSubsystem.getDistanceFromTargetBase(Measurements.Field.upperHubHeightMeters);
 
             if (distanceGoal < currentDistance) {
                 this.driveSubsystem.tankDrive(0.5, 0.5);
@@ -47,7 +47,7 @@ public class DriveToDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (distanceGoal - Constants.driveToDistanceOffset) <= currentDistance && currentDistance <= (distanceGoal + Constants.driveToDistanceOffset);
+        return (distanceGoal - Measurements.Calculations.limelightDistanceOffsetMeters) <= currentDistance && currentDistance <= (distanceGoal + Measurements.Calculations.limelightDistanceOffsetMeters);
     }
 
 }

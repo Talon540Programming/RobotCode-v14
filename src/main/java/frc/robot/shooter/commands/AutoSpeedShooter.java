@@ -3,7 +3,8 @@ package frc.robot.shooter.commands;
 import org.talon540.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.Constants;
+
+import frc.robot.constants.Measurements;
 import frc.robot.shooter.ShooterBase;
 
 public class AutoSpeedShooter extends CommandBase {
@@ -20,10 +21,10 @@ public class AutoSpeedShooter extends CommandBase {
 
     @Override
     public void execute() {
-        double hubHeight = Constants.FieldData.upperHubHeightMeters;
+        double hubHeight = Measurements.Field.upperHubHeightMeters;
         double distanceFromHubstack = limelight.getDistanceFromTargetBase(hubHeight);
-        double shooterHoodAngleTan = Math.tan(Math.toRadians(Constants.RobotData.RobotMeasurement.shooterHoodAngle));
-        double flywheelHeight = Constants.RobotData.RobotMeasurement.flywheelHeightMeters;
+        double shooterHoodAngleTan = Math.tan(Math.toRadians(Measurements.Robot.shooterHoodAngle));
+        double flywheelHeight = Measurements.Robot.flywheelHeightMeters;
         double targetHeightDelta = hubHeight - flywheelHeight;
 
         targetVelocity = Math.sqrt(-(9.8*Math.pow(distanceFromHubstack,2)*(1+Math.pow(shooterHoodAngleTan,2)))/((2*targetHeightDelta)-2*distanceFromHubstack*shooterHoodAngleTan));

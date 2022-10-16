@@ -17,7 +17,10 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.CANDeviceIDS;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Measurements;
+import frc.robot.constants.PID;
 
 import org.talon540.mapping.BoundRobotPositionTreeMap;
 
@@ -28,37 +31,37 @@ public class DrivetrainBase extends SubsystemBase {
 
     private DifferentialDrive driveDifferential;
 
-    private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(Constants.RobotData.RobotMeasurement.botwidthMeters);
+    private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(Measurements.Robot.botwidthMeters);
     private DifferentialDriveOdometry driveOdometry;
     private BoundRobotPositionTreeMap positionMap = new BoundRobotPositionTreeMap(500);
 
 
     private PIDController leftDriveController = new PIDController(
-            Constants.PID_Values.drivetrain.translation.kP,
-            Constants.PID_Values.drivetrain.translation.kI,
-            Constants.PID_Values.drivetrain.translation.kD);
+            PID.drivetrain.translation.kP,
+            PID.drivetrain.translation.kI,
+            PID.drivetrain.translation.kD);
     private PIDController rightDriveController = new PIDController(
-            Constants.PID_Values.drivetrain.translation.kP,
-            Constants.PID_Values.drivetrain.translation.kI,
-            Constants.PID_Values.drivetrain.translation.kD);
+            PID.drivetrain.translation.kP,
+            PID.drivetrain.translation.kI,
+            PID.drivetrain.translation.kD);
     private ProfiledPIDController rotationController = new ProfiledPIDController(
-            Constants.PID_Values.drivetrain.rotation.kP,
-            Constants.PID_Values.drivetrain.rotation.kI,
-            Constants.PID_Values.drivetrain.rotation.kD,
+            PID.drivetrain.rotation.kP,
+            PID.drivetrain.rotation.kI,
+            PID.drivetrain.rotation.kD,
             new TrapezoidProfile.Constraints(
-                    Constants.kMaxDrivetrainRotationalVelocity,
-                    Constants.kMaxDrivetrainRotationalAcceleration));
+                    Measurements.Calculations.kMaxDrivetrainRotationalVelocity,
+                    Measurements.Calculations.kMaxDrivetrainRotationalAcceleration));
 
     private AHRS gyro;
 
     public DrivetrainBase(AHRS gyro) {
         this.gyro = gyro;
 
-        WPI_TalonFX rightLeader = new WPI_TalonFX(Constants.RobotData.RobotPorts.DRIVETRAIN_FRONTRIGHT);
-        WPI_TalonFX rightFollower = new WPI_TalonFX(Constants.RobotData.RobotPorts.DRIVETRAIN_BACKRIGHT);
+        WPI_TalonFX rightLeader = new WPI_TalonFX(CANDeviceIDS.DRIVETRAIN_FRONTRIGHT);
+        WPI_TalonFX rightFollower = new WPI_TalonFX(CANDeviceIDS.DRIVETRAIN_BACKRIGHT);
 
-        WPI_TalonFX leftLeader = new WPI_TalonFX(Constants.RobotData.RobotPorts.DRIVETRAIN_FRONTLEFT);
-        WPI_TalonFX leftFollower = new WPI_TalonFX(Constants.RobotData.RobotPorts.DRIVETRAIN_BACKLEFT);
+        WPI_TalonFX leftLeader = new WPI_TalonFX(CANDeviceIDS.DRIVETRAIN_FRONTLEFT);
+        WPI_TalonFX leftFollower = new WPI_TalonFX(CANDeviceIDS.DRIVETRAIN_BACKLEFT);
 
         rightSide = new TalonFX_DifferentialMotorGroup(rightLeader, rightFollower);
         leftSide = new TalonFX_DifferentialMotorGroup(leftLeader, leftFollower);
@@ -148,8 +151,8 @@ public class DrivetrainBase extends SubsystemBase {
     public double getLeftVelocity() {
         return conversions.Falcon500VelocityToLinearVelocity(
             leftSide.getVelocity(),
-            Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters,
-            Constants.RobotData.MotorData.Drivetrain.gearRatio
+            Measurements.Robot.drivetrainWheelRadiusMeters,
+            Measurements.Robot.GearRatios.drivetrain
         );
     }
 
@@ -160,8 +163,8 @@ public class DrivetrainBase extends SubsystemBase {
     public double getRightVelocity() {
         return conversions.Falcon500VelocityToLinearVelocity(
             rightSide.getVelocity(),
-            Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters,
-            Constants.RobotData.MotorData.Drivetrain.gearRatio
+            Measurements.Robot.drivetrainWheelRadiusMeters,
+            Measurements.Robot.GearRatios.drivetrain
         );
     }
 
@@ -170,7 +173,7 @@ public class DrivetrainBase extends SubsystemBase {
      * @return position in meters
      */
     public double getLeftPosition() {
-        return (leftSide.getPosition() / Constants.RobotData.MotorData.Drivetrain.gearRatio) * ((2 * Math.PI * Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters) / 2048.0);
+        return (leftSide.getPosition() / Measurements.Robot.GearRatios.drivetrain) * ((2 * Math.PI * Measurements.Robot.drivetrainWheelRadiusMeters) / 2048.0);
     }
 
     /**
@@ -178,7 +181,7 @@ public class DrivetrainBase extends SubsystemBase {
      * @return position in meters
      */
     public double getRightPosition() {
-        return (rightSide.getPosition() / Constants.RobotData.MotorData.Drivetrain.gearRatio) * ((2 * Math.PI * Constants.RobotData.RobotMeasurement.WheelData.DriveTrain.wheelRadiusMeters) / 2048.0);
+        return (rightSide.getPosition() / Measurements.Robot.GearRatios.drivetrain) * ((2 * Math.PI * Measurements.Robot.drivetrainWheelRadiusMeters) / 2048.0);
     }
 
     /**

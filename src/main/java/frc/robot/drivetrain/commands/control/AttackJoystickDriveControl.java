@@ -2,7 +2,7 @@ package frc.robot.drivetrain.commands.control;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 
-import frc.robot.constants.Constants.DriveTeamInfo;
+import frc.robot.constants.Constants;
 import frc.robot.drivetrain.DrivetrainBase;
 
 public class AttackJoystickDriveControl extends DriveControl {
@@ -14,8 +14,8 @@ public class AttackJoystickDriveControl extends DriveControl {
         this.rightJoystick = right;
 
         // Override inherited value in case it was changed since it's initalization
-        this.leftJoystick.deadband = DriveTeamInfo.AttackJoystickDeadband;
-        this.rightJoystick.deadband = DriveTeamInfo.AttackJoystickDeadband;
+        this.leftJoystick.deadband = Constants.AttackJoystickDeadband;
+        this.rightJoystick.deadband = Constants.AttackJoystickDeadband;
     }
 
     @Override

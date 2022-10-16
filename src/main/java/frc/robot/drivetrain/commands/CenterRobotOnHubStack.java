@@ -2,9 +2,8 @@ package frc.robot.drivetrain.commands;
 
 import org.talon540.vision.Limelight.LimelightVision;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.constants.Constants;
+import frc.robot.constants.Measurements;
 import frc.robot.drivetrain.DrivetrainBase;
 
 public class CenterRobotOnHubStack extends CommandBase {
@@ -47,7 +46,7 @@ public class CenterRobotOnHubStack extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Constants.deadbandAngle > Math.abs(limelightBase.nonZeroX);
+        return Measurements.Calculations.limelightCenteringDeadbandAngleDeg > Math.abs(limelightBase.nonZeroX);
     }
 
 }
