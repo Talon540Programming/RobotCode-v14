@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.climberz.ClimberBase;
 import frc.robot.climberz.commands.control.AttackJoystickClimberzControl;
 import frc.robot.climberz.commands.control.XboxControllerClimberzControl;
@@ -47,7 +46,7 @@ public class RobotContainer {
         gyro.calibrate();
         gyro.reset();
 
-        configureButtonBindings();
+        configureButtonBindings(OperatorModes.ATTACK_ONLY);
     }
 
     private void configureButtonBindings() {
