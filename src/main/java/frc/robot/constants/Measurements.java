@@ -67,11 +67,8 @@ public class Measurements {
     public static class Calculations {
         public static final double kMaxDrivetrainTranslationVelocity = 0.0; // TODO
         public static final double kMaxDrivetrainTranslationAcceleration = 0.0; // TODO
-        // public static final double kMaxDrivetrainRotationalVelocity = 0.0; // TODO
-        public static final double kMaxDrivetrainRotationalVelocity = 2 * Math.PI;
-        // public static final double kMaxDrivetrainRotationalAcceleration = 0.0; //
-        // TODO
-        public static final double kMaxDrivetrainRotationalAcceleration = 2 * kMaxDrivetrainRotationalVelocity;
+        public static final double kMaxDrivetrainRotationalVelocity = 2 * Math.PI; // TODO
+        public static final double kMaxDrivetrainRotationalAcceleration = 2 * kMaxDrivetrainRotationalVelocity; // TODO
 
         public static final double limelightCenteringDeadbandAngleDeg = 0.5;
         public static final double limelightDistanceOffsetMeters = 0.1;

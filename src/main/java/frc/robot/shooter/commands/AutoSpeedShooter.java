@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Measurements;
 import frc.robot.shooter.ShooterBase;
 
+/**
+ * Automatically set the Velocity of the flywheel based on the distance from the hubstack
+ */
 public class AutoSpeedShooter extends CommandBase {
 
     private LimelightVision limelight;

@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.wrist.WristBase;
 
+/**
+ * Run the rollers to kickup any ball currently in the trough into the flywheel
+ * @implNote disables rollers after {@code 4 seconds}
+ */
 public class KickupBall extends SequentialCommandGroup {
     private WristBase wristBase;
 
