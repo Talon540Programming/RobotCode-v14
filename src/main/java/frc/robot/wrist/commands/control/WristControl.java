@@ -5,7 +5,6 @@ import frc.robot.wrist.WristBase;
 
 public abstract class WristControl extends CommandBase {
     private WristBase wristSubsystem;
-
     protected double rotationPercent, rollersPercent;
 
     public WristControl(WristBase wristSubsystem) {
@@ -15,6 +14,7 @@ public abstract class WristControl extends CommandBase {
 
     @Override
     public void execute() {
+        periodic();
         this.wristSubsystem.setRollers(rollersPercent);
         this.wristSubsystem.setWrist(rotationPercent);
     }

@@ -4,9 +4,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.shooter.ShooterBase;
 
 public abstract class ShooterControl extends CommandBase {
-    public double outputPercent;
-
     protected ShooterBase shooterSubsystem;
+    public double outputPercent;
 
     public ShooterControl(ShooterBase shooter) {
         this.shooterSubsystem = shooter;
@@ -16,7 +15,6 @@ public abstract class ShooterControl extends CommandBase {
     @Override
     public void execute() {
         periodic();
-
         shooterSubsystem.setPercentOutput(outputPercent);
     }
 

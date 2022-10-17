@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.autos.oldAuto;
 import frc.robot.climberz.ClimberBase;
 import frc.robot.climberz.commands.control.AttackJoystickClimberzControl;
 import frc.robot.climberz.commands.control.XboxControllerClimberzControl;
@@ -33,9 +34,10 @@ public class RobotContainer {
     private final AHRS gyro = new AHRS(Port.kUSB);
 
     // Subsystems
-    public final LimelightVision limelightSubsystem = new LimelightVision(
+    private final LimelightVision limelightSubsystem = new LimelightVision(
         Measurements.Robot.LimelightAngleDegrees,
         Measurements.Robot.LimelightHeightMeters
+        // 99.0/39.37
     );
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final WristBase wristSubsystem = new WristBase();
@@ -46,7 +48,8 @@ public class RobotContainer {
         gyro.calibrate();
         gyro.reset();
 
-        configureButtonBindings(OperatorModes.ATTACK_ONLY);
+        // configureButtonBindings(OperatorModes.ATTACK_ONLY);
+        configureButtonBindings(OperatorModes.XBOX_ONLY);
     }
 
     private void configureButtonBindings() {
@@ -128,6 +131,20 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return null;
+        return new oldAuto(drivetrainSubsystem, shooterSubsystem, wristSubsystem, limelightSubsystem);
+    }
+
+    /**
+     * Disable all lights on the robot
+     */
+    public void disableAllLights() {
+        disableFunctionalLights();
+    }
+
+    /**
+     * Disables lights used for calculations and computer vision
+     */
+    public void disableFunctionalLights() {
+        this.limelightSubsystem.disableLEDS();
     }
 }

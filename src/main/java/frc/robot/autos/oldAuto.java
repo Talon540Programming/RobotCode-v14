@@ -27,27 +27,19 @@ import frc.robot.wrist.commands.rollers.KickupBall;
  * </ul>
  */
 public class oldAuto extends SequentialCommandGroup {
-    private LimelightVision limelightBase;
-
     public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristBase wristBase,LimelightVision limelightBase) {
-        this.limelightBase = limelightBase;
         addCommands(
-                new CenterRobotOnHubStack(drivetrainBase, limelightBase),
+            new CenterRobotOnHubStack(drivetrainBase, limelightBase),
 
-                new ParallelCommandGroup(
-                        new DriveToDistance(drivetrainBase, limelightBase, 0), // TODO: find distance
-                        new SingleBallFire(shooterBase)),
+            new ParallelCommandGroup(
+                    new DriveToDistance(drivetrainBase, limelightBase, 1.3), // TODO: find distance
+                    new SingleBallFire(shooterBase)),
 
-                new CenterRobotOnHubStack(drivetrainBase, limelightBase),
+            new CenterRobotOnHubStack(drivetrainBase, limelightBase),
 
-                new KickupBall(wristBase),
+            new KickupBall(wristBase),
 
-                new DriveToDistance(drivetrainBase, limelightBase,
-                        Measurements.Robot.botlengthBumpersMeters + Measurements.Field.tarmacLengthMeters));
-    }
-
-    @Override
-    public void initialize() {
-        limelightBase.enableLEDS();
+            new DriveToDistance(drivetrainBase, limelightBase,
+                    Measurements.Robot.botlengthBumpersMeters + Measurements.Field.tarmacLengthMeters));
     }
 }

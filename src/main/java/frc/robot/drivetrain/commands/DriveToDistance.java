@@ -32,9 +32,9 @@ public class DriveToDistance extends CommandBase {
             currentDistance = this.limelightSubsystem.getDistanceFromTargetBase(Measurements.Field.upperHubHeightMeters);
 
             if (distanceGoal < currentDistance) {
-                this.driveSubsystem.tankDrive(0.5, 0.5);
+                this.driveSubsystem.percentTankDrive(0.5, 0.5);
             } else if (distanceGoal > currentDistance) {
-                this.driveSubsystem.tankDrive(-0.25, -0.25);
+                this.driveSubsystem.percentTankDrive(-0.25, -0.25);
             }
         }
     }

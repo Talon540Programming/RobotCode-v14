@@ -9,14 +9,12 @@ public class XboxControllerWristControl extends WristControl {
 
     public XboxControllerWristControl(WristBase wristSubsystem, TalonXboxController controller) {
         super(wristSubsystem);
-
         this.controller = controller;
     }
 
     @Override
     public void periodic() {
-        // TODO
-        super.rollersPercent =  controller.buttons.A.get() ? -0.5 : controller.buttons.Y.get() ? 0.5 : 0;
+        super.rollersPercent =  controller.buttons.A.get() ? -0.75 : controller.buttons.Y.get() ? 1 : 0;
         super.rotationPercent =  controller.buttons.X.get() ? -0.15 : controller.buttons.B.get() ? 0.15 : 0;
     }
 }

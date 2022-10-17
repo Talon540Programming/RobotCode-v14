@@ -25,9 +25,9 @@ public class WristBase extends SubsystemBase {
     public void setRollers(double percentOutput) {
         percentOutput = MathUtil.clamp(percentOutput, -1, 1);
         if(percentOutput < 0) {
-            percentOutput *= Constants.rollerLowPercentage;
+            percentOutput *= Constants.rollerHighPercentage;
         } else {
-            percentOutput *=Constants.rollerHighPercentage;
+            percentOutput *=Constants.rollerLowPercentage;
         }
 
         this.wristRollers.set(ControlMode.PercentOutput, percentOutput);

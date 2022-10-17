@@ -70,8 +70,7 @@ public class Measurements {
         public static final double kMaxDrivetrainRotationalVelocity = 2 * Math.PI; // TODO
         public static final double kMaxDrivetrainRotationalAcceleration = 2 * kMaxDrivetrainRotationalVelocity; // TODO
 
-        // public static final double limelightCenteringDeadbandAngleDeg = 0.5;
-        public static final double limelightCenteringDeadbandAngleDeg = 0.1;
+        public static final double limelightCenteringDeadbandAngleDeg = 0.5;
 
         public static final double limelightDistanceOffsetMeters = 0.1;
 

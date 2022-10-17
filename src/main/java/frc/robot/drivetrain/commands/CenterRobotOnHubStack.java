@@ -24,7 +24,7 @@ public class CenterRobotOnHubStack extends CommandBase {
 
     @Override
     public void execute() {
-        double nonZeroX = limelightBase.nonZeroX == null ? 15 : limelightBase.nonZeroX ;
+        double nonZeroX = limelightBase.nonZeroX == null ? 15 : limelightBase.nonZeroX;
 
         double motorSpeed = (Math.abs(nonZeroX * .9)/59.6)+.05;
         motorSpeed = Math.round(motorSpeed * 100.0) / 100.0;
@@ -41,7 +41,7 @@ public class CenterRobotOnHubStack extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        // limelightBase.disableLEDS();
+        limelightBase.disableLEDS();
         driveBase.brake();
         // driveBase.rotationController.reset();
     }

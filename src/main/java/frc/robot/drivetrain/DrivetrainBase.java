@@ -38,18 +38,22 @@ public class DrivetrainBase extends SubsystemBase {
     private PIDController leftDriveController = new PIDController(
             PID.drivetrain.translation.kP,
             PID.drivetrain.translation.kI,
-            PID.drivetrain.translation.kD);
+            PID.drivetrain.translation.kD
+    );
     private PIDController rightDriveController = new PIDController(
             PID.drivetrain.translation.kP,
             PID.drivetrain.translation.kI,
-            PID.drivetrain.translation.kD);
+            PID.drivetrain.translation.kD
+    );
     private ProfiledPIDController rotationController = new ProfiledPIDController(
             PID.drivetrain.rotation.kP,
             PID.drivetrain.rotation.kI,
             PID.drivetrain.rotation.kD,
             new TrapezoidProfile.Constraints(
                     Measurements.Calculations.kMaxDrivetrainRotationalVelocity,
-                    Measurements.Calculations.kMaxDrivetrainRotationalAcceleration));
+                    Measurements.Calculations.kMaxDrivetrainRotationalAcceleration
+            )
+    );
 
     private AHRS gyro;
 
@@ -114,7 +118,8 @@ public class DrivetrainBase extends SubsystemBase {
     }
 
     /**
-     * Equivalent to {@link DrivetrainBase#driveDifferential} tank drive without applying deadband values
+     * Equivalent to {@link DrivetrainBase#driveDifferential} tank drive without applying deadband values.
+     * @implNote REMOVES ALL DEADBAND VALUES, SPEED LIMITATIONS, ETC.
      * @param leftPercent  speed of drivetrain within [-1, 1]
      * @param rightPercent speed of drivetrain within [-1, 1]
      */
