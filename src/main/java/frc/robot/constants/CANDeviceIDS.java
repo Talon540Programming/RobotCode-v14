@@ -16,5 +16,4 @@ public class CANDeviceIDS {
 
     // Climb port
     public static final int CLIMBEXTENSION = 7;
-    public static final int CLIMBROTATION = 6;
 }

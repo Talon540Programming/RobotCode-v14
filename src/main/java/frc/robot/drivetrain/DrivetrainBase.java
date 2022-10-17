@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANDeviceIDS;
-import frc.robot.constants.Constants;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.PID;
 
@@ -112,6 +111,16 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public void tankDrive(double leftSpeed, double rightSpeed) {
         driveDifferential.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    /**
+     * Equivalent to {@link DrivetrainBase#driveDifferential} tank drive without applying deadband values
+     * @param leftPercent  speed of drivetrain within [-1, 1]
+     * @param rightPercent speed of drivetrain within [-1, 1]
+     */
+    public void percentTankDrive(double leftPercent, double rightPercent) {
+        this.leftSide.set(leftPercent);
+        this.rightSide.set(rightPercent);
     }
 
     /**

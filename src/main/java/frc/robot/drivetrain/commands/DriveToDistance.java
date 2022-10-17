@@ -23,7 +23,6 @@ public class DriveToDistance extends CommandBase {
 
     @Override
     public void initialize() {
-        limelightSubsystem.setPipeline(0);
         limelightSubsystem.enableLEDS();
     }
 

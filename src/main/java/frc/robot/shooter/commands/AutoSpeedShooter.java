@@ -23,6 +23,11 @@ public class AutoSpeedShooter extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        limelight.enableLEDS();
+    }
+
+    @Override
     public void execute() {
         double hubHeight = Measurements.Field.upperHubHeightMeters;
         double distanceFromHubstack = limelight.getDistanceFromTargetBase(hubHeight);

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.climberz.ClimberBase;
 import frc.robot.climberz.commands.control.AttackJoystickClimberzControl;
 import frc.robot.climberz.commands.control.XboxControllerClimberzControl;
-import frc.robot.constants.Constants;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
