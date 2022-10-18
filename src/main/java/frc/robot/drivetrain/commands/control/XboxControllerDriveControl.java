@@ -16,8 +16,9 @@ public class XboxControllerDriveControl extends DriveControl {
     }
 
     @Override
-    public void periodic() {
+    public void execute() {
         super.kleftDrive = controller.getLeftDeadbandY();
         super.krightDrive = controller.getRightDeadbandY();
+        super.execute();
     }
 }

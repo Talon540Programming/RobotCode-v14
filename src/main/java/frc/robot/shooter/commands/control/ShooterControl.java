@@ -14,9 +14,6 @@ public abstract class ShooterControl extends CommandBase {
 
     @Override
     public void execute() {
-        periodic();
         shooterSubsystem.setPercentOutput(outputPercent);
     }
-
-    public abstract void periodic();
 }

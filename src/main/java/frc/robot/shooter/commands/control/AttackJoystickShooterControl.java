@@ -14,7 +14,8 @@ public class AttackJoystickShooterControl extends ShooterControl {
     }
 
     @Override
-    public void periodic() {
+    public void execute() {
         super.outputPercent = rightJoystick.getTrigger() ? 1 : 0;
+        super.execute();
     }
 }

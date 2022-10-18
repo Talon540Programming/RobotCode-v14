@@ -13,7 +13,8 @@ public class XboxControllerShooterContol extends ShooterControl {
     }
 
     @Override
-    public void periodic() {
+    public void execute() {
         super.outputPercent = controller.buttons.RIGHT_TRIGGER.get() ? 1 : 0;
+        super.execute();
     }
 }

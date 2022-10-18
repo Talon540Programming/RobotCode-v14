@@ -19,8 +19,9 @@ public class AttackJoystickDriveControl extends DriveControl {
     }
 
     @Override
-    public void periodic() {
+    public void execute() {
         super.kleftDrive = leftJoystick.getDeadbandY();
         super.krightDrive = rightJoystick.getDeadbandY();
+        super.execute();
     }
 }

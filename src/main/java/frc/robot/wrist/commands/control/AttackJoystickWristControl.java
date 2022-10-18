@@ -15,9 +15,9 @@ public class AttackJoystickWristControl extends WristControl {
     }
 
     @Override
-    public void periodic() {
-        // TODO
+    public void execute() {
         super.rollersPercent =  leftJoystick.buttons.TOP_LEFT.get() ? -0.5 : leftJoystick.buttons.TOP_RIGHT.get() ? 0.5 : 0;
         super.rotationPercent =  rightJoystick.buttons.TOP_LEFT.get() ? -0.15 : rightJoystick.buttons.TOP_RIGHT.get() ? 0.15 : 0;
+        super.execute();
     }
 }

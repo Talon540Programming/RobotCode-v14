@@ -14,10 +14,7 @@ public abstract class WristControl extends CommandBase {
 
     @Override
     public void execute() {
-        periodic();
         this.wristSubsystem.setRollers(rollersPercent);
         this.wristSubsystem.setWrist(rotationPercent);
     }
-
-    public abstract void periodic();
 }

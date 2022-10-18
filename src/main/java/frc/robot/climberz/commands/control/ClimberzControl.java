@@ -15,10 +15,6 @@ public abstract class ClimberzControl extends CommandBase {
 
     @Override
     public void execute() {
-        periodic();
-
         climberzSub.setExtensionPercentOut(extensionInput);
     }
-
-    public abstract void periodic();
 }

@@ -20,14 +20,6 @@ public abstract class DriveControl extends CommandBase {
 
     @Override
     public void execute() {
-        periodic();
         drivetrainBase.tankDrive(kleftDrive, krightDrive);
     }
-
-    /**
-     * Runs periodically throughout the lifecycle of the command.
-     * Use this to update {@code kleftDrive}, and {@code krightDrive} values
-     */
-    public abstract void periodic();
-
 }
