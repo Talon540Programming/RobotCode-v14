@@ -14,7 +14,7 @@ public class XboxControllerWristControl extends WristControl {
 
     @Override
     public void execute() {
-        super.rollersPercent =  controller.buttons.A.get() ? -0.75 : controller.buttons.Y.get() ? 1 : 0;
+        super.rollersPercent =  controller.buttons.A.get() ? -0.75 : controller.buttons.Y.get() ? 0.5 : 0;
         super.rotationPercent =  controller.buttons.X.get() ? -0.15 : controller.buttons.B.get() ? 0.15 : 0;
         super.execute();
     }
