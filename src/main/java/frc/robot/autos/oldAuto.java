@@ -27,7 +27,7 @@ import frc.robot.wrist.commands.rollers.KickupBall;
  * </ul>
  */
 public class oldAuto extends SequentialCommandGroup {
-    public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristBase wristBase,LimelightVision limelightBase) {
+    public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristBase wristBase, LimelightVision limelightBase) {
         addCommands(
             new CenterRobotOnHubStack(drivetrainBase, limelightBase),
 
