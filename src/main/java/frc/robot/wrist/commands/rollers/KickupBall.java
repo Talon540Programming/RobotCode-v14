@@ -6,21 +6,15 @@ import frc.robot.wrist.WristBase;
 
 /**
  * Run the rollers to kickup any ball currently in the trough into the flywheel
- * @implNote disables rollers after {@code 4 seconds}
+ * @implNote disables rollers {@code 4 seconds} after the command has been scheduled
  */
 public class KickupBall extends SequentialCommandGroup {
-    private WristBase wristBase;
 
     public KickupBall(WristBase wristBase) {
-        this.wristBase = wristBase;
         addCommands(
-            new SetRollerPercent(wristBase, 0.5),
-            new WaitCommand(4)
+            new SetRollers(wristBase, 0.5),
+            new WaitCommand(3),
+            new StopRollers(wristBase)
         );
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        this.wristBase.stopRollers();
     }
 }

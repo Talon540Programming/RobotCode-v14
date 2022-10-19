@@ -7,11 +7,11 @@ import frc.robot.wrist.WristBase;
  * Set the rollers percent output
  * @implNote This commands does not stop the motor after it finishes
  */
-public class SetRollerPercent extends  CommandBase {
+public class SetRollers extends  CommandBase {
     private WristBase wristBase;
     private double percent;
 
-    public SetRollerPercent(WristBase wristBase, double percentOut) {
+    public SetRollers(WristBase wristBase, double percentOut) {
         this.wristBase = wristBase;
         this.percent = percentOut;
         addRequirements(wristBase);
