@@ -45,7 +45,7 @@ public class DrivetrainBase extends SubsystemBase {
             PID.drivetrain.translation.kI,
             PID.drivetrain.translation.kD
     );
-    private ProfiledPIDController rotationController = new ProfiledPIDController(
+    public ProfiledPIDController rotationController = new ProfiledPIDController(
             PID.drivetrain.rotation.kP,
             PID.drivetrain.rotation.kI,
             PID.drivetrain.rotation.kD,
@@ -55,7 +55,7 @@ public class DrivetrainBase extends SubsystemBase {
             )
     );
 
-    private AHRS gyro;
+    public AHRS gyro;
 
     public DrivetrainBase(AHRS gyro) {
         this.gyro = gyro;
@@ -69,10 +69,11 @@ public class DrivetrainBase extends SubsystemBase {
         rightSide = new TalonFX_DifferentialMotorGroup(rightLeader, rightFollower);
         leftSide = new TalonFX_DifferentialMotorGroup(leftLeader, leftFollower);
 
-        this.driveDifferential = new DifferentialDrive(leftSide, rightSide);
-
         /* It was CAD's fault */
         leftSide.setInverted(true);
+
+        this.driveDifferential = new DifferentialDrive(leftSide, rightSide);
+        this.driveDifferential.setSafetyEnabled(false);
 
         rotationController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -88,8 +89,8 @@ public class DrivetrainBase extends SubsystemBase {
      * Update the position of the robot from current meausrements and log the latest position in the position map for future reference
      */
     private void updateOdometry() {
-        driveOdometry.update(gyro.getRotation2d(), getLeftPosition(), getRightPosition());
-        positionMap.addPositionToMap(driveOdometry.getPoseMeters(), Timer.getFPGATimestamp());
+        Pose2d currentPose = driveOdometry.update(gyro.getRotation2d(), getLeftPosition(), getRightPosition());
+        positionMap.addPositionToMap(currentPose, Timer.getFPGATimestamp());
     }
 
     /**
@@ -99,12 +100,9 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public void rotateToAngle(double rotationAngRad) {
         double calc = rotationController.calculate(gyro.getRotation2d().getRadians(), rotationAngRad);
+        calc = MathUtil.clamp(calc, -1, 1);
 
-        if(rotationAngRad < 0) {
-            driveDifferential.tankDrive(-calc, calc);
-        } else if(0 < rotationAngRad) {
-            driveDifferential.tankDrive(calc, -calc);
-        }
+        driveDifferential.arcadeDrive(0, calc);
     }
 
     /**
@@ -135,15 +133,15 @@ public class DrivetrainBase extends SubsystemBase {
      * @param leftSpeed  left side velocity in meters per second
      * @param rightSpeed right side velocity in meters per second
      */
-    public void driveFromSpeeds(double leftSpeed, double rightSpeed) {
+    public void driveFromSpeeds(DifferentialDriveWheelSpeeds speeds) {
         double leftVal = 0;
         double rightVal = 0;
 
-        if (leftSpeed > 2E-2)
-            leftVal = MathUtil.clamp(leftDriveController.calculate(getLeftVelocity(), leftSpeed), -1, 1);
+        if (speeds.leftMetersPerSecond > 2E-2)
+            leftVal = MathUtil.clamp(leftDriveController.calculate(getLeftVelocity(), speeds.leftMetersPerSecond), -1, 1);
 
-        if (rightSpeed > 2E-2)
-            rightVal = MathUtil.clamp(rightDriveController.calculate(getRightVelocity(), rightSpeed), -1, 1);
+        if (speeds.rightMetersPerSecond > 2E-2)
+            rightVal = MathUtil.clamp(rightDriveController.calculate(getRightVelocity(), speeds.rightMetersPerSecond), -1, 1);
 
         driveDifferential.tankDrive(leftVal, rightVal);
     }
@@ -154,8 +152,7 @@ public class DrivetrainBase extends SubsystemBase {
      * @param speed ChassisSpeeds to set drivetrain to
      */
     public void driveFromChassisSpeeds(ChassisSpeeds speed) {
-        DifferentialDriveWheelSpeeds speeds = driveKinematics.toWheelSpeeds(speed);
-        driveFromSpeeds(speeds.leftMetersPerSecond, speeds.rightMetersPerSecond);
+        driveFromSpeeds(driveKinematics.toWheelSpeeds(speed));
     }
 
     /**
@@ -215,6 +212,27 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public void brake() {
         driveDifferential.stopMotor();
+    }
+
+    /**
+     * Drive straight in a linear direction
+     * @param percent between [-1,1], positive is forward
+     */
+    public void driveStraight(double percent) {
+
+    }
+
+    /**
+     * Drive the robot from speeds
+     * @param speedX Linear speed in {@code m/s}
+     * @param speedRot Rotational speed in {@code rad/s}
+     */
+    public void driveFromForces(double speedX, double speedRot) {
+        driveFromChassisSpeeds(new ChassisSpeeds(speedX, 0.0, speedRot));
+    }
+
+    public void resetGyro() {
+        this.gyro.reset();
     }
 
     /**
