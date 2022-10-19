@@ -2,17 +2,19 @@ package frc.robot.wrist;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANDeviceIDS;
 
 public class WristBase extends SubsystemBase {
-    private WPI_TalonFX wristRotation, wristRollers;
+    private WPI_TalonFX wristRotation;
+    private WPI_TalonSRX wristRollers;
 
     public WristBase() {
         this.wristRotation = new WPI_TalonFX(CANDeviceIDS.INTAKE_WRIST);
-        this.wristRollers = new WPI_TalonFX(CANDeviceIDS.INTAKE_ROLLERS);
+        this.wristRollers = new WPI_TalonSRX(CANDeviceIDS.INTAKE_ROLLERS);
     }
 
     public void setWrist(double percentOutput) {
