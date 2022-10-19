@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autos.oldAuto;
@@ -49,12 +50,25 @@ public class RobotContainer {
         gyro.reset();
 
         // configureButtonBindings(OperatorModes.ATTACK_ONLY);
-        configureButtonBindings(OperatorModes.XBOX_ONLY);
+        // configureButtonBindings(OperatorModes.XBOX_ONLY);
+        configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        // TODO: Add logic to get choice from smart dashboard
-        configureButtonBindings(OperatorModes.XBOX_AND_ATTACK);
+        boolean joystickOneConnected = DriverStation.isJoystickConnected(0);
+        boolean joystickTwoConnected = DriverStation.isJoystickConnected(1);
+        boolean xboxcontrollerConnected = DriverStation.isJoystickConnected(2);
+
+        if((joystickOneConnected && joystickTwoConnected)) {
+            if(xboxcontrollerConnected) {
+                configureButtonBindings(OperatorModes.XBOX_AND_ATTACK);
+            } else {
+                configureButtonBindings(OperatorModes.ATTACK_ONLY);
+            }
+        } else {
+            configureButtonBindings(OperatorModes.XBOX_ONLY);
+        }
+
     }
 
     private void configureButtonBindings(OperatorModes operatorMode) {
@@ -146,5 +160,12 @@ public class RobotContainer {
      */
     public void disableFunctionalLights() {
         this.limelightSubsystem.disableLEDS();
+    }
+
+    /**
+     * Used to notify people that some kind of error has occured
+     */
+    public void reportError() {
+        limelightSubsystem.blinkLEDS();
     }
 }
