@@ -37,7 +37,7 @@ public class Measurements {
         public static class GearRatios {
             public static final double drivetrain = 54.0 / 20.0;
             public static final double climbers = 90.0;
-            public static final double shooter = (1.0 / 4.0) * (4.0 / 1.0);
+            public static final double shooter = (4.0/1.0) * (2.0 / 5.0);
             public static final double rollers = 7;
             public static final double wrist = 10;
         }
@@ -73,6 +73,8 @@ public class Measurements {
         public static final double limelightCenteringDeadbandAngleDeg = 0.5;
 
         public static final double limelightDistanceOffsetMeters = 0.1;
+        // public static final double limelightDistanceOffsetMeters = 0.4;
+
 
     }
 }
