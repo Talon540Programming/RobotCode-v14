@@ -12,7 +12,8 @@ import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.SetShooter;
 import frc.robot.shooter.commands.StopFlywheel;
-import frc.robot.wrist.WristBase;
+import frc.robot.wrist.WristRollersBase;
+import frc.robot.wrist.WristRotationBase;
 import frc.robot.wrist.commands.rollers.SetRollers;
 import frc.robot.wrist.commands.rollers.StopRollers;
 
@@ -30,7 +31,7 @@ import frc.robot.wrist.commands.rollers.StopRollers;
  * </ul>
  */
 public class oldAuto extends SequentialCommandGroup {
-    public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristBase wristBase, LimelightVision limelightBase) {
+    public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristRotationBase rotationBase, WristRollersBase rollersBase, LimelightVision limelightBase) {
         addCommands(
             // Center the robot on the hub stack
             new CenterRobotOnHubStack(drivetrainBase, limelightBase),
@@ -50,12 +51,12 @@ public class oldAuto extends SequentialCommandGroup {
             // Fire the ball from the trough and stop the flywheel and rollers after
             new SequentialCommandGroup(
                 new SequentialCommandGroup(
-                    new SetRollers(wristBase, -0.5),
+                    new SetRollers(rollersBase, -0.5),
                     new WaitCommand(3)
                 ),
 
                 new StopFlywheel(shooterBase),
-                new StopRollers(wristBase)
+                new StopRollers(rollersBase)
             ),
 
             // Taxi

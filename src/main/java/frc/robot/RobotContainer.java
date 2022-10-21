@@ -6,22 +6,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autos.oldAuto;
 import frc.robot.climberz.ClimberBase;
-import frc.robot.climberz.commands.control.AttackJoystickClimberzControl;
-import frc.robot.climberz.commands.control.XboxControllerClimberzControl;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
 import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
 import frc.robot.drivetrain.commands.DriveToDistance;
-import frc.robot.drivetrain.commands.control.AttackJoystickDriveControl;
-import frc.robot.drivetrain.commands.control.XboxControllerDriveControl;
 import frc.robot.groups.singleFire;
 import frc.robot.shooter.ShooterBase;
-import frc.robot.shooter.commands.control.AttackJoystickShooterControl;
-import frc.robot.shooter.commands.control.XboxControllerShooterContol;
-import frc.robot.wrist.WristBase;
-import frc.robot.wrist.commands.control.AttackJoystickWristControl;
-import frc.robot.wrist.commands.control.XboxControllerWristControl;
+import frc.robot.wrist.WristRollersBase;
+import frc.robot.wrist.WristRotationBase;
+
+
+import frc.robot.shooter.commands.control.*;
+import frc.robot.drivetrain.commands.control.*;
+import frc.robot.climberz.commands.control.*;
+import frc.robot.wrist.commands.rollers.control.*;
+import frc.robot.wrist.commands.rotation.control.*;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 import org.talon540.control.XboxController.TalonXboxController;
@@ -44,21 +44,23 @@ public class RobotContainer {
         // 99.0/39.37
     );
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
-    private final WristBase wristSubsystem = new WristBase();
     private final ShooterBase shooterSubsystem = new ShooterBase();
     private final ClimberBase climberSubsystem = new ClimberBase();
+    private final WristRotationBase rotationBase = new WristRotationBase();
+    private final WristRollersBase rollersBase = new WristRollersBase();
 
     public RobotContainer() {
         gyro.calibrate();
         gyro.reset();
 
-        // configureButtonBindings(OperatorModes.ATTACK_ONLY);
-        // configureButtonBindings(OperatorModes.XBOX_ONLY);
         configureButtonBindings();
 
         putTelemetrySendables();
     }
 
+    /**
+     * Configure button bindings for a control made based on the number of input controllers connected to the driverstation
+     */
     private void configureButtonBindings() {
         boolean joystickOneConnected = DriverStation.isJoystickConnected(0);
         boolean joystickTwoConnected = DriverStation.isJoystickConnected(1);
@@ -76,6 +78,10 @@ public class RobotContainer {
 
     }
 
+    /**
+     * Configure button bindings based on a specific operator mode
+     * @param operatorMode Desired operation mode (Single Driver Xbox, Single Driver Attack, Dual Driver Xbox and Attack)
+     */
     private void configureButtonBindings(OperatorModes operatorMode) {
         switch(operatorMode) {
             case XBOX_ONLY:
@@ -87,8 +93,8 @@ public class RobotContainer {
                 this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDriveControl(drivetrainSubsystem, xboxController));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
-                this.wristSubsystem.setDefaultCommand(new XboxControllerWristControl(wristSubsystem, xboxController));
-
+                this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
+                this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
                 /*
                  * ==========================
                  * Configure specific buttons
@@ -100,7 +106,7 @@ public class RobotContainer {
                 // xboxController.buttons.LEFT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
 
                 xboxController.buttons.LEFT_BUMPER.whenHeld(new DriveToDistance(drivetrainSubsystem, limelightSubsystem, 1.3));
-                xboxController.buttons.RIGHT_BUMPER.whenPressed(new singleFire(shooterSubsystem, wristSubsystem));
+                xboxController.buttons.RIGHT_BUMPER.whenHeld(new singleFire(shooterSubsystem, rotationBase, rollersBase));
 
                 break;
             case ATTACK_ONLY:
@@ -112,7 +118,8 @@ public class RobotContainer {
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberzControl(climberSubsystem, leftJoystick, rightJoystick));
                 this.shooterSubsystem.setDefaultCommand(new AttackJoystickShooterControl(shooterSubsystem, leftJoystick, rightJoystick));
-                this.wristSubsystem.setDefaultCommand(new AttackJoystickWristControl(wristSubsystem, leftJoystick, rightJoystick));
+                this.rotationBase.setDefaultCommand(new AttackJoystickWristRotationControl(rotationBase, leftJoystick, rightJoystick));
+                this.rollersBase.setDefaultCommand(new AttackJoystickWristRollersControl(rollersBase, leftJoystick, rightJoystick));
 
                 /*
                  * ==========================
@@ -133,7 +140,8 @@ public class RobotContainer {
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
-                this.wristSubsystem.setDefaultCommand(new XboxControllerWristControl(wristSubsystem, xboxController));
+                this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
+                this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
 
                 /*
                  * ==========================
@@ -153,7 +161,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new oldAuto(drivetrainSubsystem, shooterSubsystem, wristSubsystem, limelightSubsystem);
+        return new oldAuto(drivetrainSubsystem, shooterSubsystem, rotationBase, rollersBase, limelightSubsystem);
     }
 
     /**
@@ -185,8 +193,8 @@ public class RobotContainer {
     }
 
     /**
-     * Put data to the SmartDashboard from the subsystems
-     * Should be called in an initalization block
+     * Set up getters and senders for each telemetry object to the SmartDashboard update. 
+     * Should be called in an initalization block, not periodic
      */
     private void putTelemetrySendables() {
         SmartDashboard.putData("Limelight", limelightSubsystem);
@@ -196,7 +204,7 @@ public class RobotContainer {
     }
 
     public void updateSmartDashboard() {
-        SmartDashboard.putNumber("DISTANCE", limelightSubsystem.getDistanceFromTargetBase(Measurements.Field.upperHubHeightMeters));
+        SmartDashboard.putNumber("Distance From Hubstack", limelightSubsystem.getDistanceFromTargetBase(Measurements.Field.upperHubHeightMeters));
     }
 
     /**

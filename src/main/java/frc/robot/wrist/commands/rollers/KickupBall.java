@@ -2,7 +2,7 @@ package frc.robot.wrist.commands.rollers;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.wrist.WristBase;
+import frc.robot.wrist.WristRollersBase;
 
 /**
  * Run the rollers to kickup any ball currently in the trough into the flywheel
@@ -10,11 +10,11 @@ import frc.robot.wrist.WristBase;
  */
 public class KickupBall extends SequentialCommandGroup {
 
-    public KickupBall(WristBase wristBase) {
+    public KickupBall(WristRollersBase rollersBase) {
         addCommands(
-            new SetRollers(wristBase, 0.5),
+            new SetRollers(rollersBase, 0.5),
             new WaitCommand(3),
-            new StopRollers(wristBase)
+            new StopRollers(rollersBase)
         );
     }
 }
