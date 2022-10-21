@@ -3,6 +3,7 @@ package frc.robot.wrist.rotation;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANDeviceIDS;
 
@@ -34,7 +35,7 @@ public class WristRotationBase extends SubsystemBase {
      * @return
      */
     public boolean underResistance() {
-        return getResistance() < resistanceTollerance;
+        return getResistance() > resistanceTollerance;
     }
 
     /**
@@ -46,12 +47,16 @@ public class WristRotationBase extends SubsystemBase {
      *                      values move the wrist inside
      */
     public void setWrist(double percentOutput) {
-        if (underResistance()) {
-            this.wristRotation.set(ControlMode.PercentOutput, percentOutput);
+        if (!underResistance()) {
+            setWristRaw(percentOutput);
         } else {
             // wristRotation.set(ControlMode.PercentOutput, 0);
             stopWrist();
         }
+    }
+
+    public void setWristRaw(double percentOutput) {
+        this.wristRotation.set(ControlMode.PercentOutput, percentOutput);
     }
 
     /**
@@ -59,5 +64,10 @@ public class WristRotationBase extends SubsystemBase {
      */
     public void stopWrist() {
         wristRotation.stopMotor();
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addBooleanProperty("UNDER LOAD", this::underResistance, null);
     }
 }

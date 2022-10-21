@@ -13,7 +13,7 @@ public class MoveWristOut extends CommandBase {
 
     @Override
     public void initialize() {
-        this.rotationBase.setWrist(-0.15);
+        this.rotationBase.setWristRaw(-0.15);
     }
 
     @Override
