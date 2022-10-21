@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autos.oldAuto;
 import frc.robot.climberz.ClimberBase;
@@ -11,8 +12,10 @@ import frc.robot.constants.Measurements;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
 import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
+import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.drivetrain.commands.control.AttackJoystickDriveControl;
 import frc.robot.drivetrain.commands.control.XboxControllerDriveControl;
+import frc.robot.groups.singleFire;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.control.AttackJoystickShooterControl;
 import frc.robot.shooter.commands.control.XboxControllerShooterContol;
@@ -52,6 +55,8 @@ public class RobotContainer {
         // configureButtonBindings(OperatorModes.ATTACK_ONLY);
         // configureButtonBindings(OperatorModes.XBOX_ONLY);
         configureButtonBindings();
+
+        putTelemetrySendables();
     }
 
     private void configureButtonBindings() {
@@ -91,8 +96,11 @@ public class RobotContainer {
                  */
 
                 // Center on hubs, preference on press once vs held
-                // xboxController.buttons.LEFT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
-                xboxController.buttons.LEFT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                xboxController.buttons.LEFT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // xboxController.buttons.LEFT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+
+                xboxController.buttons.LEFT_BUMPER.whenHeld(new DriveToDistance(drivetrainSubsystem, limelightSubsystem, 1.3));
+                xboxController.buttons.RIGHT_BUMPER.whenPressed(new singleFire(shooterSubsystem, wristSubsystem));
 
                 break;
             case ATTACK_ONLY:
@@ -160,6 +168,35 @@ public class RobotContainer {
      */
     public void disableFunctionalLights() {
         this.limelightSubsystem.disableLEDS();
+    }
+
+    /**
+     * Enable all lights on the robot
+     */
+    public void enableAllLights() {
+        enableFunctionalLights();
+    }
+
+    /**
+     * Enables lights used for calculations and computer vision
+     */
+    public void enableFunctionalLights() {
+        this.limelightSubsystem.enableLEDS();
+    }
+
+    /**
+     * Put data to the SmartDashboard from the subsystems
+     * Should be called in an initalization block
+     */
+    private void putTelemetrySendables() {
+        SmartDashboard.putData("Limelight", limelightSubsystem);
+        SmartDashboard.putData("Flywheel", shooterSubsystem);
+        SmartDashboard.putData("Drivetrain", drivetrainSubsystem);
+        SmartDashboard.putData("Position Map", drivetrainSubsystem.positionMap);
+    }
+
+    public void updateSmartDashboard() {
+        SmartDashboard.putNumber("DISTANCE", limelightSubsystem.getDistanceFromTargetBase(Measurements.Field.upperHubHeightMeters));
     }
 
     /**

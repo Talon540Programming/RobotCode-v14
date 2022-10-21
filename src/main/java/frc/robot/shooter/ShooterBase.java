@@ -87,9 +87,9 @@ public class ShooterBase extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("shooter");
 
-        builder.addDoubleProperty("Flywheel RPM", this::getFlywheelRPM, this::setFlywheelRPM);
-        builder.addDoubleProperty("Flywheel Linear Velocity", this::getFlywheelLinearVelocity, this::setFlywheelLinearVelocity);
-        builder.addDoubleProperty("Flywheel Angular Velocity", this::getFlywheelAngularVelocity, this::setFlywheelAngularVelocity);
+        builder.addDoubleProperty("RPM", this::getFlywheelRPM, this::setFlywheelRPM);
+        builder.addDoubleProperty("Linear Velocity", this::getFlywheelLinearVelocity, this::setFlywheelLinearVelocity);
+        builder.addDoubleProperty("Angular Velocity", this::getFlywheelAngularVelocity, this::setFlywheelAngularVelocity);
 
     }
 }

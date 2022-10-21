@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,7 +33,7 @@ public class DrivetrainBase extends SubsystemBase {
 
     private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(Measurements.Robot.botwidthMeters);
     private DifferentialDriveOdometry driveOdometry;
-    private BoundRobotPositionTreeMap positionMap = new BoundRobotPositionTreeMap(500);
+    public BoundRobotPositionTreeMap positionMap = new BoundRobotPositionTreeMap(500);
 
 
     private PIDController leftDriveController = new PIDController(
@@ -249,6 +250,15 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public Pose2d getPosition(double timestamp) {
         return this.positionMap.getPositionFromTimestamp(timestamp);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("drivetrain");
+
+        builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
+        builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
+        builder.addDoubleProperty("Average Velocity", this::getAverageVelocity, null);
     }
 
 }

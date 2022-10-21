@@ -15,6 +15,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         CameraServer.startAutomaticCapture();
         robotContainer = new RobotContainer();
+        robotContainer.disableAllLights();
     }
 
     @Override
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
 
         if(DriverStation.isEStopped()) robotContainer.reportError();
+        robotContainer.updateSmartDashboard();
     }
 
     @Override
@@ -34,6 +36,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        robotContainer.enableFunctionalLights();
+
         autonomousCommand = robotContainer.getAutonomousCommand();
 
         if (autonomousCommand != null) {
@@ -46,6 +50,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        robotContainer.enableFunctionalLights();
+
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }

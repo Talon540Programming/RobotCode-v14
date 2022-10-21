@@ -13,7 +13,6 @@ import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.SetShooter;
 import frc.robot.shooter.commands.StopFlywheel;
 import frc.robot.wrist.WristBase;
-import frc.robot.wrist.commands.rollers.KickupBall;
 import frc.robot.wrist.commands.rollers.SetRollers;
 import frc.robot.wrist.commands.rollers.StopRollers;
 
@@ -51,7 +50,7 @@ public class oldAuto extends SequentialCommandGroup {
             // Fire the ball from the trough and stop the flywheel and rollers after
             new SequentialCommandGroup(
                 new SequentialCommandGroup(
-                    new SetRollers(wristBase, 0.5),
+                    new SetRollers(wristBase, -0.5),
                     new WaitCommand(3)
                 ),
 
