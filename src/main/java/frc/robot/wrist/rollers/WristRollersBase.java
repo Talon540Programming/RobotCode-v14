@@ -20,5 +20,4 @@ public class WristRollersBase extends SubsystemBase {
     public void stopRollers() {
         this.wristRollers.stopMotor();
     }
-    
 }
