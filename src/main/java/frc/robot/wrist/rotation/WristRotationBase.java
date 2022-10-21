@@ -30,6 +30,14 @@ public class WristRotationBase extends SubsystemBase {
     }
 
     /**
+     * Return if the wrist is under a significant load (such as being at the limit of its rotation)
+     * @return
+     */
+    public boolean underResistance() {
+        return getResistance() < resistanceTollerance;
+    }
+
+    /**
      * Set the wrist output percent.
      * Automatically stops the wrist if resistance is met over threshold:
      * {@link WristRotationBase#resistanceTollerance}
@@ -38,7 +46,7 @@ public class WristRotationBase extends SubsystemBase {
      *                      values move the wrist inside
      */
     public void setWrist(double percentOutput) {
-        if (getResistance() < resistanceTollerance) {
+        if (underResistance()) {
             this.wristRotation.set(ControlMode.PercentOutput, percentOutput);
         } else {
             // wristRotation.set(ControlMode.PercentOutput, 0);
