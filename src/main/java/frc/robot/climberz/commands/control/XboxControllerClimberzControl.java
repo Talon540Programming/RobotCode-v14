@@ -14,7 +14,7 @@ public class XboxControllerClimberzControl extends ClimberzControl {
 
     @Override
     public void execute() {
-        super.extensionInput = controller.buttons.DPAD_NORTH.get() ? 0.3 : controller.buttons.DPAD_SOUTH.get() ? -0.3 : 0.0;
+        super.extensionInput = controller.buttons.DPAD_NORTH.get() ? 1 : controller.buttons.DPAD_SOUTH.get() ? -1 : 0.0;
         super.execute();
     }
 

@@ -15,7 +15,7 @@ public class AttackJoystickClimberzControl extends ClimberzControl {
 
     @Override
     public void execute() {
-        super.extensionInput = leftJoystick.buttons.TOP_MIDDLE.get() ? 0.3 : leftJoystick.buttons.TOP_BOTTOM.get() ? -0.3 : 0.0;
+        super.extensionInput = leftJoystick.buttons.TOP_MIDDLE.get() ? 1 : leftJoystick.buttons.TOP_BOTTOM.get() ? -1 : 0.0;
         super.execute();
     }
 }
