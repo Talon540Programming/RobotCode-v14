@@ -1,8 +1,8 @@
-package frc.robot.wrist.commands.rollers.control;
+package frc.robot.wrist.rollers.commands.control;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 
-import frc.robot.wrist.WristRollersBase;
+import frc.robot.wrist.rollers.WristRollersBase;
 
 public class AttackJoystickWristRollersControl extends WristRollersControl {
     private TalonJoystick leftJoystick, rightJoystick;

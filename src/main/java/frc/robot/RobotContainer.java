@@ -13,15 +13,13 @@ import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
 import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.groups.singleFire;
 import frc.robot.shooter.ShooterBase;
-import frc.robot.wrist.WristRollersBase;
-import frc.robot.wrist.WristRotationBase;
-
-
 import frc.robot.shooter.commands.control.*;
 import frc.robot.drivetrain.commands.control.*;
 import frc.robot.climberz.commands.control.*;
-import frc.robot.wrist.commands.rollers.control.*;
-import frc.robot.wrist.commands.rotation.control.*;
+import frc.robot.wrist.rollers.commands.control.*;
+import frc.robot.wrist.rotation.commands.control.*;
+import frc.robot.wrist.rollers.WristRollersBase;
+import frc.robot.wrist.rotation.WristRotationBase;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 import org.talon540.control.XboxController.TalonXboxController;

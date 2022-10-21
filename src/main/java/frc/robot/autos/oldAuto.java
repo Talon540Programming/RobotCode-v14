@@ -12,10 +12,10 @@ import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.SetShooter;
 import frc.robot.shooter.commands.StopFlywheel;
-import frc.robot.wrist.WristRollersBase;
-import frc.robot.wrist.WristRotationBase;
-import frc.robot.wrist.commands.rollers.SetRollers;
-import frc.robot.wrist.commands.rollers.StopRollers;
+import frc.robot.wrist.rollers.WristRollersBase;
+import frc.robot.wrist.rollers.commands.SetRollers;
+import frc.robot.wrist.rollers.commands.StopRollers;
+import frc.robot.wrist.rotation.WristRotationBase;
 
 /**
  * Old Auto Sequence. Auto sequence used during the 2022, Rapid React

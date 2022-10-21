@@ -1,7 +1,7 @@
-package frc.robot.wrist.commands.rollers;
+package frc.robot.wrist.rollers.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.wrist.WristRollersBase;
+import frc.robot.wrist.rollers.WristRollersBase;
 
 public class StopRollers extends CommandBase {
     private WristRollersBase rollerBase;

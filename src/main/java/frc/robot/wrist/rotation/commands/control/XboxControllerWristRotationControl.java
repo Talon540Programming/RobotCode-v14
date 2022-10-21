@@ -1,8 +1,8 @@
-package frc.robot.wrist.commands.rotation.control;
+package frc.robot.wrist.rotation.commands.control;
 
 import org.talon540.control.XboxController.TalonXboxController;
 
-import frc.robot.wrist.WristRotationBase;
+import frc.robot.wrist.rotation.WristRotationBase;
 
 public class XboxControllerWristRotationControl extends WristRotationControl {
     private TalonXboxController controller;

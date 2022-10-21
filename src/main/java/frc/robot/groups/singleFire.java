@@ -5,10 +5,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.SetShooter;
 import frc.robot.shooter.commands.StopFlywheel;
-import frc.robot.wrist.WristRollersBase;
-import frc.robot.wrist.WristRotationBase;
-import frc.robot.wrist.commands.rollers.SetRollers;
-import frc.robot.wrist.commands.rollers.StopRollers;
+import frc.robot.wrist.rollers.WristRollersBase;
+import frc.robot.wrist.rollers.commands.SetRollers;
+import frc.robot.wrist.rollers.commands.StopRollers;
+import frc.robot.wrist.rotation.WristRotationBase;
 
 public class singleFire extends SequentialCommandGroup {
     public singleFire(ShooterBase shooterBase, WristRotationBase rotationBase, WristRollersBase rollersBase) {

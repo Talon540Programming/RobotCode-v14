@@ -1,7 +1,7 @@
-package frc.robot.wrist.commands.rotation.control;
+package frc.robot.wrist.rotation.commands.control;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.wrist.WristRotationBase;
+import frc.robot.wrist.rotation.WristRotationBase;
 
 public class WristRotationControl extends CommandBase {
     private WristRotationBase rotationBase;
