@@ -10,6 +10,9 @@ public class CenterRobotOnHubStack extends CommandBase {
     private DrivetrainBase driveBase;
     private LimelightVision limelightBase;
 
+    private double ERROR = 15;
+    private int centeredCount = 0;
+
     public CenterRobotOnHubStack(DrivetrainBase dBase, LimelightVision lBase) {
         this.driveBase = dBase;
         this.limelightBase = lBase;
@@ -24,13 +27,15 @@ public class CenterRobotOnHubStack extends CommandBase {
 
     @Override
     public void execute() {
-        double nonZeroX = limelightBase.nonZeroX == null ? 15 : limelightBase.nonZeroX;
+        double nonZeroX = getNonZeroX(ERROR);
 
-        double motorSpeed = (Math.abs(nonZeroX * .9)/59.6)+.05;
+        double motorSpeed = (Math.abs(nonZeroX * .9)/59.6) + 0.05;
         motorSpeed = Math.round(motorSpeed * 100.0) / 100.0;
 
         // Uncomment for testing
         // motorSpeed = MathUtil.clamp(driveBase.rotationController.calculate(Math.toRadians(limelightBase.nonZeroX), 0), -1, 1);
+
+        // if(!limelightBase.targetViewed) motorSpeed = 0.25;
 
         if(0 < nonZeroX) {
             driveBase.percentTankDrive(-motorSpeed, motorSpeed);
@@ -41,14 +46,29 @@ public class CenterRobotOnHubStack extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        limelightBase.disableLEDS();
         driveBase.brake();
+        // limelightBase.disableLEDS();
         // driveBase.rotationController.reset();
     }
 
     @Override
     public boolean isFinished() {
-        return Measurements.Calculations.limelightCenteringDeadbandAngleDeg > Math.abs(limelightBase.nonZeroX);
+        if(Measurements.Calculations.limelightCenteringDeadbandAngleDeg > Math.abs(getNonZeroX(1000000000))) {
+            centeredCount++;
+            return centeredCount == 7;
+        } else {
+            centeredCount = 0;
+            return false;
+        }
+
+        // return Measurements.Calculations.limelightCenteringDeadbandAngleDeg > Math.abs(getNonZeroX(1000000000));
     }
 
+    private double getNonZeroX() {
+        return getNonZeroX(0);
+    }
+
+    private double getNonZeroX(double error) {
+        return (limelightBase.nonZeroX == null || limelightBase.nonZeroX == 0) ? error : limelightBase.nonZeroX;
+    }
 }
