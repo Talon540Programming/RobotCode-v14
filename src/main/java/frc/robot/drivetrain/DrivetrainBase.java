@@ -22,7 +22,7 @@ import frc.robot.constants.CANDeviceIDS;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.PID;
 
-import org.talon540.mapping.BoundRobotPositionTreeMap;
+import org.talon540.mapping.position.BoundRobotPositionTreeMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
