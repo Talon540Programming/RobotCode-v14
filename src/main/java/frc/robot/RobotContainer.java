@@ -199,6 +199,8 @@ public class RobotContainer {
         SmartDashboard.putData("Flywheel", shooterSubsystem);
         SmartDashboard.putData("Drivetrain", drivetrainSubsystem);
         SmartDashboard.putData("Position Map", drivetrainSubsystem.positionMap);
+        SmartDashboard.putData("Rollers Resistance Map", rollersBase.resistanceMap);
+        SmartDashboard.putData("Rotation", rotationBase);
     }
 
     public void updateSmartDashboard() {
