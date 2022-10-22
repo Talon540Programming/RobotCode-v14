@@ -52,7 +52,6 @@ public class RobotContainer {
         gyro.reset();
 
         configureButtonBindings();
-
         putTelemetrySendables();
     }
 

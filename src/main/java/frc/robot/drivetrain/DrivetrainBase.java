@@ -22,7 +22,7 @@ import frc.robot.constants.CANDeviceIDS;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.PID;
 
-import org.talon540.mapping.position.BoundRobotPositionTreeMap;
+import org.talon540.mapping.position.BoundRobotPositionMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -33,7 +33,7 @@ public class DrivetrainBase extends SubsystemBase {
 
     private DifferentialDriveKinematics driveKinematics = new DifferentialDriveKinematics(Measurements.Robot.botwidthMeters);
     private DifferentialDriveOdometry driveOdometry;
-    public BoundRobotPositionTreeMap positionMap = new BoundRobotPositionTreeMap(500);
+    public BoundRobotPositionMap positionMap = new BoundRobotPositionMap(500);
 
 
     private PIDController leftDriveController = new PIDController(

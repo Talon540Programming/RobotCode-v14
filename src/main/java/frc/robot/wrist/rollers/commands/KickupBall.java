@@ -12,7 +12,7 @@ public class KickupBall extends SequentialCommandGroup {
 
     public KickupBall(WristRollersBase rollersBase) {
         addCommands(
-            new SetRollers(rollersBase, 0.5),
+            new SetRollers(rollersBase, -0.5),
             new WaitCommand(3),
             new StopRollers(rollersBase)
         );
