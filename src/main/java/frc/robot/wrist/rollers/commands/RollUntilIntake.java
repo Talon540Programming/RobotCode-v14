@@ -14,7 +14,7 @@ public class RollUntilIntake extends CommandBase {
     @Override
     public void initialize() {
         rollerBase.clearDataMap();
-        rollerBase.setRollers(-0.50);
+        rollerBase.setRollers(-0.75);
     }
 
     @Override

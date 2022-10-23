@@ -16,7 +16,10 @@ import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.control.*;
 import frc.robot.drivetrain.commands.control.*;
 import frc.robot.climberz.commands.control.*;
+import frc.robot.wrist.rollers.commands.AutoIntake;
 import frc.robot.wrist.rollers.commands.control.*;
+import frc.robot.wrist.rotation.commands.MoveWristIn;
+import frc.robot.wrist.rotation.commands.MoveWristOut;
 import frc.robot.wrist.rotation.commands.control.*;
 import frc.robot.wrist.rollers.WristRollersBase;
 import frc.robot.wrist.rotation.WristRotationBase;
@@ -99,11 +102,16 @@ public class RobotContainer {
                  */
 
                 // Center on hubs, preference on press once vs held
-                xboxController.buttons.LEFT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
-                // xboxController.buttons.LEFT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                // xboxController.buttons.LEFT_TRIGGER.whenPressed(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
+                xboxController.buttons.LEFT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
 
-                xboxController.buttons.LEFT_BUMPER.whenHeld(new DriveToDistance(drivetrainSubsystem, limelightSubsystem, 1.3));
+                xboxController.buttons.LEFT_BUMPER.whenHeld(new DriveToDistance(drivetrainSubsystem, limelightSubsystem, Measurements.Calculations.optimalShootingRange));
                 xboxController.buttons.RIGHT_BUMPER.whenHeld(new singleFire(shooterSubsystem, rotationBase, rollersBase));
+
+                xboxController.buttons.START.whenPressed(new AutoIntake(rollersBase, rotationBase));
+
+                xboxController.buttons.DPAD_EAST.whenPressed(new MoveWristOut(rotationBase));
+                xboxController.buttons.DPAD_WEST.whenPressed(new MoveWristIn(rotationBase));
 
                 break;
             case ATTACK_ONLY:
@@ -199,6 +207,7 @@ public class RobotContainer {
         SmartDashboard.putData("Drivetrain", drivetrainSubsystem);
         SmartDashboard.putData("Position Map", drivetrainSubsystem.positionMap);
         SmartDashboard.putData("Rollers Resistance Map", rollersBase.resistanceMap);
+        SmartDashboard.putData("Rollers", rollersBase);
         SmartDashboard.putData("Rotation", rotationBase);
     }
 

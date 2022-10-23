@@ -20,4 +20,9 @@ public class MoveWristIn extends CommandBase {
     public boolean isFinished() {
         return rotationBase.underResistance();
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        this.rotationBase.stopWrist();
+    }
 }

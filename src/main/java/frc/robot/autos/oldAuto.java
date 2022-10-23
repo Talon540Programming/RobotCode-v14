@@ -34,11 +34,11 @@ public class oldAuto extends SequentialCommandGroup {
     public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristRotationBase rotationBase, WristRollersBase rollersBase, LimelightVision limelightBase) {
         addCommands(
             // Center the robot on the hub stack
-            new CenterRobotOnHubStack(drivetrainBase, limelightBase),
+            // new CenterRobotOnHubStack(drivetrainBase, limelightBase),
 
             // Get to a good distance from the hubstack and rev the flywheel
             new ParallelCommandGroup(
-                    new DriveToDistance(drivetrainBase, limelightBase, 1.3), // TODO: find distance
+                    new DriveToDistance(drivetrainBase, limelightBase, Measurements.Calculations.optimalShootingRange),
                     new SequentialCommandGroup(
                         new SetShooter(shooterBase, 1),
                         new WaitCommand(2)
@@ -46,20 +46,22 @@ public class oldAuto extends SequentialCommandGroup {
             ),
 
             // Center the robot again to account for any error that occured during driving
-            new CenterRobotOnHubStack(drivetrainBase, limelightBase),
+            // new CenterRobotOnHubStack(drivetrainBase, limelightBase),
 
             // Fire the ball from the trough and stop the flywheel and rollers after
-            new SequentialCommandGroup(
-                new SequentialCommandGroup(
-                    new SetRollers(rollersBase, -0.5),
-                    new WaitCommand(3)
-                ),
 
-                new StopFlywheel(shooterBase),
-                new StopRollers(rollersBase)
+            new SequentialCommandGroup(
+                new SetRollers(rollersBase, -0.5),
+                new WaitCommand(3)
             ),
 
+            new StopFlywheel(shooterBase),
+            new StopRollers(rollersBase),
+
             // Taxi
-            new DriveToDistance(drivetrainBase, limelightBase, Measurements.Robot.botlengthBumpersMeters + Measurements.Field.tarmacLengthMeters));
+            new DriveToDistance(drivetrainBase, limelightBase, Measurements.Robot.botlengthBumpersMeters + Measurements.Field.tarmacLengthMeters)
+            // new SlowDriveBack(drivetrainBase)
+
+        );
     }
 }

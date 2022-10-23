@@ -76,5 +76,6 @@ public class Measurements {
         // public static final double limelightDistanceOffsetMeters = 0.4;
 
 
+        public static final double optimalShootingRange = 1.3;
     }
 }

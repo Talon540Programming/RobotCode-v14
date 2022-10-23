@@ -20,7 +20,7 @@ public class WristRollersBase extends SubsystemBase {
     }
 
     public boolean peakFound() {
-        return (1.5 * resistanceMap.getStandardDeviation()) < wristRollers.getSupplyCurrent();
+        return ((7 * resistanceMap.getStandardDeviation()) < wristRollers.getSupplyCurrent() && 100 <= resistanceMap.getNodeCount());
     }
 
     public WristRollersBase() {

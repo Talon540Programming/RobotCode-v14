@@ -29,13 +29,11 @@ public class CenterRobotOnHubStack extends CommandBase {
     public void execute() {
         double nonZeroX = getNonZeroX(ERROR);
 
-        double motorSpeed = (Math.abs(nonZeroX * .9)/59.6) + 0.05;
+        double motorSpeed = ((Math.abs(nonZeroX * .9)/59.6) + 0.05);
         motorSpeed = Math.round(motorSpeed * 100.0) / 100.0;
 
         // Uncomment for testing
         // motorSpeed = MathUtil.clamp(driveBase.rotationController.calculate(Math.toRadians(limelightBase.nonZeroX), 0), -1, 1);
-
-        // if(!limelightBase.targetViewed) motorSpeed = 0.25;
 
         if(0 < nonZeroX) {
             driveBase.percentTankDrive(-motorSpeed, motorSpeed);
@@ -55,7 +53,7 @@ public class CenterRobotOnHubStack extends CommandBase {
     public boolean isFinished() {
         if(Measurements.Calculations.limelightCenteringDeadbandAngleDeg > Math.abs(getNonZeroX(1000000000))) {
             centeredCount++;
-            return centeredCount == 7;
+            return centeredCount == 15;
         } else {
             centeredCount = 0;
             return false;

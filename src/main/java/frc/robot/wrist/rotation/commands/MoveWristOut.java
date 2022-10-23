@@ -17,6 +17,11 @@ public class MoveWristOut extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        this.rotationBase.stopWrist();
+    }
+
+    @Override
     public boolean isFinished() {
         return rotationBase.underResistance();
     }

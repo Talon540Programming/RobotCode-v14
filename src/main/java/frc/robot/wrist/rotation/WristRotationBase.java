@@ -69,5 +69,6 @@ public class WristRotationBase extends SubsystemBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addBooleanProperty("UNDER LOAD", this::underResistance, null);
+        builder.addDoubleProperty("current amp", () -> this.wristRotation.getSupplyCurrent(), null);
     }
 }
