@@ -67,6 +67,6 @@ public class CenterRobotOnHubStack extends CommandBase {
     }
 
     private double getNonZeroX(double error) {
-        return (limelightBase.nonZeroX == null || limelightBase.nonZeroX == 0) ? error : limelightBase.nonZeroX;
+        return  limelightBase.nonZeroX == 0 ? error : limelightBase.nonZeroX;
     }
 }

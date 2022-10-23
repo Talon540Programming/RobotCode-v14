@@ -1,6 +1,6 @@
 package frc.robot.drivetrain;
 
-import org.talon540.TalonFX_DifferentialMotorGroup;
+import org.talon540.drive.differential.TalonFX_DifferentialMotorGroup;
 import org.talon540.math.conversions;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
