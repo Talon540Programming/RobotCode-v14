@@ -12,10 +12,6 @@ public class AttackJoystickDriveControl extends DriveControl {
         super(dBase);
         this.leftJoystick = left;
         this.rightJoystick = right;
-
-        // Override inherited value in case it was changed since it's initalization
-        this.leftJoystick.deadband = Constants.AttackJoystickDeadband;
-        this.rightJoystick.deadband = Constants.AttackJoystickDeadband;
     }
 
     @Override

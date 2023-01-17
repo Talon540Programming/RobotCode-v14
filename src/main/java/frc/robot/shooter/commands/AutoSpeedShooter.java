@@ -1,6 +1,6 @@
 package frc.robot.shooter.commands;
 
-import org.talon540.vision.Limelight.LimelightVision;
+import org.talon540.sensors.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

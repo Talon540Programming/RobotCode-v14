@@ -21,8 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.CANDeviceIDS;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.PID;
-
-import org.talon540.mapping.position.BoundRobotPositionMap;
+import org.talon540.math.mapping.position.BoundRobotPositionMap;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -130,9 +129,7 @@ public class DrivetrainBase extends SubsystemBase {
     /**
      * Set drivetrain speed based on linear velocities of each side of the
      * drivetrain
-     * 
-     * @param leftSpeed  left side velocity in meters per second
-     * @param rightSpeed right side velocity in meters per second
+     *
      */
     public void driveFromSpeeds(DifferentialDriveWheelSpeeds speeds) {
         double leftVal = 0;
@@ -162,7 +159,7 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public double getLeftVelocity() {
         return conversions.Falcon500VelocityToLinearVelocity(
-            leftSide.getVelocity(),
+            leftSide.getRawVelocity(),
             Measurements.Robot.drivetrainWheelRadiusMeters,
             Measurements.Robot.GearRatios.drivetrain
         );
@@ -174,7 +171,7 @@ public class DrivetrainBase extends SubsystemBase {
      */
     public double getRightVelocity() {
         return conversions.Falcon500VelocityToLinearVelocity(
-            rightSide.getVelocity(),
+            rightSide.getRawVelocity(),
             Measurements.Robot.drivetrainWheelRadiusMeters,
             Measurements.Robot.GearRatios.drivetrain
         );
@@ -185,7 +182,7 @@ public class DrivetrainBase extends SubsystemBase {
      * @return position in meters
      */
     public double getLeftPosition() {
-        return (leftSide.getPosition() / Measurements.Robot.GearRatios.drivetrain) * ((2 * Math.PI * Measurements.Robot.drivetrainWheelRadiusMeters) / 2048.0);
+        return (leftSide.getRawPosition() / Measurements.Robot.GearRatios.drivetrain) * ((2 * Math.PI * Measurements.Robot.drivetrainWheelRadiusMeters) / 2048.0);
     }
 
     /**
@@ -193,7 +190,7 @@ public class DrivetrainBase extends SubsystemBase {
      * @return position in meters
      */
     public double getRightPosition() {
-        return (rightSide.getPosition() / Measurements.Robot.GearRatios.drivetrain) * ((2 * Math.PI * Measurements.Robot.drivetrainWheelRadiusMeters) / 2048.0);
+        return (rightSide.getRawPosition() / Measurements.Robot.GearRatios.drivetrain) * ((2 * Math.PI * Measurements.Robot.drivetrainWheelRadiusMeters) / 2048.0);
     }
 
     /**

@@ -11,8 +11,6 @@ public class XboxControllerDriveControl extends DriveControl {
     public XboxControllerDriveControl(DrivetrainBase dBase, TalonXboxController cTalonXboxController) {
         super(dBase);
         this.controller = cTalonXboxController;
-        // Override inherited value in case it was changed since it's initalization
-        this.controller.deadband = Constants.XboxControllerDeadband;
     }
 
     @Override

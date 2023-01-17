@@ -1,6 +1,6 @@
 package frc.robot.wrist.rollers;
 
-import org.talon540.mapping.data.BoundDataMap;
+import org.talon540.math.mapping.data.BoundDataset;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -12,7 +12,7 @@ import frc.robot.constants.CANDeviceIDS;
 public class WristRollersBase extends SubsystemBase {
     private WPI_TalonSRX wristRollers;
 
-    public BoundDataMap resistanceMap = new BoundDataMap(150);
+    public BoundDataset resistanceMap = new BoundDataset(150);
 
     @Override
     public void periodic() {
@@ -20,7 +20,7 @@ public class WristRollersBase extends SubsystemBase {
     }
 
     public boolean peakFound() {
-        return ((7 * resistanceMap.getStandardDeviation()) < wristRollers.getSupplyCurrent() && 100 <= resistanceMap.getNodeCount());
+        return ((7 * resistanceMap.getStandardDeviation()) < wristRollers.getSupplyCurrent() && 100 <= resistanceMap.getDatasetSize());
     }
 
     public WristRollersBase() {
@@ -40,7 +40,7 @@ public class WristRollersBase extends SubsystemBase {
     }
 
     public void clearDataMap() {
-        resistanceMap.clearList();
+        resistanceMap.clearDataset();
     }
 
     @Override

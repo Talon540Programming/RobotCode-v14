@@ -1,13 +1,11 @@
 package frc.robot.autos;
 
-import org.talon540.vision.Limelight.LimelightVision;
-
+import org.talon540.sensors.vision.Limelight.LimelightVision;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.Measurements;
 import frc.robot.drivetrain.DrivetrainBase;
-import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
 import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.SetShooter;

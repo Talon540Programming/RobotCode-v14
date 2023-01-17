@@ -1,6 +1,6 @@
 package frc.robot.drivetrain.commands;
 
-import org.talon540.vision.Limelight.LimelightVision;
+import org.talon540.sensors.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Measurements;
@@ -17,7 +17,7 @@ public class CenterRobotOnHubStack extends CommandBase {
         this.driveBase = dBase;
         this.limelightBase = lBase;
 
-        addRequirements(dBase, lBase);
+        addRequirements(dBase);
     }
 
     @Override
@@ -67,6 +67,7 @@ public class CenterRobotOnHubStack extends CommandBase {
     }
 
     private double getNonZeroX(double error) {
-        return  limelightBase.nonZeroX == 0 ? error : limelightBase.nonZeroX;
+        double val = limelightBase.getVisionState().getYaw();
+        return val == 0 ? error : val;
     }
 }

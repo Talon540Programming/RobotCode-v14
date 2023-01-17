@@ -26,7 +26,8 @@ import frc.robot.wrist.rotation.WristRotationBase;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 import org.talon540.control.XboxController.TalonXboxController;
-import org.talon540.vision.Limelight.LimelightVision;
+import org.talon540.sensors.vision.VisionCameraMountConfig;
+import org.talon540.sensors.vision.Limelight.LimelightVision;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -40,10 +41,9 @@ public class RobotContainer {
 
     // Subsystems
     private final LimelightVision limelightSubsystem = new LimelightVision(
-        Measurements.Robot.LimelightAngleDegrees,
-        Measurements.Robot.LimelightHeightMeters
-        // 99.0/39.37
+        new VisionCameraMountConfig(0, 0)
     );
+
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final ShooterBase shooterSubsystem = new ShooterBase();
     private final ClimberBase climberSubsystem = new ClimberBase();

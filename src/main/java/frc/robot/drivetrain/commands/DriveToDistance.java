@@ -1,6 +1,6 @@
 package frc.robot.drivetrain.commands;
 
-import org.talon540.vision.Limelight.LimelightVision;
+import org.talon540.sensors.vision.Limelight.LimelightVision;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,7 +20,7 @@ public class DriveToDistance extends CommandBase {
 
         this.distanceGoal = Math.abs(desiredDistanceMeters);
 
-        addRequirements(drivetrainBase, limelightVisionBase);
+        addRequirements(drivetrainBase);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DriveToDistance extends CommandBase {
         double percentL = 0;
         double percentR = 0;
 
-        if (this.limelightSubsystem.targetViewed) {
+        if (this.limelightSubsystem.targetViewed()) {
             currentDistance = this.limelightSubsystem.getDistanceFromTargetBase(Measurements.Field.upperHubHeightMeters);
 
             if (distanceGoal < currentDistance) {
