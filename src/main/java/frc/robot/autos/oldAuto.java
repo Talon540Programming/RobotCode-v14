@@ -10,10 +10,10 @@ import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.SetShooter;
 import frc.robot.shooter.commands.StopFlywheel;
-import frc.robot.wrist.rollers.WristRollersBase;
-import frc.robot.wrist.rollers.commands.SetRollers;
-import frc.robot.wrist.rollers.commands.StopRollers;
-import frc.robot.wrist.rotation.WristRotationBase;
+// import frc.robot.wrist.rollers.WristRollersBase;
+// import frc.robot.wrist.rollers.commands.SetRollers;
+// import frc.robot.wrist.rollers.commands.StopRollers;
+// import frc.robot.wrist.rotation.WristRotationBase;
 
 /**
  * Old Auto Sequence. Auto sequence used during the 2022, Rapid React
@@ -29,7 +29,7 @@ import frc.robot.wrist.rotation.WristRotationBase;
  * </ul>
  */
 public class oldAuto extends SequentialCommandGroup {
-    public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, WristRotationBase rotationBase, WristRollersBase rollersBase, LimelightVision limelightBase) {
+    public oldAuto(DrivetrainBase drivetrainBase, ShooterBase shooterBase, LimelightVision limelightBase) {
         addCommands(
             // Center the robot on the hub stack
             // new CenterRobotOnHubStack(drivetrainBase, limelightBase),
@@ -48,13 +48,13 @@ public class oldAuto extends SequentialCommandGroup {
 
             // Fire the ball from the trough and stop the flywheel and rollers after
 
-            new SequentialCommandGroup(
-                new SetRollers(rollersBase, -0.5),
-                new WaitCommand(3)
-            ),
+            // new SequentialCommandGroup(
+            //     new SetRollers(rollersBase, -0.5),
+            //     new WaitCommand(3)
+            // ),
 
-            new StopFlywheel(shooterBase),
-            new StopRollers(rollersBase),
+            // new StopFlywheel(shooterBase),
+            // new StopRollers(rollersBase),
 
             // Taxi
             new DriveToDistance(drivetrainBase, limelightBase, Measurements.Robot.botlengthBumpersMeters + Measurements.Field.tarmacLengthMeters)

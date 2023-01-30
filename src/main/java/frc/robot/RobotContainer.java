@@ -11,18 +11,18 @@ import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
 import frc.robot.drivetrain.commands.CenterRobotOnHubStack;
 import frc.robot.drivetrain.commands.DriveToDistance;
-import frc.robot.groups.singleFire;
+// import frc.robot.groups.singleFire;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.control.*;
 import frc.robot.drivetrain.commands.control.*;
 import frc.robot.climberz.commands.control.*;
-import frc.robot.wrist.rollers.commands.AutoIntake;
-import frc.robot.wrist.rollers.commands.control.*;
-import frc.robot.wrist.rotation.commands.MoveWristIn;
-import frc.robot.wrist.rotation.commands.MoveWristOut;
-import frc.robot.wrist.rotation.commands.control.*;
-import frc.robot.wrist.rollers.WristRollersBase;
-import frc.robot.wrist.rotation.WristRotationBase;
+// import frc.robot.wrist.rollers.commands.AutoIntake;
+// import frc.robot.wrist.rollers.commands.control.*;
+// import frc.robot.wrist.rotation.commands.MoveWristIn;
+// import frc.robot.wrist.rotation.commands.MoveWristOut;
+// import frc.robot.wrist.rotation.commands.control.*;
+// import frc.robot.wrist.rollers.WristRollersBase;
+// import frc.robot.wrist.rotation.WristRotationBase;
 
 import org.talon540.control.AttackJoystick.TalonJoystick;
 import org.talon540.control.XboxController.TalonXboxController;
@@ -47,8 +47,8 @@ public class RobotContainer {
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final ShooterBase shooterSubsystem = new ShooterBase();
     private final ClimberBase climberSubsystem = new ClimberBase();
-    private final WristRotationBase rotationBase = new WristRotationBase();
-    private final WristRollersBase rollersBase = new WristRollersBase();
+    //private final WristRotationBase rotationBase = new WristRotationBase();
+    //private final WristRollersBase rollersBase = new WristRollersBase();
 
     public RobotContainer() {
         gyro.calibrate();
@@ -93,8 +93,8 @@ public class RobotContainer {
                 this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDriveControl(drivetrainSubsystem, xboxController));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
-                this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
-                this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
+                //this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
+                //this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
                 /*
                  * ==========================
                  * Configure specific buttons
@@ -106,12 +106,12 @@ public class RobotContainer {
                 xboxController.buttons.LEFT_TRIGGER.whenHeld(new CenterRobotOnHubStack(drivetrainSubsystem, limelightSubsystem));
 
                 xboxController.buttons.LEFT_BUMPER.whenHeld(new DriveToDistance(drivetrainSubsystem, limelightSubsystem, Measurements.Calculations.optimalShootingRange));
-                xboxController.buttons.RIGHT_BUMPER.whenHeld(new singleFire(shooterSubsystem, rotationBase, rollersBase));
+                //xboxController.buttons.RIGHT_BUMPER.whenHeld(new singleFire(shooterSubsystem, rotationBase, rollersBase));
 
-                xboxController.buttons.START.whenPressed(new AutoIntake(rollersBase, rotationBase));
+                //xboxController.buttons.START.whenPressed(new AutoIntake(rollersBase, rotationBase));
 
-                xboxController.buttons.DPAD_EAST.whenPressed(new MoveWristOut(rotationBase));
-                xboxController.buttons.DPAD_WEST.whenPressed(new MoveWristIn(rotationBase));
+                //xboxController.buttons.DPAD_EAST.whenPressed(new MoveWristOut(rotationBase));
+                //xboxController.buttons.DPAD_WEST.whenPressed(new MoveWristIn(rotationBase));
 
                 break;
             case ATTACK_ONLY:
@@ -123,8 +123,8 @@ public class RobotContainer {
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberzControl(climberSubsystem, leftJoystick, rightJoystick));
                 this.shooterSubsystem.setDefaultCommand(new AttackJoystickShooterControl(shooterSubsystem, leftJoystick, rightJoystick));
-                this.rotationBase.setDefaultCommand(new AttackJoystickWristRotationControl(rotationBase, leftJoystick, rightJoystick));
-                this.rollersBase.setDefaultCommand(new AttackJoystickWristRollersControl(rollersBase, leftJoystick, rightJoystick));
+                //this.rotationBase.setDefaultCommand(new AttackJoystickWristRotationControl(rotationBase, leftJoystick, rightJoystick));
+                //this.rollersBase.setDefaultCommand(new AttackJoystickWristRollersControl(rollersBase, leftJoystick, rightJoystick));
 
                 /*
                  * ==========================
@@ -145,8 +145,8 @@ public class RobotContainer {
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
                 this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
-                this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
-                this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
+                //this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
+                //this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
 
                 /*
                  * ==========================
@@ -166,7 +166,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new oldAuto(drivetrainSubsystem, shooterSubsystem, rotationBase, rollersBase, limelightSubsystem);
+        return new oldAuto(drivetrainSubsystem, shooterSubsystem, limelightSubsystem);
     }
 
     /**
@@ -206,9 +206,9 @@ public class RobotContainer {
         SmartDashboard.putData("Flywheel", shooterSubsystem);
         SmartDashboard.putData("Drivetrain", drivetrainSubsystem);
         SmartDashboard.putData("Position Map", drivetrainSubsystem.positionMap);
-        SmartDashboard.putData("Rollers Resistance Map", rollersBase.resistanceMap);
-        SmartDashboard.putData("Rollers", rollersBase);
-        SmartDashboard.putData("Rotation", rotationBase);
+        //SmartDashboard.putData("Rollers Resistance Map", rollersBase.resistanceMap);
+        //SmartDashboard.putData("Rollers", rollersBase);
+        //SmartDashboard.putData("Rotation", rotationBase);
     }
 
     public void updateSmartDashboard() {
