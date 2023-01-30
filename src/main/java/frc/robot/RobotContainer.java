@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autos.oldAuto;
-import frc.robot.climberz.ClimberBase;
+// import frc.robot.climberz.ClimberBase;
 import frc.robot.constants.Measurements;
 import frc.robot.constants.Flags.OperatorModes;
 import frc.robot.drivetrain.DrivetrainBase;
@@ -15,7 +15,7 @@ import frc.robot.drivetrain.commands.DriveToDistance;
 import frc.robot.shooter.ShooterBase;
 import frc.robot.shooter.commands.control.*;
 import frc.robot.drivetrain.commands.control.*;
-import frc.robot.climberz.commands.control.*;
+// import frc.robot.climberz.commands.control.*;
 // import frc.robot.wrist.rollers.commands.AutoIntake;
 // import frc.robot.wrist.rollers.commands.control.*;
 // import frc.robot.wrist.rotation.commands.MoveWristIn;
@@ -46,7 +46,7 @@ public class RobotContainer {
 
     private final DrivetrainBase drivetrainSubsystem = new DrivetrainBase(gyro);
     private final ShooterBase shooterSubsystem = new ShooterBase();
-    private final ClimberBase climberSubsystem = new ClimberBase();
+    //private final ClimberBase climberSubsystem = new ClimberBase();
     //private final WristRotationBase rotationBase = new WristRotationBase();
     //private final WristRollersBase rollersBase = new WristRollersBase();
 
@@ -91,7 +91,7 @@ public class RobotContainer {
                  * ==========================
                  */
                 this.drivetrainSubsystem.setDefaultCommand(new XboxControllerDriveControl(drivetrainSubsystem, xboxController));
-                this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
+                //this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
                 //this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
                 //this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
@@ -121,7 +121,7 @@ public class RobotContainer {
                  * ==========================
                  */
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
-                this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberzControl(climberSubsystem, leftJoystick, rightJoystick));
+                //this.climberSubsystem.setDefaultCommand(new AttackJoystickClimberzControl(climberSubsystem, leftJoystick, rightJoystick));
                 this.shooterSubsystem.setDefaultCommand(new AttackJoystickShooterControl(shooterSubsystem, leftJoystick, rightJoystick));
                 //this.rotationBase.setDefaultCommand(new AttackJoystickWristRotationControl(rotationBase, leftJoystick, rightJoystick));
                 //this.rollersBase.setDefaultCommand(new AttackJoystickWristRollersControl(rollersBase, leftJoystick, rightJoystick));
@@ -143,7 +143,7 @@ public class RobotContainer {
                  * ==========================
                  */
                 this.drivetrainSubsystem.setDefaultCommand(new AttackJoystickDriveControl(drivetrainSubsystem, leftJoystick, rightJoystick));
-                this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
+                //this.climberSubsystem.setDefaultCommand(new XboxControllerClimberzControl(climberSubsystem, xboxController));
                 this.shooterSubsystem.setDefaultCommand(new XboxControllerShooterContol(shooterSubsystem, xboxController));
                 //this.rotationBase.setDefaultCommand(new XboxControllerWristRotationControl(rotationBase, xboxController));
                 //this.rollersBase.setDefaultCommand(new XboxControllerWristRollersControl(rollersBase, xboxController));
